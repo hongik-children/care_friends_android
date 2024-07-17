@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import NotificationScreen from './NotificationScreen';
 import ScheduleScreen from './ScheduleScreen.js'
-import imgUpload from './imgupload.js'
+import imgUpload from './ImgUpload.js'
  import messaging from '@react-native-firebase/messaging';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
