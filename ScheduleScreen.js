@@ -22,7 +22,7 @@ notifee.onBackgroundEvent(async ({ type, detail }) => {
     await notifee.cancelNotification(notification.id);
 });
 
-const Schedule = ({ navigation }) => {
+const ScheduleScreen = ({ navigation }) => {
     const [fcmToken, setFcmToken] = useState("");
 
     useEffect(() => {
@@ -157,7 +157,7 @@ const Schedule = ({ navigation }) => {
                 <TouchableOpacity style={styles.navButton} onPress={() => { }}>
                     <Text style={styles.navButtonText}>홈</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.navButton} onPress={() => { }}>
+                <TouchableOpacity style={styles.navButton} onPress={() => { navigation.navigate("CalendarScreen") }}>
                     <Text style={styles.navButtonText}>달력</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.navButton} onPress={() => { }}>
@@ -244,4 +244,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Schedule;
+export default ScheduleScreen;
