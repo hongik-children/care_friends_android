@@ -156,6 +156,10 @@ const ScheduleScreen = ({ navigation }) => {
                 <Text style={styles.buttonText}>약봉투 업로드</Text>
             </TouchableOpacity>
 
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AddFriendScreen')}>
+                <Text style={styles.buttonText}>친구 추가하기</Text>
+            </TouchableOpacity>
+
             {showMap && location && (
                 <MapView
                     style={styles.map}
