@@ -1,13 +1,44 @@
-// CalendarScreen.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Calendar } from 'react-native-calendars'; // 예시로 사용하는 가상의 달력 컴포넌트
+import { Calendar } from 'react-native-calendars';
 import Modal from 'react-native-modal';
-
+import axios from 'axios';
 
 const CalendarScreen = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [events, setEvents] = useState({});
+
+  useEffect(() => {
+    // 서버에서 데이터를 받아와서 events state를 세팅
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get('http://192.168.0.5:8080/task', {
+            params: {
+                    date: '2024-08-10'
+                  },
+        });
+        const data = response.data;
+
+        // 서버에서 받은 데이터를 events 객체에 저장
+        const eventsData = data.reduce((acc, event) => {
+          const date = event.date; // assuming your event data has a `date` field
+          if (!acc[date]) {
+            acc[date] = [];
+          }
+          acc[date].push({ time: event.startTime, title: event.title });
+          return acc;
+        }, {});
+
+        console.log(eventsData);
+        setEvents(eventsData);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   const handleDayPress = (day) => {
     setSelectedDate(day.dateString);
@@ -19,29 +50,38 @@ const CalendarScreen = ({ navigation }) => {
     setSelectedDate(null);
   };
 
-  const handleEventPress = () => {
+  const handleEventPress = (event) => {
     closeModal();
-    navigation.navigate('EditScheduleScreen');
+    navigation.navigate('EditScheduleScreen', { event });
   };
 
   return (
     <View style={styles.container}>
       <Calendar
         onDayPress={handleDayPress}
-        // 기본 스타일 및 기능 설정
+        markedDates={Object.keys(events).reduce((acc, date) => {
+          acc[date] = { marked: true, dotColor: 'blue' };
+          return acc;
+        }, {})}
       />
       <Modal isVisible={isModalVisible} onBackdropPress={closeModal}>
         <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>{selectedDate}의 일정</Text>
-          <TouchableOpacity style={styles.event} onPress={handleEventPress}>
-            <Text>일정 1: 점심약 복용</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.event} onPress={handleEventPress}>
-            <Text>일정 2: 정형외과 진료</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.event} onPress={handleEventPress}>
-            <Text>일정 3: 손녀딸 집에 방문</Text>
-          </TouchableOpacity>
+          <Text style={styles.modalTitle}>
+            {selectedDate ? `${selectedDate}의 일정` : '일정이 없습니다.'}
+          </Text>
+          {events[selectedDate]?.length > 0 ? (
+            events[selectedDate].map((event, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.event}
+                onPress={() => handleEventPress(event)}
+              >
+                <Text>{event.time}: {event.title}</Text>
+              </TouchableOpacity>
+            ))
+          ) : (
+            <Text>이날은 일정이 없습니다.</Text>
+          )}
         </View>
       </Modal>
     </View>
@@ -51,9 +91,10 @@ const CalendarScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
   },
   modalContent: {
-    backgroundColor: 'white',
+    backgroundColor: 'black',
     padding: 20,
     borderRadius: 10,
   },
@@ -70,38 +111,3 @@ const styles = StyleSheet.create({
 });
 
 export default CalendarScreen;
-
-
-
-
-//import React from 'react';
-//import { View, StyleSheet } from 'react-native';
-//import { Calendar } from 'react-native-calendars';
-//
-//const CalendarScreen = () => {
-//  return (
-//    <View style={styles.container}>
-//      <Calendar
-//        // Marked dates example
-//        markedDates={{
-//          '2024-03-07': { marked: true },
-//          '2024-03-08': { marked: true, dotColor: 'red', activeOpacity: 0 },
-//          '2024-03-09': { marked: true, dotColor: 'blue' },
-//        }}
-//        // Handler which gets executed on day press
-//        onDayPress={(day) => {
-//          console.log('selected day', day);
-//        }}
-//      />
-//    </View>
-//  );
-//};
-//
-//const styles = StyleSheet.create({
-//  container: {
-//    flex: 1,
-//    backgroundColor: '#fff',
-//  },
-//});
-//
-//export default CalendarScreen;
