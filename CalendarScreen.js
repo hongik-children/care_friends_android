@@ -13,11 +13,7 @@ const CalendarScreen = ({ navigation }) => {
     // 서버에서 데이터를 받아와서 events state를 세팅
     const fetchEvents = async () => {
       try {
-        const response = await axios.get('http://192.168.0.5:8080/task', {
-            params: {
-                    date: '2024-08-10'
-                  },
-        });
+        const response = await axios.get('http://192.168.0.5:8080/task/all');
         const data = response.data;
 
         // 서버에서 받은 데이터를 events 객체에 저장
