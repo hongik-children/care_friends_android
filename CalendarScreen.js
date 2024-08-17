@@ -1,40 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Modal from 'react-native-modal';
 import axios from 'axios';
+import { useFocusEffect } from '@react-navigation/native';
 
 const CalendarScreen = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
-  const [events, setEvents] = useState({});
+  const [events, setEvents] = useState({});  // 날짜별 이벤트 리스트
+  const [allEvents, setAllEvents] = useState([]);  // 전체 이벤트 객체 저장
 
-  useEffect(() => {
-    // 서버에서 데이터를 받아와서 events state를 세팅
-    const fetchEvents = async () => {
-      try {
-        const response = await axios.get('http://192.168.0.5:8080/task/all');
-        const data = response.data;
+  const fetchEvents = async () => {
+    try {
+      const response = await axios.get('http://192.168.45.200:8080/task/all');
+      const data = response.data;
 
-        // 서버에서 받은 데이터를 events 객체에 저장
-        const eventsData = data.reduce((acc, event) => {
-          const date = event.date; // assuming your event data has a `date` field
-          if (!acc[date]) {
-            acc[date] = [];
-          }
-          acc[date].push({ time: event.startTime, title: event.title });
-          return acc;
-        }, {});
+      // 서버에서 받은 모든 데이터를 allEvents에 저장
+      setAllEvents(data);
 
-        console.log(eventsData);
-        setEvents(eventsData);
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      }
-    };
+      // 서버에서 받은 데이터를 날짜별로 events 객체에 저장
+      const eventsData = data.reduce((acc, event) => {
+        const date = event.date; // assuming your event data has a `date` field
+        if (!acc[date]) {
+          acc[date] = [];
+        }
+        acc[date].push({ time: event.startTime, title: event.title, ...event });
+        return acc;
+      }, {});
 
-    fetchEvents();
-  }, []);
+      console.log(eventsData);
+      setEvents(eventsData);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
+  };
+
+  // 화면이 포커스를 받을 때마다 fetchEvents를 호출하여 데이터를 갱신
+  useFocusEffect(
+    useCallback(() => {
+      fetchEvents();
+    }, [])
+  );
 
   const handleDayPress = (day) => {
     setSelectedDate(day.dateString);
