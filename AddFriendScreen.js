@@ -1,20 +1,39 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import axios from 'axios';
 
 const AddFriendScreen = ({ navigation }) => {
   const [uuid, setUuid] = useState('');
 
-  const handleAddFriend = () => {
+  const handleAddFriend = async () => {
     if (uuid.trim() === '') {
-      Alert.alert('Error', 'Please enter a valid UUID.');
+      Alert.alert('Error', '유효한 UUID를 입력해주세요.');
       return;
     }
 
     // 친구 추가 로직 구현하기
+    try {
+      // 백엔드로 친구 추가 요청 보내기
+      const response = await axios.post('http://10.0.2.2:8080/friendRequest', {
+        friendId: uuid,
+        caregiver: {
+          id: 'f9822800-42fe-4366-b2c3-65f19620d8b7',
+          name: '보호자',
+          phoneNumber: '01012345678',
+          gender: 'MALE'
+        }
+      });
 
-
-    Alert.alert('Success', 'Friend has been added successfully!');
-    navigation.goBack();
+      if (response.status === 200) {
+        Alert.alert('성공', '친구 요청이 완료되었습니다.');
+        navigation.goBack();
+      } else {
+        Alert.alert('오류', '친구 요청에 실패하였습니다.');
+      }
+    } catch (error) {
+    console.error(error);
+    Alert.alert('오류', '친구 추가 중 오류가 발생하였습니다.');
+    }
   };
 
   return (
