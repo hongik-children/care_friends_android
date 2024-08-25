@@ -14,6 +14,9 @@ import AddScheduleScreen from './AddScheduleScreen';
 import EditScheduleScreen from './EditScheduleScreen'; // Import the EditScheduleScreen
 import messaging from '@react-native-firebase/messaging';
 import AddFriendScreen from './AddFriendScreen';
+import FriendsRequestListScreen from './FriendsRequestListScreen';
+import CaregiverFriendsListScreen from './CaregiverFriendsListScreen';
+import FriendCaregiverScreen from './FriendCaregiverScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -49,7 +52,24 @@ const HomeStack = () => (
           name="AddFriendScreen"  // Add this screen to the stack
           component={AddFriendScreen}
           options={{ title: '친구 추가하기' }}
-        />
+    />
+    <Stack.Screen
+          name="FriendsRequestListScreen"
+          component={FriendsRequestListScreen}
+          options={{ title: '친구 요청 리스트 조회' }}
+    />
+
+    <Stack.Screen
+          name="CaregiverFriendsListScreen"
+          component={CaregiverFriendsListScreen}
+          options={{ title: '보호자의 프렌즈 조회' }}
+    />
+
+    <Stack.Screen
+          name="FriendCaregiverScreen"
+          component={FriendCaregiverScreen}
+          options={{ title: '프렌즈의 보호자 조회' }}
+    />
   </Stack.Navigator>
 );
 
