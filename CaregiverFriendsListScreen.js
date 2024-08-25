@@ -5,7 +5,7 @@ import axios from 'axios';
 const CaregiverFriendsListScreen = ({ navigation }) => {
   const [friends, setFriends] = useState([]);
   // 보호자의 UUID를 하드코딩
-    const caregiverId = '4d44d2f9-5891-4e94-b19b-6e998acd6e09';
+  const caregiverId = '4d44d2f9-5891-4e94-b19b-6e998acd6e09';
 
   useEffect(() => {
     const fetchFriends = async () => {

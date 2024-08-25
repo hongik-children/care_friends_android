@@ -168,6 +168,10 @@ const ScheduleScreen = ({ navigation }) => {
                 <Text style={styles.buttonText}>프렌즈 조회(보호자 기능)</Text>
             </TouchableOpacity>
 
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('FriendCaregiverScreen')}>
+                <Text style={styles.buttonText}>보호자 조회(프렌즈 기능)</Text>
+            </TouchableOpacity>
+
             {showMap && location && (
                 <MapView
                     style={styles.map}
