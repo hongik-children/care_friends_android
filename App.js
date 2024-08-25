@@ -15,6 +15,7 @@ import EditScheduleScreen from './EditScheduleScreen'; // Import the EditSchedul
 import messaging from '@react-native-firebase/messaging';
 import AddFriendScreen from './AddFriendScreen';
 import FriendsRequestListScreen from './FriendsRequestListScreen';
+import CaregiverFriendsListScreen from './CaregiverFriendsListScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -55,6 +56,12 @@ const HomeStack = () => (
           name="FriendsRequestListScreen"
           component={FriendsRequestListScreen}
           options={{ title: '친구 요청 리스트 조회' }}
+    />
+
+    <Stack.Screen
+          name="CaregiverFriendsListScreen"
+          component={CaregiverFriendsListScreen}
+          options={{ title: '보호자의 프렌즈 조회' }}
     />
   </Stack.Navigator>
 );
