@@ -1,12 +1,10 @@
-// KakaoLoginScreen.js
-
 import React from 'react';
 import { View, TouchableOpacity, Image, StyleSheet, Linking } from 'react-native';
-
+import { KAKAO_REST_API_KEY, KAKAO_REDIRECT_URI } from '@env'; // @env 모듈로 불러옴
 
 const KakaoLoginScreen = () => {
     const handleKakaoLogin = () => {
-        const authUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
+        const authUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}`;
         Linking.openURL(authUrl).catch(err => console.error('Error opening URL:', err));
     };
 
@@ -33,3 +31,4 @@ const styles = StyleSheet.create({
 });
 
 export default KakaoLoginScreen;
+
