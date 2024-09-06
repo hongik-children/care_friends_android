@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
         color: '#333333',
     },
     event: {
-        backgroundColor: '#FFF4CC',
+        backgroundColor: '#FFF8DE',
         width: '100%',
         padding: 15,
         marginVertical: 10,
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
         color: '#000000',
     },
     button: {
-        backgroundColor: '#1E90FF',
+        backgroundColor: '#6495ED',
         padding: 15,
         borderRadius: 10,
         marginVertical: 10,
