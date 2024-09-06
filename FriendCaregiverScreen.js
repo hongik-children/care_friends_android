@@ -30,7 +30,7 @@ const FriendCaregiverScreen = ({ navigation }) => {
       ) : (
         <Text>보호자 정보가 없습니다.</Text>
       )}
-      <Button title="뒤로가기" onPress={() => navigation.goBack()} />
+      <Button title="뒤로가기" onPress={() => navigation.goBack()} color="#6495ED" />
     </View>
   );
 };

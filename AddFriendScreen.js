@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
 
 const AddFriendScreen = ({ navigation }) => {
@@ -11,17 +11,15 @@ const AddFriendScreen = ({ navigation }) => {
       return;
     }
 
-    // 친구 추가 로직 구현하기
     try {
-      // 백엔드로 친구 추가 요청 보내기
       const response = await axios.post('http://10.0.2.2:8080/friendRequest', {
         friendId: uuid,
         caregiver: {
           id: '79662e03-77d7-420d-ba2d-320a1106ba4b',
           name: '보호자',
           phoneNumber: '01012345678',
-          gender: 'MALE'
-        }
+          gender: 'MALE',
+        },
       });
 
       if (response.status === 200) {
@@ -31,21 +29,24 @@ const AddFriendScreen = ({ navigation }) => {
         Alert.alert('오류', '친구 요청에 실패하였습니다.');
       }
     } catch (error) {
-    console.error(error);
-    Alert.alert('오류', '친구 추가 중 오류가 발생하였습니다.');
+      console.error(error);
+      Alert.alert('오류', '친구 추가 중 오류가 발생하였습니다.');
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>친구 코드 입력:</Text>
+      <Text style={styles.label}>친구 코드를 입력해주세요. </Text>
       <TextInput
         style={styles.input}
         placeholder="UUID"
         value={uuid}
         onChangeText={setUuid}
+        placeholderTextColor="#9CA3AF"
       />
-      <Button title="친구 요청 보내기" onPress={handleAddFriend} />
+      <TouchableOpacity style={styles.button} onPress={handleAddFriend}>
+        <Text style={styles.buttonText}>친구 요청 보내기</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -55,17 +56,33 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#fff',
+    justifyContent: 'center',
   },
   label: {
     fontSize: 18,
+    color: '#111827',
     marginBottom: 10,
   },
   input: {
-    height: 40,
-    borderColor: '#ccc',
+    height: 50,
+    borderColor: '#D1D5DB',
     borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 15,
     marginBottom: 20,
-    paddingHorizontal: 10,
+    backgroundColor: '#F9FAFB',
+    color: '#111827',
+  },
+  button: {
+    backgroundColor: '#6495ED',
+    borderRadius: 8,
+    paddingVertical: 15,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

@@ -100,8 +100,8 @@ const AddScheduleScreen = ({ navigation }) => {
         multiline
       />
       <View style={styles.dateTimePicker}>
-        <Button title="날짜 선택" onPress={() => setShowDatePicker(true)} />
-        <Button title="시간 선택" onPress={() => setShowTimePicker(true)} />
+        <Button title="날짜 선택" onPress={() => setShowDatePicker(true)} color="#6495ED"/>
+        <Button title="시간 선택" onPress={() => setShowTimePicker(true)} color="#6495ED"/>
       </View>
       {showDatePicker && (
         <DateTimePicker
@@ -119,7 +119,7 @@ const AddScheduleScreen = ({ navigation }) => {
           onChange={onTimeChange}
         />
       )}
-      <Button title="저장" onPress={handleSave} />
+      <Button title="저장" onPress={handleSave} color="#6495ED" />
     </View>
   );
 };

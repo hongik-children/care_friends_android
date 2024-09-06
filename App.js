@@ -18,6 +18,7 @@ import FriendCaregiverScreen from './FriendCaregiverScreen';
 import KakaoLoginScreen from './KakaoLoginScreen';
 import SignupScreen from './SignupScreen';
 import UserTypeSelectionScreen from './UserTypeSelectionScreen';
+import SplashScreen from './SplashScreen';
 import { Linking, Alert } from 'react-native';
 
 const Stack = createStackNavigator();
@@ -25,6 +26,7 @@ const Tab = createBottomTabNavigator();
 
 const HomeStack = () => (
   <Stack.Navigator>
+    <Stack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
     <Stack.Screen name="ScheduleScreen" component={ScheduleScreen} options={{ headerShown: false }} />
     <Stack.Screen name="imgUpload" component={imgUpload} options={{ headerShown: false }} />
     <Stack.Screen name="NotificationScreen" component={NotificationScreen} options={{ headerShown: false }} />
@@ -114,7 +116,7 @@ const App = () => {
 
             return <FontAwesome name={iconName} size={size} color={color} />;
           },
-          tabBarActiveTintColor: '#1E90FF',
+          tabBarActiveTintColor: '#6495ED',
           tabBarInactiveTintColor: '#8e8e93',
           tabBarStyle: { paddingVertical: 5, backgroundColor: '#f8f8f8' },
           tabBarLabelStyle: { fontSize: 12, fontWeight: 'bold' },

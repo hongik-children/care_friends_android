@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    backgroundColor: '#6495ED',
   },
 });
 
