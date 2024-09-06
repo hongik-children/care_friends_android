@@ -32,7 +32,7 @@ const imgUpload = () => {
       });
 
       try {
-        const response = await axios.post(`${BASE_URL}/medicine', formData, {
+        const response = await axios.post(`${BASE_URL}/medicine`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
