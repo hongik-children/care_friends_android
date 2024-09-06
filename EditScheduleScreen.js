@@ -21,7 +21,7 @@ const EditScheduleScreen = ({ route, navigation }) => {
 
   const handleSave = async () => {
     try {
-      const response = await fetch('http://192.168.45.200:8080/task/update', {
+      const response = await fetch('http://192.168.186.243:8080/task/update', {
         method: 'POST', // PUT일 수도 있음
         headers: {
           'Content-Type': 'application/json',

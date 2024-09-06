@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Button, Image, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { launchImageLibrary } from 'react-native-image-picker';
+import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 
 const imgUpload = () => {
   const [imageUri, setImageUri] = useState(null);
@@ -31,7 +32,7 @@ const imgUpload = () => {
       });
 
       try {
-        const response = await axios.post('http://3.34.59.173:8080/medicine', formData, {
+        const response = await axios.post(`${BASE_URL}/medicine', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

@@ -3,6 +3,7 @@ import { View, TextInput, Button, StyleSheet, Platform, Alert } from 'react-nati
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
 import { Picker } from '@react-native-picker/picker';
+import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 
 const AddScheduleScreen = ({ navigation }) => {
   const [friendId, setFriendId] = useState('');
@@ -29,7 +30,7 @@ const AddScheduleScreen = ({ navigation }) => {
     };
 
     try {
-      const apiUrl = Platform.OS === 'android' ? 'http://10.0.2.2:8080/task' : 'http://localhost:8080/task';
+      const apiUrl = Platform.OS === 'android' ? `${BASE_URL}/task` : `${BASE_URL}/task`;
 
       const response = await axios.post(apiUrl, taskRequest);
       console.log('Task saved:', response.data);

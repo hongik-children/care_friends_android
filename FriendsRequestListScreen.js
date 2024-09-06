@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Button, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
+import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 
 const FriendsRequestListScreen = ({ navigation }) => {
   const [requests, setRequests] = useState([]);
@@ -12,7 +13,7 @@ const FriendsRequestListScreen = ({ navigation }) => {
     // 친구 요청 리스트를 가져오는 함수
     const fetchFriendRequests = async () => {
       try {
-        const response = await axios.get(`http://10.0.2.2:8080/friendRequest/pendingRequests/${friendId}`);
+        const response = await axios.get(`${BASE_URL}/friendRequest/pendingRequests/${friendId}`);
         setRequests(response.data);
       } catch (error) {
         console.error(error);
@@ -26,7 +27,7 @@ const FriendsRequestListScreen = ({ navigation }) => {
   // 친구 요청 수락/거절 버튼 클릭 시 호출되는 함수
   const handleRequestAction = async (requestId, action) => {
     try {
-      const response = await axios.post(`http://10.0.2.2:8080/friendRequest/${requestId}/${action}`);
+      const response = await axios.post(`${BASE_URL}/friendRequest/${requestId}/${action}`);
       if (response.status === 200) {
         Alert.alert('성공', `친구 요청이 ${action === 'accept' ? '수락' : '거절'}되었습니다.`);
         setRequests(requests.filter(req => req.requestId !== requestId)); // 수락/거절된 요청을 리스트에서 제거

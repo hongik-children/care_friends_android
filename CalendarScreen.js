@@ -4,6 +4,7 @@ import { Calendar } from 'react-native-calendars';
 import Modal from 'react-native-modal';
 import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
+import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 
 const CalendarScreen = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -13,7 +14,7 @@ const CalendarScreen = ({ navigation }) => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get('http://192.168.45.200:8080/task/all');
+      const response = await axios.get(`${BASE_URL}/task/all`);
       const data = response.data;
 
       // 서버에서 받은 모든 데이터를 allEvents에 저장

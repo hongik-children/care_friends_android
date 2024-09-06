@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
+import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 
 const FriendCaregiverScreen = ({ navigation }) => {
   const [caregiver, setCaregiver] = useState(null);
@@ -11,7 +12,7 @@ const FriendCaregiverScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchCaregiver = async () => {
       try {
-        const response = await axios.get(`http://10.0.2.2:8080/friendRequest/getCaregiver/${friendId}`);
+        const response = await axios.get(`${BASE_URL}/friendRequest/getCaregiver/${friendId}`);
         setCaregiver(response.data);
       } catch (error) {
         console.error(error);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, FlatList, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
+import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 
 const CaregiverFriendsListScreen = ({ navigation }) => {
   const [friends, setFriends] = useState([]);
@@ -10,7 +11,7 @@ const CaregiverFriendsListScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchFriends = async () => {
       try {
-        const response = await axios.get(`http://10.0.2.2:8080/friendRequest/getFriends/${caregiverId}`);
+        const response = await axios.get(`${BASE_URL}/friendRequest/getFriends/${caregiverId}`);
         setFriends(response.data);
       } catch (error) {
         console.error(error);
