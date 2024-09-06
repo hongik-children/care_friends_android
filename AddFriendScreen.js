@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
+import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 
 const AddFriendScreen = ({ navigation }) => {
   const [uuid, setUuid] = useState('');
@@ -11,8 +12,10 @@ const AddFriendScreen = ({ navigation }) => {
       return;
     }
 
+    // 친구 추가 로직 구현하기
     try {
-      const response = await axios.post('http://10.0.2.2:8080/friendRequest', {
+      // 백엔드로 친구 추가 요청 보내기
+      const response = await axios.post(`${BASE_URL}/friendRequest`, {
         friendId: uuid,
         caregiver: {
           id: '79662e03-77d7-420d-ba2d-320a1106ba4b',

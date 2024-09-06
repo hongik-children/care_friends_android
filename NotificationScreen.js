@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import messaging from '@react-native-firebase/messaging';
 import notifee, { AndroidImportance } from '@notifee/react-native';
 import { Text, TouchableHighlight, View, PermissionsAndroid } from "react-native";
+import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 
 
 // 백그라운드 이벤트 핸들러 함수 정의
@@ -110,7 +111,7 @@ const NotificationScreen = () => {
             body: "16:00 손녀딸 집에 방문"
         };
 
-        await fetch('http://3.34.59.173:8080/api/v1/fcm/send', {
+        await fetch(`${BASE_URL}/api/v1/fcm/send`, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(sendInfo)
