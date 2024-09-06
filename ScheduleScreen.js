@@ -172,6 +172,10 @@ const ScheduleScreen = ({ navigation }) => {
                 <Text style={styles.buttonText}>보호자 조회(프렌즈 기능)</Text>
             </TouchableOpacity>
 
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('KakaoLoginScreen')}>
+                <Text style={styles.buttonText}>카카오 로그인</Text>
+            </TouchableOpacity>
+
             {showMap && location && (
                 <MapView
                     style={styles.map}
