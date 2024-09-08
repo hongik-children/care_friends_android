@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Platform, Alert } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Platform, Alert, Pressable, Text, ScrollView } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
 import { Picker } from '@react-native-picker/picker';
@@ -57,41 +57,51 @@ const AddScheduleScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <TextInput
         placeholder="친구 ID"
         value={friendId}
         onChangeText={setFriendId}
-        style={styles.input}
+        style={[styles.input, {marginBottom:16}]}
+        placeholderTextColor={'#6495ED'}
       />
+      <Text style={{color:'#6495ED', marginBottom:10, marginHorizontal:8}}>주기</Text>
+      <View style={{borderWidth:1, borderColor:'#6495ED',
+    marginBottom: 20, overflow:'visible'}}>
       <Picker
         selectedValue={periodType}
         onValueChange={(itemValue) => setPeriodType(itemValue)}
         style={styles.picker}
+        dropdownIconColor={'#6495ED'}
       >
-        <Picker.Item label="NONE" value="NONE" />
-        <Picker.Item label="DAY" value="DAY" />
-        <Picker.Item label="WEEK" value="WEEK" />
-        <Picker.Item label="MONTH" value="MONTH" />
-        <Picker.Item label="YEAR" value="YEAR" />
+        <Picker.Item label="업음" value="NONE" />
+        <Picker.Item label="매일" value="DAY" />
+        <Picker.Item label="매주" value="WEEK" />
+        <Picker.Item label="매월" value="MONTH" />
+        <Picker.Item label="매년" value="YEAR" />
       </Picker>
+      </View>
       <TextInput
         placeholder="반복 주기"
         value={period}
         onChangeText={setPeriod}
         style={styles.input}
+
+        placeholderTextColor={'#6495ED'}
       />
       <TextInput
         placeholder="제목"
         value={title}
         onChangeText={setTitle}
         style={styles.input}
+        placeholderTextColor={'#6495ED'}
       />
       <TextInput
         placeholder="위치"
         value={location}
         onChangeText={setLocation}
         style={styles.input}
+        placeholderTextColor={'#6495ED'}
       />
       <TextInput
         placeholder="메모"
@@ -99,10 +109,19 @@ const AddScheduleScreen = ({ navigation }) => {
         onChangeText={setMemo}
         style={styles.input}
         multiline
+        placeholderTextColor={'#6495ED'}
       />
       <View style={styles.dateTimePicker}>
-        <Button title="날짜 선택" onPress={() => setShowDatePicker(true)} color="#6495ED"/>
-        <Button title="시간 선택" onPress={() => setShowTimePicker(true)} color="#6495ED"/>
+        <Pressable
+        style={{borderRadius:6, width:120, height:48, backgroundColor:'#6495ED', alignItems:'center', justifyContent:'center'}}
+        onPress={() => setShowDatePicker(true)} color="#6495ED">
+            <Text style={{color:'#FFF', fontSize:14 }}>날짜 선택</Text>
+        </Pressable>
+        <Pressable
+                style={{borderRadius:6, width:120, height:48, backgroundColor:'#6495ED', alignItems:'center', justifyContent:'center'}}
+                onPress={() => setShowTimePicker(true)} color="#6495ED">
+                    <Text style={{color:'#FFF', fontSize:14 }}>시간 선택</Text>
+                </Pressable>
       </View>
       {showDatePicker && (
         <DateTimePicker
@@ -120,8 +139,12 @@ const AddScheduleScreen = ({ navigation }) => {
           onChange={onTimeChange}
         />
       )}
-      <Button title="저장" onPress={handleSave} color="#6495ED" />
-    </View>
+      <Pressable
+                      style={{borderRadius:6, height:48, backgroundColor:'#6495ED', alignItems:'center', justifyContent:'center'}}
+                      onPress={handleSave}>
+                          <Text style={{color:'#FFF', fontSize:14 }}>저장</Text>
+                      </Pressable>
+    </ScrollView>
   );
 };
 
@@ -133,16 +156,16 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
-    borderColor: '#CCCCCC',
+    borderColor: '#6495ED',
     borderWidth: 1,
     marginBottom: 20,
-    paddingHorizontal: 10,
+    paddingHorizontal: 16,
+    color:'#000',
+    borderRadius:10,
   },
   picker: {
-    height: 50,
-    borderColor: '#CCCCCC',
-    borderWidth: 1,
-    marginBottom: 20,
+    backgroundColor:'#FFF',
+    color:'#6495ED'
   },
   dateTimePicker: {
     flexDirection: 'row',
