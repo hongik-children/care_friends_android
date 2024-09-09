@@ -107,6 +107,7 @@ const NotificationScreen = () => {
     const sendPushMessage = async () => {
         const sendInfo = {
             token: fcmToken,
+            id: "a6b94ff9-e5c3-4272-819b-f0e26dc2731b",
             title: "일정 확인해주세요",
             body: "16:00 손녀딸 집에 방문"
         };

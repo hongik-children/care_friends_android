@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Button, Alert, StyleSheet } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 
@@ -7,7 +7,7 @@ const FriendsRequestListScreen = ({ navigation }) => {
   const [requests, setRequests] = useState([]);
 
   // 프렌즈의 UUID를 하드코딩
-  const friendId = 'bc4527ff-9554-486f-865e-1364591a13f5';
+  const friendId = '416f8ed3-084f-4ef6-8762-cfa8f5518b9b';
 
   useEffect(() => {
     // 친구 요청 리스트를 가져오는 함수
@@ -45,8 +45,18 @@ const FriendsRequestListScreen = ({ navigation }) => {
     <View style={styles.requestItem}>
       <Text style={styles.requestText}>{item.caregiverName}님의 친구 요청</Text>
       <View style={styles.buttonContainer}>
-        <Button title="수락" onPress={() => handleRequestAction(item.requestId, 'accept')} />
-        <Button title="거절" onPress={() => handleRequestAction(item.requestId, 'reject')} />
+        <TouchableOpacity
+          style={styles.acceptButton}
+          onPress={() => handleRequestAction(item.requestId, 'accept')}
+        >
+          <Text style={styles.acceptButtonText}>수락</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.rejectButton}
+          onPress={() => handleRequestAction(item.requestId, 'reject')}
+        >
+          <Text style={styles.rejectButtonText}>거절</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -79,16 +89,47 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     marginBottom: 10,
-    borderRadius: 5,
+    borderRadius: 8,
+    backgroundColor: '#f9f9f9',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
   },
   requestText: {
     fontSize: 18,
     marginBottom: 10,
+    fontWeight: '500',
+    color: '#333',
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  acceptButton: {
     backgroundColor: '#6495ED',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 50,
+    marginRight: 10,
+  },
+  acceptButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  rejectButton: {
+    backgroundColor: '#ff6b6b',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 50,
+  },
+  rejectButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#fff',
   },
 });
 

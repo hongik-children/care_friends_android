@@ -4,6 +4,7 @@ import DatePicker from 'react-native-date-picker';
 import axios from 'axios';
 import { useRoute } from '@react-navigation/native';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
+import messaging from '@react-native-firebase/messaging';
 
 
 const SignupScreen = () => {
@@ -29,11 +30,25 @@ const SignupScreen = () => {
         setBirthDate(date.toISOString().split('T')[0]);
     };
 
+    // fcm 토큰 가져오기
+    const getFcmToken = async () => {
+        try {
+            const token = await messaging().getToken();
+            console.log('FCM Token:', token);
+            return token;
+        } catch (error) {
+            console.error('FCM 토큰을 가져오는 중 오류 발생:', error);
+            return null;
+        }
+    };
+
     const handleSignup = async () => {
         if (!name || !phone || !gender || !birthDate) {
             Alert.alert('모든 필드를 입력해 주세요.');
             return;
         }
+        // FCM 토큰 가져오기
+        const fcmToken = await getFcmToken();
 
         const payload = {
             email,
@@ -41,7 +56,8 @@ const SignupScreen = () => {
             name,
             phone,
             gender,
-            birthDate
+            birthDate,
+            fcmToken
         };
 
         try {

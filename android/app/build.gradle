@@ -48,8 +48,9 @@ dependencies {
     implementation("com.facebook.react:react-android")
 
     // Import the Firebase BoM
-    implementation platform('com.google.firebase:firebase-bom:33.1.0')
+    implementation platform('com.google.firebase:firebase-bom:33.2.0')
     implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-analytics'
 
     // Import Google Play Services and Location Services
     implementation "com.google.android.gms:play-services-location:21.0.1" // 여기 내용을 추가해줍니다.
