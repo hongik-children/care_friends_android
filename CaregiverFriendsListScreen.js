@@ -6,7 +6,7 @@ import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 const CaregiverFriendsListScreen = ({ navigation }) => {
   const [friends, setFriends] = useState([]);
   // 보호자의 UUID를 하드코딩
-  const caregiverId = '25c18a25-106f-4544-b419-3da89f769053';
+  const caregiverId = '2ee4ee2e-344d-4abb-b78f-30a38cc0f839';
 
   useEffect(() => {
     const fetchFriends = async () => {
