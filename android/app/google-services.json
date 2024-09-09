@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "890153355832",
+    "project_id": "carefriends-ede42",
+    "storage_bucket": "carefriends-ede42.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890153355832:android:37a46711a8eb5dd197b4cd",
+        "android_client_info": {
+          "package_name": "com.care_friends_android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBf-OTRcf68AtQ5SH8SxbRItHCEwyf5HxE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

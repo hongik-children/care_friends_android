@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, FlatList, Alert, StyleSheet } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 
 const CaregiverFriendsListScreen = ({ navigation }) => {
   const [friends, setFriends] = useState([]);
   // 보호자의 UUID를 하드코딩
-  const caregiverId = '4d44d2f9-5891-4e94-b19b-6e998acd6e09';
+  const caregiverId = '0714ffd8-2ce1-4f97-8226-801293b855e7';
 
   useEffect(() => {
     const fetchFriends = async () => {
@@ -22,15 +22,24 @@ const CaregiverFriendsListScreen = ({ navigation }) => {
     fetchFriends();
   }, [caregiverId]);
 
+  // 프렌드 ID 리스트 항목 렌더링
+  const renderFriendItem = ({ item }) => (
+    <View style={styles.friendItem}>
+      <Text style={styles.friendId}>{item}</Text>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>프렌즈 리스트</Text>
       <FlatList
         data={friends}
         keyExtractor={(item) => item.toString()}
-        renderItem={({ item }) => <Text style={styles.friend}>{item}</Text>}
+        renderItem={renderFriendItem}
       />
-      <Button title="뒤로가기" onPress={() => navigation.goBack()} />
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Text style={styles.backButtonText}>뒤로가기</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -39,16 +48,34 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#f9f9f9',
   },
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
+    color: '#333',
     marginBottom: 20,
   },
-  friend: {
-    fontSize: 18,
-    marginVertical: 10,
+  friendItem: {
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  friendId: {
+    fontSize: 16,
+    color: '#333',
+  },
+  backButton: {
+    marginTop: 20,
+    backgroundColor: '#6495ED',
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  backButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
