@@ -18,7 +18,7 @@ const AddFriendScreen = ({ navigation }) => {
       const response = await axios.post(`${BASE_URL}/friendRequest`, {
         friendId: uuid,
         caregiver: {
-          id: '2ee4ee2e-344d-4abb-b78f-30a38cc0f839',
+          id: '036c9858-439b-4bb1-b999-970cd85f2f7f',
           name: 'caregiver',
           phoneNumber: '01012345678',
           gender: 'MALE',

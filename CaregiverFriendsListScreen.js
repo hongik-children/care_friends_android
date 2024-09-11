@@ -6,7 +6,7 @@ import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 const CaregiverFriendsListScreen = ({ navigation }) => {
   const [friends, setFriends] = useState([]);
   // 보호자의 UUID를 하드코딩
-  const caregiverId = '2ee4ee2e-344d-4abb-b78f-30a38cc0f839';
+  const caregiverId = '036c9858-439b-4bb1-b999-970cd85f2f7f';
 
   useEffect(() => {
     const fetchFriends = async () => {
@@ -22,26 +22,34 @@ const CaregiverFriendsListScreen = ({ navigation }) => {
     fetchFriends();
   }, [caregiverId]);
 
-  // 프렌드 ID 리스트 항목 렌더링
+
+
+  // 프렌드 정보 렌더링
   const renderFriendItem = ({ item }) => (
     <View style={styles.friendItem}>
-      <Text style={styles.friendId}>{item}</Text>
+      <View style={styles.friendDetails}>
+        <Text style={styles.friendName}>{item.name}</Text>
+        <Text style={styles.friendPhone}>{item.phoneNumber}</Text>
+      </View>
+      <View style={styles.friendInfo}>
+        <Text style={styles.friendBirthday}>생년월일: {item.birthDate}</Text>
+        <Text style={styles.friendGender}>성별: {item.gender === 'MALE' ? '남성' : '여성'}</Text>
+      </View>
     </View>
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>프렌즈 리스트</Text>
-      <FlatList
-        data={friends}
-        keyExtractor={(item) => item.toString()}
-        renderItem={renderFriendItem}
-      />
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Text style={styles.backButtonText}>뒤로가기</Text>
-      </TouchableOpacity>
-    </View>
-  );
+      <View style={styles.container}>
+        <FlatList
+          data={friends}
+          keyExtractor={(item) => item.name}
+          renderItem={renderFriendItem}
+        />
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Text style={styles.backButtonText}>뒤로가기</Text>
+        </TouchableOpacity>
+      </View>
+    );
 };
 
 const styles = StyleSheet.create({
@@ -57,13 +65,36 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   friendItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingVertical: 15,
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
   },
-  friendId: {
-    fontSize: 16,
+  friendDetails: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  friendInfo: {
+    flexShrink: 0,
+    alignItems: 'flex-end',
+  },
+  friendName: {
+    fontSize: 18,
+    fontWeight: '600',
     color: '#333',
+  },
+  friendPhone: {
+    fontSize: 14,
+    color: '#555',
+  },
+  friendBirthday: {
+    fontSize: 14,
+    color: '#333',
+  },
+  friendGender: {
+    fontSize: 14,
+    color: '#555',
   },
   backButton: {
     marginTop: 20,
@@ -78,5 +109,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
 
 export default CaregiverFriendsListScreen;

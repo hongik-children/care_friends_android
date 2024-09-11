@@ -7,7 +7,7 @@ const FriendCaregiverScreen = ({ navigation }) => {
   const [caregiver, setCaregiver] = useState(null);
 
   // 프렌즈의 UUID를 하드코딩
-  const friendId = '8ff12205-8fc4-433a-9357-8d0a891beaa1';
+  const friendId = '1893e4a9-3922-4127-b30f-5fa9723981c0';
 
   useEffect(() => {
     const fetchCaregiver = async () => {
