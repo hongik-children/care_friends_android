@@ -7,7 +7,7 @@ const FriendCaregiverScreen = ({ navigation }) => {
   const [caregiver, setCaregiver] = useState(null);
 
   // 프렌즈의 UUID를 하드코딩
-  const friendId = '8ff12205-8fc4-433a-9357-8d0a891beaa1';
+  const friendId = '1893e4a9-3922-4127-b30f-5fa9723981c0';
 
   useEffect(() => {
     const fetchCaregiver = async () => {
@@ -28,7 +28,22 @@ const FriendCaregiverScreen = ({ navigation }) => {
       <Text style={styles.title}>나의 보호자</Text>
       {caregiver ? (
         <View style={styles.caregiverBox}>
-          <Text style={styles.caregiverText}>보호자 ID: {caregiver}</Text>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>이름</Text>
+            <Text style={styles.value}>{caregiver.name}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>전화번호</Text>
+            <Text style={styles.value}>{caregiver.phoneNumber}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>생년월일</Text>
+            <Text style={styles.value}>{caregiver.birthDate}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>성별</Text>
+            <Text style={styles.value}>{caregiver.gender === 'MALE' ? '남성' : '여성'}</Text>
+          </View>
         </View>
       ) : (
         <Text style={styles.noCaregiverText}>보호자 정보가 없습니다.</Text>
@@ -49,7 +64,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 30,
@@ -62,15 +77,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#6495ED',
     width: '100%',
-    alignItems: 'center',
   },
-  caregiverText: {
-    fontSize: 18,
+  infoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 15,
+  },
+  label: {
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#333',
   },
+  value: {
+    fontSize: 22,
+    color: '#333',
+  },
   noCaregiverText: {
-    fontSize: 16,
+    fontSize: 20,
     color: '#ff4d4d',
     marginBottom: 20,
   },
@@ -82,7 +105,7 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
 });

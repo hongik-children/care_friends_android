@@ -34,8 +34,8 @@ const HomeStack = () => (
     <Stack.Screen name="EditScheduleScreen" component={EditScheduleScreen} options={{ title: '일정 수정하기' }} />
     <Stack.Screen name="AddFriendScreen" component={AddFriendScreen} options={{ title: '친구 추가하기' }} />
     <Stack.Screen name="FriendsRequestListScreen" component={FriendsRequestListScreen} options={{ title: '친구 요청 리스트 조회' }} />
-    <Stack.Screen name="CaregiverFriendsListScreen" component={CaregiverFriendsListScreen} options={{ title: '보호자의 프렌즈 조회' }} />
-    <Stack.Screen name="FriendCaregiverScreen" component={FriendCaregiverScreen} options={{ title: '프렌즈의 보호자 조회' }} />
+    <Stack.Screen name="CaregiverFriendsListScreen" component={CaregiverFriendsListScreen} options={{ title: '나의 프렌즈' }} />
+    <Stack.Screen name="FriendCaregiverScreen" component={FriendCaregiverScreen} options={{ title: '나의 보호자' }} />
     <Stack.Screen name="KakaoLoginScreen" component={KakaoLoginScreen} options={{ title: '카카오 로그인' }} />
     <Stack.Screen name="SignupScreen" component={SignupScreen} />
     <Stack.Screen name="UserTypeSelection" component={UserTypeSelectionScreen} options={{ title: '회원 유형 선택' }} />
