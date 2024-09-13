@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
+import CustomText from './CustomTextProps';
 
 const FriendsRequestListScreen = ({ navigation }) => {
   const [requests, setRequests] = useState([]);
 
   // 프렌즈의 UUID를 하드코딩
-  const friendId = '1893e4a9-3922-4127-b30f-5fa9723981c0';
+  const friendId = 'fce5ae58-7682-429b-b784-6e15e10d0ee9';
 
   useEffect(() => {
     // 친구 요청 리스트를 가져오는 함수
@@ -43,19 +44,19 @@ const FriendsRequestListScreen = ({ navigation }) => {
   // 리스트 항목 렌더링
   const renderRequestItem = ({ item }) => (
     <View style={styles.requestItem}>
-      <Text style={styles.requestText}>{item.caregiverName}님의 친구 요청</Text>
+      <CustomText style={styles.requestText}>{item.caregiverName}님의 친구 요청</CustomText>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.acceptButton}
           onPress={() => handleRequestAction(item.requestId, 'accept')}
         >
-          <Text style={styles.acceptButtonText}>수락</Text>
+          <CustomText style={styles.acceptButtonText}>수락</CustomText>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.rejectButton}
           onPress={() => handleRequestAction(item.requestId, 'reject')}
         >
-          <Text style={styles.rejectButtonText}>거절</Text>
+          <CustomText style={styles.rejectButtonText}>거절</CustomText>
         </TouchableOpacity>
       </View>
     </View>
@@ -63,7 +64,7 @@ const FriendsRequestListScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>친구 요청 리스트</Text>
+      <CustomText style={styles.title}>친구 요청 리스트</CustomText>
       <FlatList
         data={requests}
         renderItem={renderRequestItem}
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
     marginBottom: 20,
   },
   requestItem: {
@@ -96,17 +97,18 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
+    flexDirection: 'row',  // 텍스트와 버튼이 같은 줄에 위치하게 함
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   requestText: {
     fontSize: 18,
     marginBottom: 10,
-    fontWeight: '500',
+    fontFamily: 'Pretendard-SemiBold',
     color: '#333',
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
   },
   acceptButton: {
     backgroundColor: '#6495ED',
@@ -117,7 +119,7 @@ const styles = StyleSheet.create({
   },
   acceptButtonText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontFamily: 'Pretendard-Bold',
     color: '#fff',
   },
   rejectButton: {
@@ -128,7 +130,7 @@ const styles = StyleSheet.create({
   },
   rejectButtonText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontFamily: 'Pretendard-Bold',
     color: '#fff',
   },
 });

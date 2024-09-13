@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import CustomText from './CustomTextProps';
 
 const ProfileScreen = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>내정보 화면</Text>
+      <CustomText style={styles.text}>내정보 화면</CustomText>
     </View>
   );
 };
@@ -17,7 +18,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
   },
 });
 

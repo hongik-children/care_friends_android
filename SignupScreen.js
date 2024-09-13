@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useRoute } from '@react-navigation/native';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 import messaging from '@react-native-firebase/messaging';
+import CustomText from './CustomTextProps';
 
 
 const SignupScreen = () => {
@@ -76,7 +77,7 @@ const SignupScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>회원가입</Text>
+            <CustomText style={styles.title}>회원가입</CustomText>
 
             <TextInput
                 style={styles.input}
@@ -94,26 +95,26 @@ const SignupScreen = () => {
             />
 
             {/* 성별 선택 */}
-            <Text style={styles.label}>성별</Text>
+            <CustomText style={styles.label}>성별</CustomText>
             <View style={styles.radioGroup}>
                 <TouchableOpacity onPress={() => setGender('male')} style={styles.radioButton}>
                     <View style={[styles.radioOuterCircle, gender === 'male' && styles.radioSelected]}>
                         {gender === 'male' && <View style={styles.radioInnerCircle} />}
                     </View>
-                    <Text style={{ color: '#000000' }}>남성</Text>
+                    <CustomText style={{ color: '#000000' }}>남성</CustomText>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setGender('female')} style={styles.radioButton}>
                     <View style={[styles.radioOuterCircle, gender === 'female' && styles.radioSelected]}>
                         {gender === 'female' && <View style={styles.radioInnerCircle} />}
                     </View>
-                    <Text style={{ color: '#000000' }}>여성</Text>
+                    <CustomText style={{ color: '#000000' }}>여성</CustomText>
                 </TouchableOpacity>
             </View>
 
             {/* 생년월일 선택 */}
-            <Text style={styles.label}>생년월일</Text>
+            <CustomText style={styles.label}>생년월일</CustomText>
             <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateInput}>
-                <Text style={{ color: '#000000' }}>{birthDate ? birthDate : '생년월일을 선택하세요'}</Text>
+                <CustomText style={{ color: '#000000' }}>{birthDate ? birthDate : '생년월일을 선택하세요'}</CustomText>
             </TouchableOpacity>
 
             <Modal transparent={true} visible={showDatePicker} animationType="slide">
@@ -131,7 +132,7 @@ const SignupScreen = () => {
             </Modal>
 
             <TouchableOpacity style={styles.signupButton} onPress={handleSignup}>
-                <Text style={styles.signupButtonText}>회원가입</Text>
+                <CustomText style={styles.signupButtonText}>회원가입</CustomText>
             </TouchableOpacity>
         </View>
     );
@@ -145,7 +146,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 24,
-        fontWeight: 'bold',
+        fontFamily: 'Pretendard-Bold',
         marginBottom: 20,
         textAlign: 'center',
     },
@@ -222,7 +223,7 @@ const styles = StyleSheet.create({
     signupButtonText: {
         color: '#fff',
         fontSize: 16,
-        fontWeight: 'bold',
+        fontFamily: 'Pretendard-Bold',
     },
 });
 

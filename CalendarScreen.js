@@ -5,6 +5,7 @@ import Modal from 'react-native-modal';
 import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
+import CustomText from './CustomTextProps';
 
 const CalendarScreen = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -70,9 +71,9 @@ const CalendarScreen = ({ navigation }) => {
       />
       <Modal isVisible={isModalVisible} onBackdropPress={closeModal}>
         <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>
+          <CustomText style={styles.modalTitle}>
             {selectedDate ? `${selectedDate}의 일정` : '일정이 없습니다.'}
-          </Text>
+          </CustomText>
           {events[selectedDate]?.length > 0 ? (
             events[selectedDate].map((event, index) => (
               <TouchableOpacity
@@ -80,11 +81,11 @@ const CalendarScreen = ({ navigation }) => {
                 style={styles.event}
                 onPress={() => handleEventPress(event)}
               >
-                <Text>{event.time}: {event.title}</Text>
+                <CustomText>{event.time}: {event.title}</CustomText>
               </TouchableOpacity>
             ))
           ) : (
-            <Text>이날은 일정이 없습니다.</Text>
+            <CustomText>이날은 일정이 없습니다.</CustomText>
           )}
         </View>
       </Modal>
@@ -98,13 +99,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   modalContent: {
-    backgroundColor: 'black',
+    backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
   },
   modalTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
     marginBottom: 20,
   },
   event: {

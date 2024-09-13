@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, StyleSheet, Linking } from 'react-native';
 import axios from 'axios';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
+import CustomText from './CustomTextProps';
+import Feather from 'react-native-vector-icons/Feather';
 
 const FriendCaregiverScreen = ({ navigation }) => {
   const [caregiver, setCaregiver] = useState(null);
@@ -23,33 +25,64 @@ const FriendCaregiverScreen = ({ navigation }) => {
     fetchCaregiver();
   }, [friendId]);
 
+  const handleCall = () => {
+    if (caregiver && caregiver.phoneNumber) {
+      const phoneNumber = `tel:${caregiver.phoneNumber}`;
+      Linking.openURL(phoneNumber).catch(err => {
+        console.error('Error opening phone app', err);
+        Alert.alert('오류', '전화 걸기 중 오류가 발생했습니다.');
+      });
+    }
+  };
+
+  const handleSendMessage = () => {
+    if (caregiver && caregiver.phoneNumber) {
+      const sms = `sms:${caregiver.phoneNumber}`;
+      Linking.openURL(sms).catch(err => {
+        console.error('Error opening SMS app', err);
+        Alert.alert('오류', '문자 보내기 중 오류가 발생했습니다.');
+      });
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>나의 보호자</Text>
+      <CustomText style={styles.title}>나의 보호자</CustomText>
       {caregiver ? (
         <View style={styles.caregiverBox}>
           <View style={styles.infoRow}>
-            <Text style={styles.label}>이름</Text>
-            <Text style={styles.value}>{caregiver.name}</Text>
+            <CustomText style={styles.label}>이름</CustomText>
+            <CustomText style={styles.value}>{caregiver.name}</CustomText>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.label}>전화번호</Text>
-            <Text style={styles.value}>{caregiver.phoneNumber}</Text>
+            <CustomText style={styles.label}>전화번호</CustomText>
+            <CustomText style={styles.value}>{caregiver.phoneNumber}</CustomText>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.label}>생년월일</Text>
-            <Text style={styles.value}>{caregiver.birthDate}</Text>
+            <CustomText style={styles.label}>생년월일</CustomText>
+            <CustomText style={styles.value}>{caregiver.birthDate}</CustomText>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.label}>성별</Text>
-            <Text style={styles.value}>{caregiver.gender === 'MALE' ? '남성' : '여성'}</Text>
+            <CustomText style={styles.label}>성별</CustomText>
+            <CustomText style={styles.value}>{caregiver.gender === 'MALE' ? '남성' : '여성'}</CustomText>
+          </View>
+          {/* 전화 걸기 및 문자 보내기 버튼 */}
+          <View style={styles.actionRow}>
+            <TouchableOpacity style={styles.actionButton} onPress={handleCall}>
+              <Feather name="phone" size={24} color="#fff" />
+              <CustomText style={styles.actionButtonText}>전화 걸기</CustomText>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.actionButton} onPress={handleSendMessage}>
+              <Feather name="message-circle" size={24} color="#fff" />
+              <CustomText style={styles.actionButtonText}>문자 보내기</CustomText>
+            </TouchableOpacity>
           </View>
         </View>
       ) : (
-        <Text style={styles.noCaregiverText}>보호자 정보가 없습니다.</Text>
+        <CustomText style={styles.noCaregiverText}>보호자 정보가 없습니다.</CustomText>
       )}
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Text style={styles.backButtonText}>뒤로가기</Text>
+        <CustomText style={styles.backButtonText}>뒤로가기</CustomText>
       </TouchableOpacity>
     </View>
   );
@@ -65,7 +98,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
     color: '#333',
     marginBottom: 30,
   },
@@ -85,12 +118,32 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
     color: '#333',
   },
   value: {
     fontSize: 22,
     color: '#333',
+  },
+  actionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  actionButton: {
+    flexDirection: 'row',
+    backgroundColor: '#6495ED',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginHorizontal: 10,
+  },
+  actionButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontFamily: 'Pretendard-Bold',
+    marginLeft: 10,
   },
   noCaregiverText: {
     fontSize: 20,
@@ -106,7 +159,7 @@ const styles = StyleSheet.create({
   backButtonText: {
     color: '#fff',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
   },
 });
 

@@ -20,6 +20,8 @@ import SignupScreen from './SignupScreen';
 import UserTypeSelectionScreen from './UserTypeSelectionScreen';
 import SplashScreen from './SplashScreen';
 import { Linking, Alert } from 'react-native';
+import Feather from 'react-native-vector-icons/Feather';
+import FriendActionScreen from './FriendActionScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -39,6 +41,7 @@ const HomeStack = () => (
     <Stack.Screen name="KakaoLoginScreen" component={KakaoLoginScreen} options={{ title: '카카오 로그인' }} />
     <Stack.Screen name="SignupScreen" component={SignupScreen} />
     <Stack.Screen name="UserTypeSelection" component={UserTypeSelectionScreen} options={{ title: '회원 유형 선택' }} />
+    <Stack.Screen name="FriendActionScreen" component={FriendActionScreen} options={{ title: '프렌즈 관리' }} />
   </Stack.Navigator>
 );
 
@@ -106,20 +109,20 @@ const App = () => {
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
-            if (route.name === 'Home') {
-              iconName = focused ? 'home' : 'home';
-            } else if (route.name === 'Calendar') {
-              iconName = focused ? 'calendar' : 'calendar-o';
-            } else if (route.name === 'Profile') {
-              iconName = focused ? 'user' : 'user-o';
-            }
+          if (route.name === 'Home') {
+            iconName = 'home';
+          } else if (route.name === 'Calendar') {
+            iconName = 'calendar';
+          } else if (route.name === 'Profile') {
+            iconName = 'user';
+          }
 
-            return <FontAwesome name={iconName} size={size} color={color} />;
+            return <Feather name={iconName} size={size} color={color} />;
           },
           tabBarActiveTintColor: '#6495ED',
           tabBarInactiveTintColor: '#8e8e93',
-          tabBarStyle: { paddingVertical: 5, backgroundColor: '#f8f8f8' },
-          tabBarLabelStyle: { fontSize: 12, fontWeight: 'bold' },
+          tabBarStyle: { paddingVertical: 5, backgroundColor: '#f8f8f8', height: 60 },
+          tabBarLabelStyle: { fontSize: 16, fontFamily: 'Pretendard-SemiBold' },
         })}
       >
         <Tab.Screen name="Home" component={HomeStack} />

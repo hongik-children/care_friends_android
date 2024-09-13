@@ -3,6 +3,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
+import CustomText from './CustomTextProps';
 
 const UserTypeSelectionScreen = () => {
     const route = useRoute();
@@ -15,19 +16,19 @@ const UserTypeSelectionScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>회원 유형을 선택하세요</Text>
-            <Text>이메일: {email}</Text>
+            <CustomText style={styles.title}>회원 유형을 선택하세요</CustomText>
+            <CustomText>이메일: {email}</CustomText>
             <TouchableOpacity
                 style={styles.button}
                 onPress={() => handleSelection('노약자')}
             >
-                <Text style={styles.buttonText}>노약자</Text>
+                <CustomText style={styles.buttonText}>노약자</CustomText>
             </TouchableOpacity>
             <TouchableOpacity
                 style={styles.button}
                 onPress={() => handleSelection('보호자')}
             >
-                <Text style={styles.buttonText}>보호자</Text>
+                <CustomText style={styles.buttonText}>보호자</CustomText>
             </TouchableOpacity>
         </View>
     );
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 24,
-        fontWeight: 'bold',
+        fontFamily: 'Pretendard-Bold',
         marginBottom: 20,
     },
     button: {
