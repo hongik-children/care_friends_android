@@ -27,7 +27,10 @@ const CaregiverFriendsListScreen = ({ navigation }) => {
 
   // 프렌드 정보 렌더링
   const renderFriendItem = ({ item }) => (
-    <View style={styles.friendItem}>
+    <TouchableOpacity
+      style={styles.friendItem}
+      onPress={() => navigation.navigate('FriendActionScreen', { friend: item })} // 프렌즈 정보 전달
+    >
       <View style={styles.friendDetails}>
         <CustomText style={styles.friendName}>{item.name}</CustomText>
         <CustomText style={styles.friendPhone}>{item.phoneNumber}</CustomText>
@@ -36,7 +39,7 @@ const CaregiverFriendsListScreen = ({ navigation }) => {
         <CustomText style={styles.friendBirthday}>생년월일: {item.birthDate}</CustomText>
         <CustomText style={styles.friendGender}>성별: {item.gender === 'MALE' ? '남성' : '여성'}</CustomText>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (

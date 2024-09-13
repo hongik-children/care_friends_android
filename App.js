@@ -21,6 +21,7 @@ import UserTypeSelectionScreen from './UserTypeSelectionScreen';
 import SplashScreen from './SplashScreen';
 import { Linking, Alert } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
+import FriendActionScreen from './FriendActionScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -40,6 +41,7 @@ const HomeStack = () => (
     <Stack.Screen name="KakaoLoginScreen" component={KakaoLoginScreen} options={{ title: '카카오 로그인' }} />
     <Stack.Screen name="SignupScreen" component={SignupScreen} />
     <Stack.Screen name="UserTypeSelection" component={UserTypeSelectionScreen} options={{ title: '회원 유형 선택' }} />
+    <Stack.Screen name="FriendActionScreen" component={FriendActionScreen} options={{ title: '프렌즈 관리' }} />
   </Stack.Navigator>
 );
 
