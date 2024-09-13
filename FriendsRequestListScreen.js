@@ -97,6 +97,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
+    flexDirection: 'row',  // 텍스트와 버튼이 같은 줄에 위치하게 함
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   requestText: {
     fontSize: 18,
@@ -106,8 +109,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
   },
   acceptButton: {
     backgroundColor: '#6495ED',
