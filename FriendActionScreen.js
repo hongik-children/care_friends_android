@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Alert, Linking } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import CustomText from './CustomTextProps';
 
@@ -7,15 +7,19 @@ const FriendActionScreen = ({ route, navigation }) => {
   const { friend } = route.params;
 
   const handleCall = () => {
-    Alert.alert('전화 걸기', `${friend.name}님에게 전화 겁니다.`);
+    const phoneNumber = `tel:${friend.phoneNumber}`;
+    Linking.openURL(phoneNumber)
+      .catch(err => console.error('Error calling phone number', err));
   };
 
   const handleSendMessage = () => {
-    Alert.alert('문자 보내기', `${friend.name}님에게 문자를 보냅니다.`);
+    const sms = `sms:${friend.phoneNumber}`;
+    Linking.openURL(sms)
+      .catch(err => console.error('Error sending SMS', err));
   };
 
   const handleAddSchedule = () => {
-    Alert.alert('일정 추가하기', `${friend.name}님의 일정을 추가합니다.`);
+    navigation.navigate('AddScheduleScreen', { friend });
   };
 
   const handleCheckLocation = () => {

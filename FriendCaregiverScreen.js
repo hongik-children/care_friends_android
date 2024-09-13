@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, StyleSheet, Linking } from 'react-native';
 import axios from 'axios';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 import CustomText from './CustomTextProps';
@@ -25,6 +25,26 @@ const FriendCaregiverScreen = ({ navigation }) => {
     fetchCaregiver();
   }, [friendId]);
 
+  const handleCall = () => {
+    if (caregiver && caregiver.phoneNumber) {
+      const phoneNumber = `tel:${caregiver.phoneNumber}`;
+      Linking.openURL(phoneNumber).catch(err => {
+        console.error('Error opening phone app', err);
+        Alert.alert('오류', '전화 걸기 중 오류가 발생했습니다.');
+      });
+    }
+  };
+
+  const handleSendMessage = () => {
+    if (caregiver && caregiver.phoneNumber) {
+      const sms = `sms:${caregiver.phoneNumber}`;
+      Linking.openURL(sms).catch(err => {
+        console.error('Error opening SMS app', err);
+        Alert.alert('오류', '문자 보내기 중 오류가 발생했습니다.');
+      });
+    }
+  };
+
   return (
     <View style={styles.container}>
       <CustomText style={styles.title}>나의 보호자</CustomText>
@@ -48,11 +68,11 @@ const FriendCaregiverScreen = ({ navigation }) => {
           </View>
           {/* 전화 걸기 및 문자 보내기 버튼 */}
           <View style={styles.actionRow}>
-            <TouchableOpacity style={styles.actionButton}>
+            <TouchableOpacity style={styles.actionButton} onPress={handleCall}>
               <Feather name="phone" size={24} color="#fff" />
               <CustomText style={styles.actionButtonText}>전화 걸기</CustomText>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.actionButton}>
+            <TouchableOpacity style={styles.actionButton} onPress={handleSendMessage}>
               <Feather name="message-circle" size={24} color="#fff" />
               <CustomText style={styles.actionButtonText}>문자 보내기</CustomText>
             </TouchableOpacity>
