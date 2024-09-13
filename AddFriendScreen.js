@@ -108,16 +108,19 @@ const AddFriendScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <CustomText style={styles.label}>친구 코드를 입력해주세요.</CustomText>
-      <TextInput
-        style={styles.input}
-        placeholder="UUID"
-        value={uuid}
-        onChangeText={setUuid}
-        placeholderTextColor="#9CA3AF"
-      />
-      <TouchableOpacity style={styles.button} onPress={handleSearchFriend}>
-        <CustomText style={styles.buttonText}>친구 검색</CustomText>
-      </TouchableOpacity>
+
+      <View style={styles.inputRow}>
+        <TextInput
+          style={styles.input}
+          placeholder="UUID"
+          value={uuid}
+          onChangeText={setUuid}
+          placeholderTextColor="#9CA3AF"
+        />
+        <TouchableOpacity style={styles.searchButton} onPress={handleSearchFriend}>
+          <Feather name="search" size={20} color="#FFF" />
+        </TouchableOpacity>
+      </View>
 
       <CustomText style={styles.title}>대기중/거절된 친구 요청 목록</CustomText>
       <FlatList
@@ -162,22 +165,28 @@ const styles = StyleSheet.create({
     color: '#111827',
     marginBottom: 10,
   },
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
   input: {
+    flex: 1,
     height: 50,
     borderColor: '#D1D5DB',
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 15,
-    marginBottom: 20,
     backgroundColor: '#F9FAFB',
     color: '#111827',
   },
-  button: {
+  searchButton: {
     backgroundColor: '#6495ED',
+    padding: 10,
+    marginLeft: 10,
     borderRadius: 8,
-    paddingVertical: 15,
+    justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
   },
   buttonText: {
     color: '#FFF',
