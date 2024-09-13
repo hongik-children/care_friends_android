@@ -8,7 +8,7 @@ const FriendsRequestListScreen = ({ navigation }) => {
   const [requests, setRequests] = useState([]);
 
   // 프렌즈의 UUID를 하드코딩
-  const friendId = '1893e4a9-3922-4127-b30f-5fa9723981c0';
+  const friendId = 'fce5ae58-7682-429b-b784-6e15e10d0ee9';
 
   useEffect(() => {
     // 친구 요청 리스트를 가져오는 함수

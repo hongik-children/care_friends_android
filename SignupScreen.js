@@ -79,14 +79,14 @@ const SignupScreen = () => {
         <View style={styles.container}>
             <CustomText style={styles.title}>회원가입</CustomText>
 
-            <CustomTextInput
+            <TextInput
                 style={styles.input}
                 placeholder="이름"
                 value={name}
                 onChangeText={setName}
             />
 
-            <CustomTextInput
+            <TextInput
                 style={styles.input}
                 placeholder="전화번호"
                 keyboardType="phone-pad"
