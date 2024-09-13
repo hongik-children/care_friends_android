@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
+import CustomText from './CustomTextProps';
+
 
 const AddFriendScreen = ({ navigation }) => {
   const [uuid, setUuid] = useState('');
@@ -72,20 +74,20 @@ const AddFriendScreen = ({ navigation }) => {
   // 친구 요청 목록 렌더링
   const renderRequestItem = ({ item }) => (
     <View style={styles.requestItem}>
-      <Text style={styles.requestText}>{item.friendName}님에게 보낸 친구 요청</Text>
+      <CustomText style={styles.requestText}>{item.friendName}님에게 보낸 친구 요청</CustomText>
       {item.status === 'pending' ? (
         <TouchableOpacity onPress={() => handleCancelRequest(item.requestId)} style={styles.cancelButton}>
-          <Text style={styles.cancelButtonText}>요청 취소</Text>
+          <CustomText style={styles.cancelButtonText}>요청 취소</CustomText>
         </TouchableOpacity>
       ) : (
-        <Text style={styles.rejectedText}>거절됨</Text>
+        <CustomText style={styles.rejectedText}>거절됨</CustomText>
       )}
     </View>
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>친구 코드를 입력해주세요.</Text>
+      <CustomText style={styles.label}>친구 코드를 입력해주세요.</CustomText>
       <TextInput
         style={styles.input}
         placeholder="UUID"
@@ -94,10 +96,10 @@ const AddFriendScreen = ({ navigation }) => {
         placeholderTextColor="#9CA3AF"
       />
       <TouchableOpacity style={styles.button} onPress={handleAddFriend}>
-        <Text style={styles.buttonText}>친구 요청 보내기</Text>
+        <CustomText style={styles.buttonText}>친구 요청 보내기</CustomText>
       </TouchableOpacity>
 
-      <Text style={styles.title}>대기중/거절된 친구 요청 목록</Text>
+      <CustomText style={styles.title}>대기중/거절된 친구 요청 목록</CustomText>
       <FlatList
         data={requests}
         renderItem={renderRequestItem}
@@ -138,11 +140,11 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#FFF',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
   },
   title: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
     marginBottom: 10,
   },
   requestItem: {

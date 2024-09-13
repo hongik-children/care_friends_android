@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
+import CustomText from './CustomTextProps';
 
 const FriendCaregiverScreen = ({ navigation }) => {
   const [caregiver, setCaregiver] = useState(null);
@@ -25,31 +26,31 @@ const FriendCaregiverScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>나의 보호자</Text>
+      <CustomText style={styles.title}>나의 보호자</CustomText>
       {caregiver ? (
         <View style={styles.caregiverBox}>
           <View style={styles.infoRow}>
-            <Text style={styles.label}>이름</Text>
-            <Text style={styles.value}>{caregiver.name}</Text>
+            <CustomText style={styles.label}>이름</CustomText>
+            <CustomText style={styles.value}>{caregiver.name}</CustomText>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.label}>전화번호</Text>
-            <Text style={styles.value}>{caregiver.phoneNumber}</Text>
+            <CustomText style={styles.label}>전화번호</CustomText>
+            <CustomText style={styles.value}>{caregiver.phoneNumber}</CustomText>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.label}>생년월일</Text>
-            <Text style={styles.value}>{caregiver.birthDate}</Text>
+            <CustomText style={styles.label}>생년월일</CustomText>
+            <CustomText style={styles.value}>{caregiver.birthDate}</CustomText>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.label}>성별</Text>
-            <Text style={styles.value}>{caregiver.gender === 'MALE' ? '남성' : '여성'}</Text>
+            <CustomText style={styles.label}>성별</CustomText>
+            <CustomText style={styles.value}>{caregiver.gender === 'MALE' ? '남성' : '여성'}</CustomText>
           </View>
         </View>
       ) : (
-        <Text style={styles.noCaregiverText}>보호자 정보가 없습니다.</Text>
+        <CustomText style={styles.noCaregiverText}>보호자 정보가 없습니다.</CustomText>
       )}
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Text style={styles.backButtonText}>뒤로가기</Text>
+        <CustomText style={styles.backButtonText}>뒤로가기</CustomText>
       </TouchableOpacity>
     </View>
   );
@@ -65,7 +66,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
     color: '#333',
     marginBottom: 30,
   },
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
     color: '#333',
   },
   value: {
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
   backButtonText: {
     color: '#fff',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
   },
 });
 

@@ -74,7 +74,7 @@ const AddScheduleScreen = ({ navigation }) => {
         style={styles.picker}
         dropdownIconColor={'#6495ED'}
       >
-        <Picker.Item label="업음" value="NONE" />
+        <Picker.Item label="없음" value="NONE" />
         <Picker.Item label="매일" value="DAY" />
         <Picker.Item label="매주" value="WEEK" />
         <Picker.Item label="매월" value="MONTH" />

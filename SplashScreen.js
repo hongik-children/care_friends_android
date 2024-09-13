@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
+import CustomText from './CustomTextProps';
 
 const SplashScreen = ({ navigation }) => {
   useEffect(() => {
@@ -11,9 +12,9 @@ const SplashScreen = ({ navigation }) => {
   return (
       <View className="flex-1 justify-center items-center bg-white px-6 py-24">
         <View className="max-w-2xl text-center">
-          <Text className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+          <CustomText className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
             CareFriends
-          </Text>
+          </CustomText>
         </View>
       </View>
     );

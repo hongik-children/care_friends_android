@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
+import CustomText from './CustomTextProps';
 
 const CaregiverFriendsListScreen = ({ navigation }) => {
   const [friends, setFriends] = useState([]);
@@ -28,12 +29,12 @@ const CaregiverFriendsListScreen = ({ navigation }) => {
   const renderFriendItem = ({ item }) => (
     <View style={styles.friendItem}>
       <View style={styles.friendDetails}>
-        <Text style={styles.friendName}>{item.name}</Text>
-        <Text style={styles.friendPhone}>{item.phoneNumber}</Text>
+        <CustomText style={styles.friendName}>{item.name}</CustomText>
+        <CustomText style={styles.friendPhone}>{item.phoneNumber}</CustomText>
       </View>
       <View style={styles.friendInfo}>
-        <Text style={styles.friendBirthday}>생년월일: {item.birthDate}</Text>
-        <Text style={styles.friendGender}>성별: {item.gender === 'MALE' ? '남성' : '여성'}</Text>
+        <CustomText style={styles.friendBirthday}>생년월일: {item.birthDate}</CustomText>
+        <CustomText style={styles.friendGender}>성별: {item.gender === 'MALE' ? '남성' : '여성'}</CustomText>
       </View>
     </View>
   );
@@ -46,7 +47,7 @@ const CaregiverFriendsListScreen = ({ navigation }) => {
           renderItem={renderFriendItem}
         />
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.backButtonText}>뒤로가기</Text>
+          <CustomText style={styles.backButtonText}>뒤로가기</CustomText>
         </TouchableOpacity>
       </View>
     );
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
     color: '#333',
     marginBottom: 20,
   },
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
   },
   friendName: {
     fontSize: 18,
-    fontWeight: '600',
+    fontFamily: 'Pretendard-Bold',
     color: '#333',
   },
   friendPhone: {
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
   backButtonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
   },
 });
 

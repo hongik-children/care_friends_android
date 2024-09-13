@@ -5,6 +5,7 @@ import notifee, { AndroidImportance } from '@notifee/react-native';
 import Geolocation from '@react-native-community/geolocation';
 import MapView, { Marker } from 'react-native-maps';
 import { request, PERMISSIONS } from 'react-native-permissions';
+import CustomText from './CustomTextProps';
 
 notifee.onBackgroundEvent(async ({ type, detail }) => {
     const { notification, pressAction } = detail;
@@ -122,58 +123,58 @@ const ScheduleScreen = ({ navigation }) => {
     const DayofWeek = ['일','월','화','수','목','금','토'];
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.title}>오늘의 일정</Text>
-            <Text style={styles.date}>{new Date().getMonth()+1}월 {new Date().getDate()}일 ({DayofWeek[new Date().getDay()]})</Text>
+            <CustomText style={styles.title}>오늘의 일정</CustomText>
+            <CustomText style={styles.date}>{new Date().getMonth()+1}월 {new Date().getDate()}일 ({DayofWeek[new Date().getDay()]})</CustomText>
 
             <View style={styles.event}>
-                <Text style={styles.time}>12:00</Text>
-                <Text style={styles.description}>점심약 복용</Text>
+                <CustomText style={styles.time}>12:00</CustomText>
+                <CustomText style={styles.description}>점심약 복용</CustomText>
             </View>
 
             <View style={styles.event}>
-                <Text style={styles.time}>14:00</Text>
-                <Text style={styles.description}>정형외과 진료</Text>
+                <CustomText style={styles.time}>14:00</CustomText>
+                <CustomText style={styles.description}>정형외과 진료</CustomText>
             </View>
 
             <View style={styles.event}>
-                <Text style={styles.time}>16:00</Text>
-                <Text style={styles.description}>손녀딸 집에 방문</Text>
+                <CustomText style={styles.time}>16:00</CustomText>
+                <CustomText style={styles.description}>손녀딸 집에 방문</CustomText>
             </View>
 
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AddScheduleScreen')}>
-                <Text style={styles.buttonText}>일정 추가하기</Text>
+                <CustomText style={styles.buttonText}>일정 추가하기</CustomText>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={sendPushMessage}>
-                <Text style={styles.buttonText}>알림 보내기</Text>
+                <CustomText style={styles.buttonText}>알림 보내기</CustomText>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={getCurrentLocation}>
-                <Text style={styles.buttonText}>위치 조회하기</Text>
+                <CustomText style={styles.buttonText}>위치 조회하기</CustomText>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('imgUpload')}>
-                <Text style={styles.buttonText}>약봉투 업로드</Text>
+                <CustomText style={styles.buttonText}>약봉투 업로드</CustomText>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AddFriendScreen')}>
-                <Text style={styles.buttonText}>친구 추가하기</Text>
+                <CustomText style={styles.buttonText}>친구 추가하기</CustomText>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('FriendsRequestListScreen')}>
-                <Text style={styles.buttonText}>친구 요청 리스트(프렌즈 기능)</Text>
+                <CustomText style={styles.buttonText}>친구 요청 리스트(프렌즈 기능)</CustomText>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('CaregiverFriendsListScreen')}>
-                <Text style={styles.buttonText}>프렌즈 조회(보호자 기능)</Text>
+                <CustomText style={styles.buttonText}>프렌즈 조회(보호자 기능)</CustomText>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('FriendCaregiverScreen')}>
-                <Text style={styles.buttonText}>보호자 조회(프렌즈 기능)</Text>
+                <CustomText style={styles.buttonText}>보호자 조회(프렌즈 기능)</CustomText>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('KakaoLoginScreen')}>
-                <Text style={styles.buttonText}>카카오 로그인</Text>
+                <CustomText style={styles.buttonText}>카카오 로그인</CustomText>
             </TouchableOpacity>
 
             {showMap && location && (
@@ -208,7 +209,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 28,
-        fontWeight: 'bold',
+        fontFamily: 'Pretendard-ExtraBold',
         marginVertical: 10,
         color: '#000000',
     },
@@ -230,12 +231,12 @@ const styles = StyleSheet.create({
     },
     time: {
         fontSize: 22,
-        fontWeight: 'bold',
+        fontFamily: 'Pretendard-Bold',
         color: '#000000',
     },
     description: {
         fontSize: 22,
-        fontWeight: 'bold',
+        fontFamily: 'Pretendard-Bold',
         color: '#000000',
     },
     button: {
@@ -252,9 +253,9 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     buttonText: {
+        fontFamily: 'Pretendard-SemiBold',
         fontSize: 20,
         color: '#FFFFFF',
-        fontWeight: 'bold',
     },
     map: {
         width: '100%',
