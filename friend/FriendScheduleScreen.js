@@ -5,7 +5,7 @@ import notifee, { AndroidImportance } from '@notifee/react-native';
 import Geolocation from '@react-native-community/geolocation';
 import MapView, { Marker } from 'react-native-maps';
 import { request, PERMISSIONS } from 'react-native-permissions';
-import CustomText from './CustomTextProps';
+import CustomText from '../CustomTextProps';
 
 notifee.onBackgroundEvent(async ({ type, detail }) => {
     const { notification, pressAction } = detail;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet, Alert, Linking } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-import CustomText from './CustomTextProps';
+import CustomText from '../CustomTextProps';
 
 const FriendActionScreen = ({ route, navigation }) => {
   const { friend } = route.params;

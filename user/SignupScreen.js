@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useRoute } from '@react-navigation/native';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 import messaging from '@react-native-firebase/messaging';
-import CustomText from './CustomTextProps';
+import CustomText from '../CustomTextProps';
 
 
 const SignupScreen = () => {
