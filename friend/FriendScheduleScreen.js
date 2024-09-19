@@ -141,7 +141,7 @@ const FriendScheduleScreen = ({ navigation }) => {
                 <CustomText style={styles.description}>손녀딸 집에 방문</CustomText>
             </View>
 
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AddScheduleScreen')}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('FriendAddScheduleScreen')}>
                 <CustomText style={styles.buttonText}>일정 추가하기</CustomText>
             </TouchableOpacity>
 
