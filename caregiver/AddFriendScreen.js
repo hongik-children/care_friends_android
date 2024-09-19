@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, Alert, Modal, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
-import CustomText from './CustomTextProps';
+import CustomText from '../CustomTextProps';
 import Feather from 'react-native-vector-icons/Feather';
 
 const AddFriendScreen = ({ navigation }) => {

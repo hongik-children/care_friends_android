@@ -2,14 +2,15 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity, Modal } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import axios from 'axios';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useNavigation } from "@react-navigation/native";
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 import messaging from '@react-native-firebase/messaging';
-import CustomText from './CustomTextProps';
+import CustomText from '../CustomTextProps';
 
 
 const SignupScreen = () => {
     const route = useRoute();
+    const navigation = useNavigation();
     const { email, userType } = route.params || {};
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
@@ -69,6 +70,10 @@ const SignupScreen = () => {
             });
             console.log('회원가입 성공:', response.data);
             Alert.alert('회원가입이 성공적으로 완료되었습니다.');
+
+            // 회원가입 후 로그인 화면으로 이동
+            navigation.navigate("KakaoLoginScreen");
+
         } catch (error) {
             console.error('회원가입 실패:', error);
             Alert.alert('회원가입에 실패했습니다.');

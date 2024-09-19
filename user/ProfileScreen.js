@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import CustomText from './CustomTextProps';
+import CustomText from '../CustomTextProps';
 
 const ProfileScreen = () => {
   return (

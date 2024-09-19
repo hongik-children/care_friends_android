@@ -3,6 +3,7 @@ import { View, TextInput, Button, StyleSheet, Platform, Alert, Pressable, Text, 
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
 import { Picker } from '@react-native-picker/picker';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // JWT 토큰을 가져오기 위해 추가
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 
 const AddScheduleScreen = ({ navigation }) => {
@@ -30,9 +31,22 @@ const AddScheduleScreen = ({ navigation }) => {
     };
 
     try {
-      const apiUrl = Platform.OS === 'android' ? `${BASE_URL}/task` : `${BASE_URL}/task`;
+      // JWT 토큰 가져오기
+      const jwtToken = await AsyncStorage.getItem('jwtToken');
+      if (!jwtToken) {
+        Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
+        return;
+      }
 
-      const response = await axios.post(apiUrl, taskRequest);
+      const apiUrl = `${BASE_URL}/task/caregiver`; // API URL
+
+      // 서버로 요청 보내기
+      const response = await axios.post(apiUrl, taskRequest, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}` // JWT 토큰을 헤더에 추가
+        }
+      });
+
       console.log('Task saved:', response.data);
       Alert.alert("성공", "일정이 저장되었습니다.");
       navigation.goBack();

@@ -5,7 +5,7 @@ import notifee, { AndroidImportance } from '@notifee/react-native';
 import Geolocation from '@react-native-community/geolocation';
 import MapView, { Marker } from 'react-native-maps';
 import { request, PERMISSIONS } from 'react-native-permissions';
-import CustomText from './CustomTextProps';
+import CustomText from '../CustomTextProps';
 
 notifee.onBackgroundEvent(async ({ type, detail }) => {
     const { notification, pressAction } = detail;
@@ -123,7 +123,7 @@ const ScheduleScreen = ({ navigation }) => {
     const DayofWeek = ['일','월','화','수','목','금','토'];
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <CustomText style={styles.title}>오늘의 일정</CustomText>
+            <CustomText style={styles.title}>오늘의 일정(보호자 화면!!)</CustomText>
             <CustomText style={styles.date}>{new Date().getMonth()+1}월 {new Date().getDate()}일 ({DayofWeek[new Date().getDay()]})</CustomText>
 
             <View style={styles.event}>

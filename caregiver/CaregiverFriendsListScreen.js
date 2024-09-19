@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
-import CustomText from './CustomTextProps';
+import CustomText from '../CustomTextProps';
 
 const CaregiverFriendsListScreen = ({ navigation }) => {
   const [friends, setFriends] = useState([]);
