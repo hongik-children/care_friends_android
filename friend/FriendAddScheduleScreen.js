@@ -6,7 +6,7 @@ import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // JWT 토큰을 가져오기 위해 추가
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 
-const AddScheduleScreen = ({ navigation }) => {
+const FriendAddScheduleScreen = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
   const [periodType, setPeriodType] = useState('NONE');
   const [period, setPeriod] = useState('');
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddScheduleScreen;
+export default FriendAddScheduleScreen;
 
 
 
