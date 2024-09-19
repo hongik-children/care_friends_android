@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ScheduleScreen from './ScheduleScreen';
-import imgUpload from './ImgUpload';
+import ImgUpload from './ImgUpload';
 import CalendarScreen from './CalendarScreen';
 import NotificationScreen from './NotificationScreen';
 import ProfileScreen from './ProfileScreen';
@@ -22,6 +22,7 @@ import SplashScreen from './SplashScreen';
 import { Linking, Alert } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import FriendActionScreen from './FriendActionScreen';
+import RecommendScreen from './RecommendScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -30,7 +31,7 @@ const HomeStack = () => (
   <Stack.Navigator>
     <Stack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
     <Stack.Screen name="ScheduleScreen" component={ScheduleScreen} options={{ headerShown: false }} />
-    <Stack.Screen name="imgUpload" component={imgUpload} options={{ headerShown: false }} />
+    <Stack.Screen name="ImgUpload" component={ImgUpload} options={{ headerShown: false }} />
     <Stack.Screen name="NotificationScreen" component={NotificationScreen} options={{ headerShown: false }} />
     <Stack.Screen name="AddScheduleScreen" component={AddScheduleScreen} options={{ title: '일정 추가하기' }} />
     <Stack.Screen name="EditScheduleScreen" component={EditScheduleScreen} options={{ title: '일정 수정하기' }} />
@@ -42,6 +43,7 @@ const HomeStack = () => (
     <Stack.Screen name="SignupScreen" component={SignupScreen} />
     <Stack.Screen name="UserTypeSelection" component={UserTypeSelectionScreen} options={{ title: '회원 유형 선택' }} />
     <Stack.Screen name="FriendActionScreen" component={FriendActionScreen} options={{ title: '프렌즈 관리' }} />
+    <Stack.Screen name="RecommendScreen" component={RecommendScreen} />
   </Stack.Navigator>
 );
 
