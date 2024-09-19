@@ -5,7 +5,7 @@ import Modal from 'react-native-modal';
 import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
-import CustomText from './CustomTextProps';
+import CustomText from '../CustomTextProps';
 
 const CalendarScreen = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);

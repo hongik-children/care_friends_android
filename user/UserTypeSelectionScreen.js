@@ -3,7 +3,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import CustomText from './CustomTextProps';
+import CustomText from '../CustomTextProps';
 
 const UserTypeSelectionScreen = () => {
     const route = useRoute();
