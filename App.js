@@ -14,6 +14,7 @@ import SplashScreen from './SplashScreen';
 import FriendActionScreen from './caregiver/FriendActionScreen';
 import FriendAddScheduleScreen from './friend/FriendAddScheduleScreen';
 import AddScheduleScreen from './caregiver/AddScheduleScreen';
+import RecommendScreen from './RecommendScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
