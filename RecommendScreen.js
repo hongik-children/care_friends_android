@@ -10,7 +10,7 @@ const RecommendScreen = ({ route }) => {
     const radius = 1000; // 검색 반경 (미터)
     const apiKey = GOOGLE_MAP_PLATFORM_API_KEY; // 실제 API 키를 입력하세요.
 
-    const includedTypes = ['cafe'];
+    const includedTypes = ['hospital'];
     const excludedTypes = [];
 
     // Google Places API Nearby Search 엔드포인트 호출
