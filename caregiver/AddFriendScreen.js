@@ -4,6 +4,7 @@ import axios from 'axios';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 import CustomText from '../CustomTextProps';
 import Feather from 'react-native-vector-icons/Feather';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AddFriendScreen = ({ navigation }) => {
   const [uuid, setUuid] = useState('');
@@ -12,7 +13,7 @@ const AddFriendScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false); // 팝업 모달 상태
 
   // 보호자의 ID를 하드코딩 (예시)
-  const caregiverId = '036c9858-439b-4bb1-b999-970cd85f2f7f';
+  //const caregiverId = '036c9858-439b-4bb1-b999-970cd85f2f7f';
 
   // 친구 UUID로 검색
   const handleSearchFriend = async () => {
@@ -22,7 +23,20 @@ const AddFriendScreen = ({ navigation }) => {
     }
 
     try {
-      const response = await axios.get(`${BASE_URL}/friendRequest/searchFriend/${uuid}`); // 친구 검색 API 요청
+      // JWT 토큰 가져오기
+      const jwtToken = await AsyncStorage.getItem('jwtToken');
+      if (!jwtToken) {
+        Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
+        return;
+      }
+
+      // 친구 검색 API 요청
+      const response = await axios.get(`${BASE_URL}/friendRequest/searchFriend/${uuid}`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`
+        }
+      });
+
       if (response.status === 200 && response.data) {
         setFriend(response.data); // 친구 정보 저장
         setModalVisible(true); // 팝업 모달 띄우기
@@ -38,14 +52,20 @@ const AddFriendScreen = ({ navigation }) => {
   // 친구 요청 보내기
   const handleAddFriend = async () => {
     try {
+
+      const jwtToken = await AsyncStorage.getItem('jwtToken');
+      if (!jwtToken) {
+        Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
+        return;
+      }
+
       const response = await axios.post(`${BASE_URL}/friendRequest`, {
         friendId: uuid,
-        caregiver: {
-          id: caregiverId,
-          name: 'caregiver',
-          phoneNumber: '01012345678',
-          gender: 'MALE',
         },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}` // JWT 토큰을 헤더에 추가
+          }
       });
 
       if (response.status === 200) {
@@ -64,7 +84,17 @@ const AddFriendScreen = ({ navigation }) => {
   // 친구 요청 목록 가져오기
   const fetchFriendRequests = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/friendRequest/getRequests/${caregiverId}`);
+      const jwtToken = await AsyncStorage.getItem('jwtToken');
+      if (!jwtToken) {
+        Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
+        return;
+      }
+
+      const response = await axios.get(`${BASE_URL}/friendRequest/getRequests`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`
+        }
+      });
 
       // 대기중(pending) 및 거절된(rejected) 요청만 필터링
       const filteredRequests = response.data.filter(request => request.status === 'pending' || request.status === 'rejected');
@@ -82,7 +112,18 @@ const AddFriendScreen = ({ navigation }) => {
   // 친구 요청 취소
   const handleCancelRequest = async (requestId) => {
     try {
-      await axios.post(`${BASE_URL}/friendRequest/${requestId}/cancel`);
+
+      const jwtToken = await AsyncStorage.getItem('jwtToken');
+      if (!jwtToken) {
+        Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
+        return;
+      }
+
+      await axios.post(`${BASE_URL}/friendRequest/${requestId}/cancel`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`
+        }
+      });
       Alert.alert('성공', '친구 요청이 취소되었습니다.');
       fetchFriendRequests(); // 취소 후 목록을 새로고침
     } catch (error) {

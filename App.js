@@ -15,6 +15,8 @@ import FriendActionScreen from './caregiver/FriendActionScreen';
 import FriendAddScheduleScreen from './friend/FriendAddScheduleScreen';
 import AddScheduleScreen from './caregiver/AddScheduleScreen';
 import CaregiverFriendsListScreen from './caregiver/CaregiverFriendsListScreen';
+import AddFriendScreen from './caregiver/AddFriendScreen';
+import FriendsRequestListScreen from './friend/FriendsRequestListScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -85,6 +87,7 @@ const ScheduleStack = () => (
   <Stack.Navigator>
     <Stack.Screen name="ScheduleScreen" component={ScheduleScreen} options={{ headerShown: false }} />
     <Stack.Screen name="AddScheduleScreen" component={AddScheduleScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="AddFriendScreen" component={AddFriendScreen} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
 
@@ -92,6 +95,7 @@ const FriendScheduleStack = () => (
   <Stack.Navigator>
     <Stack.Screen name="FriendScheduleScreen" component={FriendScheduleScreen} options={{ headerShown: false }} />
     <Stack.Screen name="FriendAddScheduleScreen" component={FriendAddScheduleScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="FriendsRequestListScreen" component={FriendsRequestListScreen} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
 
