@@ -4,7 +4,7 @@ import axios from 'axios';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 
-const imgUpload = () => {
+const ImgUpload = () => {
   const [imageUri, setImageUri] = useState(null);
 
   const selectImage = () => {
@@ -68,4 +68,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default imgUpload;
+export default ImgUpload;

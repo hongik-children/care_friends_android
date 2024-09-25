@@ -25,6 +25,7 @@ const ScheduleScreen = ({ navigation }) => {
     useEffect(() => {
         requestUserPermission();
         getFcmToken();
+        getCurrentLocation();
         const unsubscribe = messaging().onMessage(async remoteMessage => onMessageReceived(remoteMessage));
         messaging().setBackgroundMessageHandler(async remoteMessage => {
             console.log('Message handled in the background!', remoteMessage);
@@ -153,7 +154,14 @@ const ScheduleScreen = ({ navigation }) => {
                 <CustomText style={styles.buttonText}>위치 조회하기</CustomText>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('imgUpload')}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('RecommendScreen', {
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude
+            })}>
+                <CustomText style={styles.buttonText}>주변 병원 추천</CustomText>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ImgUpload')}>
                 <CustomText style={styles.buttonText}>약봉투 업로드</CustomText>
             </TouchableOpacity>
 

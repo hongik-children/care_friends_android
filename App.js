@@ -17,6 +17,7 @@ import AddScheduleScreen from './caregiver/AddScheduleScreen';
 import CaregiverFriendsListScreen from './caregiver/CaregiverFriendsListScreen';
 import AddFriendScreen from './caregiver/AddFriendScreen';
 import FriendsRequestListScreen from './friend/FriendsRequestListScreen';
+import RecommendScreen from './RecommendScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -128,6 +129,7 @@ const App = () => {
         <Stack.Screen name="FriendActionScreen" component={FriendActionScreen} options={{ title: '프렌즈 관리' }} />
         <Stack.Screen name="CaregiverTabs" component={CaregiverTabs} options={{ headerShown: false }} />
         <Stack.Screen name="FriendTabs" component={FriendTabs} options={{ headerShown: false }} />
+        <Stack.Screen name="RecommendScreen" component={RecommendScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
