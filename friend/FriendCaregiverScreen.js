@@ -10,6 +10,7 @@ const FriendCaregiverScreen = ({ navigation }) => {
 
   // 프렌즈의 UUID를 하드코딩
   const friendId = '1893e4a9-3922-4127-b30f-5fa9723981c0';
+  console.log(BASE_URL); //BASE_URL이 안불러와지는 에러 해결
 
   useEffect(() => {
     const fetchCaregiver = async () => {

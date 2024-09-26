@@ -12,7 +12,7 @@ const KakaoLoginScreen = () => {
     try {
       const token = await login();
       console.log("Access Token: ", token.accessToken);
-
+      console.log("base url", BASE_URL);
       const response = await fetch(`${BASE_URL}/login`, {
         method: "POST",
         headers: {

@@ -37,6 +37,7 @@ const FriendAddScheduleScreen = ({ navigation }) => {
         return;
       }
 
+      console.log(BASE_URL); //BASE_URL이 안불러와지는 에러 해결
       const apiUrl = `${BASE_URL}/task`; // API URL
 
       // 서버로 요청 보내기

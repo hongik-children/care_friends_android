@@ -31,6 +31,8 @@ const ImgUpload = () => {
         type: 'image/jpeg',
       });
 
+      console.log(BASE_URL); // bug 해결
+
       try {
         const response = await axios.post(`${BASE_URL}/medicine`, formData, {
           headers: {

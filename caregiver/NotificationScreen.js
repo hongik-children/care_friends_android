@@ -112,6 +112,8 @@ const NotificationScreen = () => {
             body: "16:00 손녀딸 집에 방문"
         };
 
+        console.log(BASE_URL); //BASE_URL이 안불러와지는 에러 해결
+
         await fetch(`${BASE_URL}/api/v1/fcm/send`, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },

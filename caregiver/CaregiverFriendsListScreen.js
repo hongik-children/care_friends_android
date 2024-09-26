@@ -17,7 +17,7 @@ const CaregiverFriendsListScreen = ({ navigation }) => {
           Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
           return;
         }
-
+        console.log(BASE_URL); //BASE_URL이 안불러와지는 에러 해결
         const apiUrl = `${BASE_URL}/friendRequest/getFriends`; // API URL
 
         // 서버로 요청 보내기
