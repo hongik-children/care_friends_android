@@ -29,6 +29,8 @@ const AddFriendScreen = ({ navigation }) => {
         Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
         return;
       }
+      console.log(BASE_URL); //BASE_URL이 안불러와지는 에러 해결
+
 
       // 친구 검색 API 요청
       const response = await axios.get(`${BASE_URL}/friendRequest/searchFriend/${uuid}`, {

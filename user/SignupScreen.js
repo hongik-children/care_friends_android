@@ -62,6 +62,8 @@ const SignupScreen = () => {
             fcmToken
         };
 
+
+        console.log(BASE_URL); //BASE_URL이 안불러와지는 에러 해결
         try {
             const response = await axios.post(`${BASE_URL}/signup`, payload, {
                 headers: {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 
 const EditScheduleScreen = ({ route, navigation }) => {
   // route.params에서 event 객체를 가져옴
@@ -19,9 +20,11 @@ const EditScheduleScreen = ({ route, navigation }) => {
     }
   }, [event]);  // event가 변경될 때마다 이 effect가 실행됨
 
+  console.log(BASE_URL); //BASE_URL이 안불러와지는 에러 해결
+
   const handleSave = async () => {
     try {
-      const response = await fetch('http://192.168.186.243:8080/task/update', {
+      const response = await fetch(`${BASE_URL}/task/update`, {
         method: 'POST', // PUT일 수도 있음
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +53,7 @@ const EditScheduleScreen = ({ route, navigation }) => {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch('http://192.168.45.200:8080/task', {
+      const response = await fetch(`${BASE_URL}/task`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

@@ -12,7 +12,7 @@ const CalendarScreen = ({ navigation }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [events, setEvents] = useState({});  // 날짜별 이벤트 리스트
   const [allEvents, setAllEvents] = useState([]);  // 전체 이벤트 객체 저장
-
+  console.log(BASE_URL); //BASE_URL이 안불러와지는 에러 해결
   const fetchEvents = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/task/all`);
