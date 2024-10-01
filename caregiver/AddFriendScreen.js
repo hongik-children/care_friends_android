@@ -121,7 +121,9 @@ const AddFriendScreen = ({ navigation }) => {
         return;
       }
 
-      await axios.post(`${BASE_URL}/friendRequest/${requestId}/cancel`, {
+      await axios.post(`${BASE_URL}/friendRequest/${requestId}/cancel`,
+      {},
+      {
         headers: {
           Authorization: `Bearer ${jwtToken}`
         }

@@ -48,7 +48,9 @@ const FriendsRequestListScreen = ({ navigation }) => {
         return;
       }
       console.log(`${BASE_URL}/friendRequest/${requestId}/${action}`);
-      const response = await axios.post(`${BASE_URL}/friendRequest/${requestId}/${action}`, {
+      const response = await axios.post(`${BASE_URL}/friendRequest/${requestId}/${action}`,
+      {},
+      {
         headers: {
           Authorization: `Bearer ${jwtToken}`
         }
