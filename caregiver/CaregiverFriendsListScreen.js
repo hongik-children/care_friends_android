@@ -64,8 +64,9 @@ const CaregiverFriendsListScreen = ({ navigation }) => {
           keyExtractor={(item) => item.name}
           renderItem={renderFriendItem}
         />
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <CustomText style={styles.backButtonText}>뒤로가기</CustomText>
+        {/* 친구 추가 버튼 */}
+        <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('AddFriendScreen')}>
+          <CustomText style={styles.ButtonText}>친구 추가하기</CustomText>
         </TouchableOpacity>
       </View>
     );
@@ -115,14 +116,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#555',
   },
-  backButton: {
+  Button: {
     marginTop: 20,
     backgroundColor: '#6495ED',
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
   },
-  backButtonText: {
+  ButtonText: {
     color: '#fff',
     fontSize: 16,
     fontFamily: 'Pretendard-Bold',

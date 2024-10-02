@@ -18,13 +18,14 @@ notifee.onBackgroundEvent(async ({ type, detail }) => {
     await notifee.cancelNotification(notification.id);
 });
 
-const FriendScheduleScreen = ({ navigation }) => {
+const ScheduleScreen = ({ navigation }) => {
     const [location, setLocation] = useState(null);
     const [showMap, setShowMap] = useState(false);
 
     useEffect(() => {
         requestUserPermission();
         getFcmToken();
+        getCurrentLocation();
         const unsubscribe = messaging().onMessage(async remoteMessage => onMessageReceived(remoteMessage));
         messaging().setBackgroundMessageHandler(async remoteMessage => {
             console.log('Message handled in the background!', remoteMessage);
@@ -123,7 +124,7 @@ const FriendScheduleScreen = ({ navigation }) => {
     const DayofWeek = ['일','월','화','수','목','금','토'];
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <CustomText style={styles.title}>오늘의 일정(프렌드 화면!!)</CustomText>
+            <CustomText style={styles.title}>오늘의 일정(보호자 화면!!)</CustomText>
             <CustomText style={styles.date}>{new Date().getMonth()+1}월 {new Date().getDate()}일 ({DayofWeek[new Date().getDay()]})</CustomText>
 
             <View style={styles.event}>
@@ -141,7 +142,7 @@ const FriendScheduleScreen = ({ navigation }) => {
                 <CustomText style={styles.description}>손녀딸 집에 방문</CustomText>
             </View>
 
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('FriendAddScheduleScreen')}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AddScheduleScreen')}>
                 <CustomText style={styles.buttonText}>일정 추가하기</CustomText>
             </TouchableOpacity>
 
@@ -153,14 +154,14 @@ const FriendScheduleScreen = ({ navigation }) => {
                 <CustomText style={styles.buttonText}>위치 조회하기</CustomText>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SelectPainAreaScreen' , {
-                  latitude: location.coords.latitude,
-                  longitude: location.coords.longitude
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('RecommendScreen', {
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude
             })}>
-                <CustomText style={styles.buttonText}>주변 병원 데모 버튼</CustomText>
+                <CustomText style={styles.buttonText}>주변 병원 추천</CustomText>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('imgUpload')}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ImgUpload')}>
                 <CustomText style={styles.buttonText}>약봉투 업로드</CustomText>
             </TouchableOpacity>
 
@@ -271,4 +272,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default FriendScheduleScreen;
+export default ScheduleScreen;
