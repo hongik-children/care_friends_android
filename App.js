@@ -5,7 +5,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Feather from 'react-native-vector-icons/Feather';
 import ScheduleScreen from './caregiver/ScheduleScreen';
 import FriendScheduleScreen from './friend/FriendScheduleScreen';
-import CalendarScreen from './user/CalendarScreen';
+import CaregiverCalendarScreen from './caregiver/CaregiverCalendarScreen';
+import FriendCalendarScreen from './friend/FriendCalendarScreen';
 import ProfileScreen from './user/ProfileScreen';
 import KakaoLoginScreen from './user/KakaoLoginScreen';
 import SignupScreen from './user/SignupScreen';
@@ -50,7 +51,7 @@ const CaregiverTabs = () => (
     })}
   >
     <Tab.Screen name="Home" component={ScheduleStack} />
-    <Tab.Screen name="Calendar" component={CalendarStack} />
+    <Tab.Screen name="Calendar" component={CaregiverCalendarStack} />
     <Tab.Screen name="Friends" component={FriendsStack} />
     <Tab.Screen name="Profile" component={ProfileStack} />
   </Tab.Navigator>
@@ -82,7 +83,7 @@ const FriendTabs = () => (
     })}
   >
     <Tab.Screen name="Home" component={FriendScheduleStack} />
-    <Tab.Screen name="Calendar" component={CalendarStack} />
+    <Tab.Screen name="Calendar" component={FriendCalendarStack} />
     <Tab.Screen name="Caregiver" component={CaregiverStack} />
     <Tab.Screen name="Profile" component={ProfileStack} />
   </Tab.Navigator>
@@ -106,9 +107,15 @@ const FriendScheduleStack = () => (
   </Stack.Navigator>
 );
 
-const CalendarStack = () => (
+const CaregiverCalendarStack = () => (
   <Stack.Navigator>
-    <Stack.Screen name="CalendarScreen" component={CalendarScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="CaregiverCalendarScreen" component={CaregiverCalendarScreen} options={{ headerShown: false }} />
+  </Stack.Navigator>
+);
+
+const FriendCalendarStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="FriendCalendarScreen" component={FriendCalendarScreen} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
 
