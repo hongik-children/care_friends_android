@@ -95,6 +95,7 @@ const ScheduleStack = () => (
     <Stack.Screen name="ScheduleScreen" component={ScheduleScreen} options={{ headerShown: false }} />
     <Stack.Screen name="AddScheduleScreen" component={AddScheduleScreen} options={{ headerShown: false }} />
     <Stack.Screen name="AddFriendScreen" component={AddFriendScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="CaregiverFriendsListScreen" component={CaregiverFriendsListScreen} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
 

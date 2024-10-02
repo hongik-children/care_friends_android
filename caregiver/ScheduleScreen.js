@@ -1,115 +1,119 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, PermissionsAndroid, Platform } from 'react-native';
-import messaging from '@react-native-firebase/messaging';
-import notifee, { AndroidImportance } from '@notifee/react-native';
+import { View, TouchableOpacity, ScrollView, StyleSheet, Linking, Alert, Text, Modal, FlatList } from 'react-native';
+import Feather from 'react-native-vector-icons/Feather';
+import CustomText from '../CustomTextProps';
+import axios from 'axios';
+import { BASE_URL } from '@env';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from '@react-native-community/geolocation';
 import MapView, { Marker } from 'react-native-maps';
-import { request, PERMISSIONS } from 'react-native-permissions';
-import CustomText from '../CustomTextProps';
 
-notifee.onBackgroundEvent(async ({ type, detail }) => {
-    const { notification, pressAction } = detail;
-    if (type === notifee.EventType.PRESS) {
-        console.log('Notification pressed:', notification);
-    }
-    if (type === notifee.EventType.ACTION_PRESS) {
-        console.log('Action pressed:', pressAction);
-    }
-    await notifee.cancelNotification(notification.id);
-});
-
-const ScheduleScreen = ({ navigation }) => {
-    const [location, setLocation] = useState(null);
-    const [showMap, setShowMap] = useState(false);
+const ScheduleScreen = () => {
+    const [currentFriend, setCurrentFriend] = useState(null); // 현재 선택된 친구
+    const [friends, setFriends] = useState([]); // 친구 목록
+    const [tasks, setTasks] = useState([]); // 일정 목록
+    const [location, setLocation] = useState(null); // 위치 정보
+    const [showMap, setShowMap] = useState(false); // 지도 표시 여부
+    const [modalVisible, setModalVisible] = useState(false); // 드롭다운 모달 표시 여부
+    const navigation = useNavigation();
+    const today = new Date(); // 오늘 날짜
 
     useEffect(() => {
-        requestUserPermission();
-        getFcmToken();
-        getCurrentLocation();
-        const unsubscribe = messaging().onMessage(async remoteMessage => onMessageReceived(remoteMessage));
-        messaging().setBackgroundMessageHandler(async remoteMessage => {
-            console.log('Message handled in the background!', remoteMessage);
-            onMessageReceived(remoteMessage);
-        });
-
-        return () => {
-            unsubscribe();
-        };
+        fetchFriends();
     }, []);
 
-    const requestUserPermission = async () => {
-        const authStatus = await messaging().requestPermission();
-        const enabled =
-            authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-            authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-        if (enabled) {
-            console.log('Authorization status:', authStatus);
+    useEffect(() => {
+        if (currentFriend) {
+            fetchTasks(currentFriend);
         }
+    }, [currentFriend]);
 
-        if (Platform.OS === 'android') {
-            const granted = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-                {
-                    title: "Location Permission",
-                    message: "This app needs access to your location.",
-                    buttonNeutral: "Ask Me Later",
-                    buttonNegative: "Cancel",
-                    buttonPositive: "OK"
-                }
-            );
+    // 친구 목록 불러오기
+    const fetchFriends = async () => {
+        try {
+            const jwtToken = await AsyncStorage.getItem('jwtToken');
+            if (!jwtToken) {
+                Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
+                return;
+            }
 
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                console.log("Location permission granted");
-            } else {
-                console.log("Location permission denied");
+            const response = await axios.get(`${BASE_URL}/friendRequest/getFriends`, {
+                headers: {
+                    Authorization: `Bearer ${jwtToken}`,
+                },
+            });
+
+            setFriends(response.data);
+            if (response.data.length > 0) {
+                setCurrentFriend(response.data[0]); // 첫 번째 친구 선택
             }
-        } else {
-            const result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-            if (result === 'granted') {
-                console.log("Location permission granted");
-            } else {
-                console.log("Location permission denied");
-            }
+        } catch (error) {
+            console.error('친구 목록 불러오기 실패:', error);
         }
     };
 
-    const getFcmToken = async () => {
-        const fcmTokenInfo = await messaging().getToken();
-        console.log('FCM Token:', fcmTokenInfo);
+    // 오늘의 일정만 불러오기
+    const fetchTasks = async (friend) => {
+        try {
+            const jwtToken = await AsyncStorage.getItem('jwtToken');
+            if (!jwtToken) {
+                Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
+                return;
+            }
+
+            const todayString = today.toISOString().split('T')[0];
+
+            const response = await axios.get(`${BASE_URL}/task/friend/tasks/${friend.friendId}?date=${todayString}`, {
+                headers: {
+                    Authorization: `Bearer ${jwtToken}`,
+                },
+            });
+
+            setTasks(response.data);
+        } catch (error) {
+            console.error('일정 불러오기 실패:', error);
+        }
     };
 
-    const onMessageReceived = async (message) => {
-        console.log("title :: ", message.notification.title);
-        console.log("body :: ", message.notification.body);
-
-        const channelId = await notifee.createChannel({
-            id: 'default',
-            name: 'Default Channel',
-            importance: AndroidImportance.HIGH,
-        });
-
-        console.log('Channel created with ID:', channelId);
-
-        await notifee.displayNotification({
-            title: message.notification.title,
-            body: message.notification.body,
-            android: {
-                channelId,
-                smallIcon: '@mipmap/ic_launcher',
-            },
-        }).then(() => {
-            console.log('Notification displayed successfully');
-        }).catch(error => {
-            console.error('Error displaying notification:', error);
-        });
+    // 친구 선택 처리
+    const handleFriendSelect = (friendId) => {
+        const selectedFriend = friends.find(f => f.friendId === friendId);
+        setCurrentFriend(selectedFriend);
+        setModalVisible(false); // 드롭다운 닫기
     };
 
-    const sendPushMessage = async () => {
-        navigation.navigate('NotificationScreen');
+    // 화살표로 친구 이동
+    const handleNextFriend = () => {
+        const currentIndex = friends.findIndex(f => f.friendId === currentFriend.friendId);
+        const nextIndex = (currentIndex + 1) % friends.length;
+        setCurrentFriend(friends[nextIndex]);
     };
 
-    const getCurrentLocation = () => {
+    const handlePreviousFriend = () => {
+        const currentIndex = friends.findIndex(f => f.friendId === currentFriend.friendId);
+        const prevIndex = (currentIndex - 1 + friends.length) % friends.length;
+        setCurrentFriend(friends[prevIndex]);
+    };
+
+    // 전화 걸기 기능
+    const handleCall = () => {
+        if (currentFriend && currentFriend.phoneNumber) {
+            const phoneNumber = `tel:${currentFriend.phoneNumber}`;
+            Linking.openURL(phoneNumber).catch(err => console.error('Error calling phone number', err));
+        }
+    };
+
+    // 문자 보내기 기능
+    const handleSendMessage = () => {
+        if (currentFriend && currentFriend.phoneNumber) {
+            const sms = `sms:${currentFriend.phoneNumber}`;
+            Linking.openURL(sms).catch(err => console.error('Error sending SMS', err));
+        }
+    };
+
+    // 위치 조회 기능
+    const handleCheckLocation = () => {
         Geolocation.getCurrentPosition(
             (position) => {
                 setLocation(position);
@@ -121,70 +125,78 @@ const ScheduleScreen = ({ navigation }) => {
             { enableHighAccuracy: false, timeout: 15000 }
         );
     };
-    const DayofWeek = ['일','월','화','수','목','금','토'];
+
+    // 시간 형식 변환 함수
+    const formatTime = (timeString) => {
+        const time = new Date(`1970-01-01T${timeString}`);
+        return time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    };
+
+    // 날짜 형식
+    const getFormattedDate = () => {
+        const month = today.getMonth() + 1;
+        const date = today.getDate();
+        return `${month}월 ${date}일`;
+    };
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <CustomText style={styles.title}>오늘의 일정(보호자 화면!!)</CustomText>
-            <CustomText style={styles.date}>{new Date().getMonth()+1}월 {new Date().getDate()}일 ({DayofWeek[new Date().getDay()]})</CustomText>
+            {/* 고정된 상단 날짜 */}
+            <CustomText style={styles.dateText}>{getFormattedDate()}</CustomText>
 
-            <View style={styles.event}>
-                <CustomText style={styles.time}>12:00</CustomText>
-                <CustomText style={styles.description}>점심약 복용</CustomText>
+            {/* 친구 선택 및 화살표 */}
+            <View style={styles.friendScheduleHeader}>
+                <TouchableOpacity onPress={handlePreviousFriend}>
+                    <Feather name="chevron-left" size={24} color="#333" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.friendNameContainer}>
+                    <Text style={styles.friendNameText}>
+                        {currentFriend ? `${currentFriend.name}님의 일정` : "친구 선택"}
+                    </Text>
+                    <Feather name="chevron-down" size={20} color="#333" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleNextFriend}>
+                    <Feather name="chevron-right" size={24} color="#333" />
+                </TouchableOpacity>
             </View>
 
-            <View style={styles.event}>
-                <CustomText style={styles.time}>14:00</CustomText>
-                <CustomText style={styles.description}>정형외과 진료</CustomText>
-            </View>
+            {/* 일정 목록 표시 */}
+            {tasks.length > 0 ? (
+                tasks.map((task) => (
+                    <View key={task.id} style={styles.event}>
+                        <CustomText style={styles.time}>{formatTime(task.startTime)}</CustomText>
+                        <CustomText style={styles.description}>{task.title}</CustomText>
+                    </View>
+                ))
+            ) : (
+                <CustomText style={styles.noTaskText}>오늘 일정이 없습니다.</CustomText>
+            )}
 
-            <View style={styles.event}>
-                <CustomText style={styles.time}>16:00</CustomText>
-                <CustomText style={styles.description}>손녀딸 집에 방문</CustomText>
-            </View>
-
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AddScheduleScreen')}>
-                <CustomText style={styles.buttonText}>일정 추가하기</CustomText>
+            {/* 전화 걸기 */}
+            <TouchableOpacity style={styles.actionButton} onPress={handleCall}>
+                <Feather name="phone" size={24} color="#fff" />
+                <CustomText style={styles.actionButtonText}>전화 걸기</CustomText>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={sendPushMessage}>
-                <CustomText style={styles.buttonText}>알림 보내기</CustomText>
+            {/* 문자 보내기 */}
+            <TouchableOpacity style={styles.actionButton} onPress={handleSendMessage}>
+                <Feather name="message-circle" size={24} color="#fff" />
+                <CustomText style={styles.actionButtonText}>문자 보내기</CustomText>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={getCurrentLocation}>
-                <CustomText style={styles.buttonText}>위치 조회하기</CustomText>
+            {/* 일정 추가하기 */}
+            <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('AddScheduleScreen', { friendId: currentFriend.friendId })}>
+                <Feather name="calendar" size={24} color="#fff" />
+                <CustomText style={styles.actionButtonText}>일정 추가하기</CustomText>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('RecommendScreen', {
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude
-            })}>
-                <CustomText style={styles.buttonText}>주변 병원 추천</CustomText>
+            {/* 위치 조회 버튼 (가장 아래) */}
+            <TouchableOpacity style={styles.actionButton} onPress={handleCheckLocation}>
+                <Feather name="map-pin" size={24} color="#fff" />
+                <CustomText style={styles.actionButtonText}>위치 조회하기</CustomText>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ImgUpload')}>
-                <CustomText style={styles.buttonText}>약봉투 업로드</CustomText>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AddFriendScreen')}>
-                <CustomText style={styles.buttonText}>친구 추가하기</CustomText>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('FriendsRequestListScreen')}>
-                <CustomText style={styles.buttonText}>친구 요청 리스트(프렌즈 기능)</CustomText>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('CaregiverFriendsListScreen')}>
-                <CustomText style={styles.buttonText}>프렌즈 조회(보호자 기능)</CustomText>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('FriendCaregiverScreen')}>
-                <CustomText style={styles.buttonText}>보호자 조회(프렌즈 기능)</CustomText>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('KakaoLoginScreen')}>
-                <CustomText style={styles.buttonText}>카카오 로그인</CustomText>
-            </TouchableOpacity>
-
+            {/* 지도 표시 */}
             {showMap && location && (
                 <MapView
                     style={styles.map}
@@ -200,10 +212,37 @@ const ScheduleScreen = ({ navigation }) => {
                             latitude: location.coords.latitude,
                             longitude: location.coords.longitude,
                         }}
-                        title="Your Location"
+                        title="현재 위치"
                     />
                 </MapView>
             )}
+
+            {/* 드롭다운 모달 */}
+            <Modal
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <FlatList
+                            data={friends}
+                            keyExtractor={(item) => item.friendId.toString()}
+                            renderItem={({ item }) => (
+                                <TouchableOpacity
+                                    style={styles.friendItem}
+                                    onPress={() => handleFriendSelect(item.friendId)}
+                                >
+                                    <Text style={styles.friendItemText}>{item.name}</Text>
+                                </TouchableOpacity>
+                            )}
+                        />
+                        <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeModalButton}>
+                            <Text style={styles.closeModalText}>닫기</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </ScrollView>
     );
 };
@@ -215,16 +254,26 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#FFFFFF',
     },
-    title: {
-        fontSize: 28,
-        fontFamily: 'Pretendard-ExtraBold',
-        marginVertical: 10,
-        color: '#000000',
+    dateText: {
+        fontSize: 35,
+        fontWeight: 'bold',
+        color: '#333',
+        marginBottom: 15,
     },
-    date: {
-        fontSize: 24,
+    friendScheduleHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
         marginBottom: 20,
-        color: '#333333',
+    },
+    friendNameContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    friendNameText: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: '#333',
+        marginHorizontal: 10,
     },
     event: {
         backgroundColor: '#FFF8DE',
@@ -239,36 +288,65 @@ const styles = StyleSheet.create({
     },
     time: {
         fontSize: 22,
-        fontFamily: 'Pretendard-Bold',
-        color: '#000000',
+        color: '#000',
     },
     description: {
         fontSize: 22,
-        fontFamily: 'Pretendard-Bold',
-        color: '#000000',
+        color: '#000',
     },
-    button: {
+    noTaskText: {
+        fontSize: 18,
+        color: '#555',
+        marginVertical: 10,
+    },
+    actionButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
         backgroundColor: '#6495ED',
-        padding: 15,
-        borderRadius: 10,
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        borderRadius: 8,
         marginVertical: 10,
         width: '100%',
-        alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
-        elevation: 5,
     },
-    buttonText: {
-        fontFamily: 'Pretendard-SemiBold',
-        fontSize: 20,
-        color: '#FFFFFF',
+    actionButtonText: {
+        color: '#fff',
+        fontSize: 18,
+        marginLeft: 10,
     },
     map: {
         width: '100%',
         height: 300,
         marginTop: 20,
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        padding: 20,
+        width: '80%',
+    },
+    friendItem: {
+        paddingVertical: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+    },
+    friendItemText: {
+        fontSize: 18,
+        color: '#333',
+    },
+    closeModalButton: {
+        marginTop: 20,
+        alignItems: 'center',
+    },
+    closeModalText: {
+        fontSize: 16,
+        color: '#6495ED',
     },
 });
 
