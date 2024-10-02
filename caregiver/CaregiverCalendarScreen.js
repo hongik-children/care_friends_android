@@ -1,18 +1,19 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, TouchableOpacity, StyleSheet, FlatList, Modal, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Feather from 'react-native-vector-icons/Feather';
 import axios from 'axios';
 import { BASE_URL } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomText from '../CustomTextProps';
+import Modal from 'react-native-modal'; // react-native-modal 사용
 
 const CaregiverCalendarScreen = () => {
     const [friends, setFriends] = useState([]); // 친구 목록
     const [currentFriend, setCurrentFriend] = useState(null); // 현재 선택된 친구
     const [events, setEvents] = useState({}); // 날짜별 이벤트 리스트
-    const [isModalVisible, setModalVisible] = useState(false); // 친구 선택 모달
     const [selectedDate, setSelectedDate] = useState(null); // 선택한 날짜
+    const [isModalVisible, setModalVisible] = useState(false); // 친구 선택 모달
     const [isEventModalVisible, setEventModalVisible] = useState(false); // 일정 확인 모달
 
     useEffect(() => {
@@ -82,24 +83,18 @@ const CaregiverCalendarScreen = () => {
         setSelectedDate(null);
     };
 
-    const handleFriendSelect = (friendId) => {
-        const selectedFriend = friends.find((f) => f.friendId === friendId);
-        setCurrentFriend(selectedFriend);
-        setModalVisible(false); // 드롭다운 닫기
-    };
-
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            {/* 친구 선택 및 화살표 */}
-            <View style={styles.friendScheduleHeader}>
+        <View style={styles.container}>
+            {/* 화살표로 친구 이동 */}
+            <View style={styles.header}>
                 <TouchableOpacity onPress={() => setCurrentFriend(friends[0])}>
                     <Feather name="chevron-left" size={24} color="#333" />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.friendNameContainer}>
-                    <Text style={styles.friendNameText}>
+                    <CustomText style={styles.friendNameText}>
                         {currentFriend ? `${currentFriend.name}님의 일정` : '친구 선택'}
-                    </Text>
-                    <Feather name="chevron-down" size={20} color="#333" />
+                    </CustomText>
+                    <Feather name="chevron-down" size={20} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setCurrentFriend(friends[1])}>
                     <Feather name="chevron-right" size={24} color="#333" />
@@ -121,31 +116,32 @@ const CaregiverCalendarScreen = () => {
             />
 
             {/* 친구 선택 모달 */}
-            <Modal transparent={true} visible={isModalVisible} onRequestClose={() => setModalVisible(false)}>
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        <FlatList
-                            data={friends}
-                            keyExtractor={(item) => item.friendId.toString()}
-                            renderItem={({ item }) => (
-                                <TouchableOpacity
-                                    style={styles.friendItem}
-                                    onPress={() => handleFriendSelect(item.friendId)}
-                                >
-                                    <Text style={styles.friendItemText}>{item.name}</Text>
-                                </TouchableOpacity>
-                            )}
-                        />
-                        <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeModalButton}>
-                            <Text style={styles.closeModalText}>닫기</Text>
-                        </TouchableOpacity>
-                    </View>
+            <Modal isVisible={isModalVisible} onBackdropPress={() => setModalVisible(false)}>
+                <View style={styles.modalContent}>
+                    <FlatList
+                        data={friends}
+                        keyExtractor={(item) => item.friendId.toString()}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setCurrentFriend(item);
+                                    setModalVisible(false);
+                                }}
+                                style={styles.friendItem}
+                            >
+                                <CustomText style={styles.friendItemText}>{item.name}</CustomText>
+                            </TouchableOpacity>
+                        )}
+                    />
+                    <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeModalButton}>
+                        <CustomText style={styles.closeModalText}>닫기</CustomText>
+                    </TouchableOpacity>
                 </View>
             </Modal>
 
             {/* 일정 확인 모달 */}
-            <Modal visible={isEventModalVisible} onBackdropPress={closeEventModal} transparent={true}>
-                <View style={styles.eventModalContent}>
+            <Modal isVisible={isEventModalVisible} onBackdropPress={closeEventModal}>
+                <View style={styles.modalContent}>
                     <CustomText style={styles.modalTitle}>
                         {selectedDate ? `${selectedDate}의 일정` : '일정이 없습니다.'}
                     </CustomText>
@@ -158,53 +154,43 @@ const CaregiverCalendarScreen = () => {
                     ) : (
                         <CustomText>이날은 일정이 없습니다.</CustomText>
                     )}
-                    <TouchableOpacity onPress={closeEventModal}>
-                        <CustomText style={styles.closeModalText}>닫기</CustomText>
-                    </TouchableOpacity>
                 </View>
             </Modal>
-        </ScrollView>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flexGrow: 1,
-        alignItems: 'center',
-        padding: 20,
-        backgroundColor: '#FFFFFF',
+        flex: 1,
+        backgroundColor: '#fff',
     },
-    friendScheduleHeader: {
+    header: {
         flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: 10,
     },
     friendNameContainer: {
         flexDirection: 'row',
         alignItems: 'center',
     },
     friendNameText: {
-        fontSize: 28,
+        fontSize: 24,
         fontWeight: 'bold',
         color: '#333',
-        marginHorizontal: 10,
-    },
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalContent: {
-        backgroundColor: '#fff',
-        borderRadius: 10,
+        backgroundColor: 'white',
         padding: 20,
-        width: '80%',
+        borderRadius: 10,
+        alignItems: 'center',
     },
     friendItem: {
-        paddingVertical: 10,
+        padding: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
+        width: '100%',
     },
     friendItemText: {
         fontSize: 18,
@@ -218,12 +204,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#6495ED',
     },
-    eventModalContent: {
-        backgroundColor: 'white',
-        padding: 20,
-        borderRadius: 10,
-        alignItems: 'center',
-    },
     modalTitle: {
         fontSize: 20,
         fontFamily: 'Pretendard-Bold',
@@ -234,10 +214,6 @@ const styles = StyleSheet.create({
         borderBottomColor: '#ccc',
         borderBottomWidth: 1,
         width: '100%',
-    },
-    closeEventModalButton: {
-        marginTop: 20,
-        alignItems: 'center',
     },
 });
 
