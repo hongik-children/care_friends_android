@@ -11,6 +11,8 @@ import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.soloader.SoLoader
 
+import androidx.appcompat.app.AppCompatDelegate // 추가
+
 class MainApplication : Application(), ReactApplication {
 
     override val reactNativeHost: ReactNativeHost =
@@ -39,6 +41,10 @@ class MainApplication : Application(), ReactApplication {
             // If you opted-in for the New Architecture, we load the native entry point for this app.
             load()
         }
+
+
+        // 다크 모드 해제 추가
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
 }
 

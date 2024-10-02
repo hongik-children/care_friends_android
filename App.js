@@ -21,6 +21,7 @@ import FriendsRequestListScreen from './friend/FriendsRequestListScreen';
 import FriendCaregiverScreen from './friend/FriendCaregiverScreen';
 import RecommendScreen from './RecommendScreen';
 import SelectPainAreaScreen from './SelectPainAreaScreen';
+import VoiceSearchScreen from './VoiceSearchScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -150,6 +151,7 @@ const App = () => {
         <Stack.Screen name="FriendTabs" component={FriendTabs} options={{ headerShown: false }} />
         <Stack.Screen name="SelectPainAreaScreen" component={SelectPainAreaScreen} />
         <Stack.Screen name="RecommendScreen" component={RecommendScreen} />
+        <Stack.Screen name="VoiceSearchScreen" component={VoiceSearchScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -5,6 +5,7 @@ import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 import CustomText from '../CustomTextProps';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { launchImageLibrary } from 'react-native-image-picker';
+import { logout as kakaoLogout } from '@react-native-seoul/kakao-login';
 
 const ProfileScreen = ({ navigation }) => {
   const [profile, setProfile] = useState(null);
@@ -55,7 +56,6 @@ const ProfileScreen = ({ navigation }) => {
     });
   };
 
-
   const uploadProfileImage = async (imageUri) => {
     try {
       const jwtToken = await AsyncStorage.getItem('jwtToken');
@@ -93,6 +93,22 @@ const ProfileScreen = ({ navigation }) => {
     } catch (error) {
       console.error(error);
       Alert.alert('오류', '프로필 이미지 삭제 중 오류가 발생하였습니다.');
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      // Kakao 로그아웃
+      await kakaoLogout();
+      // JWT 삭제
+      await AsyncStorage.removeItem('jwtToken');
+      await AsyncStorage.removeItem('userType');
+      Alert.alert("로그아웃 성공", "로그아웃되었습니다.");
+      // 로그인 화면으로 이동
+      navigation.navigate('KakaoLoginScreen');
+    } catch (err) {
+      console.error('Logout error', err);
+      Alert.alert('오류', '로그아웃 중 오류가 발생하였습니다.');
     }
   };
 
@@ -135,6 +151,11 @@ const ProfileScreen = ({ navigation }) => {
       )}
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <CustomText style={styles.backButtonText}>뒤로가기</CustomText>
+      </TouchableOpacity>
+
+      {/* 로그아웃 버튼 추가 */}
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <CustomText style={styles.logoutButtonText}>로그아웃</CustomText>
       </TouchableOpacity>
 
       {/* 이미지 수정/삭제 모달 */}
@@ -216,6 +237,18 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   backButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontFamily: 'Pretendard-Bold',
+  },
+  logoutButton: {
+    backgroundColor: '#FF6347',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+    marginTop: 20,
+  },
+  logoutButtonText: {
     color: '#fff',
     fontSize: 18,
     fontFamily: 'Pretendard-Bold',

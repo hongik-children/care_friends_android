@@ -89,7 +89,6 @@ const RecommendScreen = ({ route, navigation }) => {
           <TouchableOpacity onPress={() => handleCardPress(item)}>
             <View style={styles.card}>
               <View style={styles.cardHeader}>
-                <MaterialIcons name="local-hospital" size={24} color="red" />
                 <Text style={styles.hospitalName}>{item.title.replace(/<[^>]+>/g, '')}</Text>
               </View>
               <Image
@@ -102,7 +101,6 @@ const RecommendScreen = ({ route, navigation }) => {
               />
               <View style={styles.cardContent}>
                 <Text style={styles.text}>주소: {item.roadAddress}</Text>
-                <Text style={styles.text}>전화번호: {item.telephone ? item.telephone : 'N/A'}</Text>
               </View>
             </View>
           </TouchableOpacity>

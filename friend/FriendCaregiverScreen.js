@@ -1,41 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, TouchableOpacity, Alert, StyleSheet, Linking } from 'react-native';
 import axios from 'axios';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 import CustomText from '../CustomTextProps';
 import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 const FriendCaregiverScreen = ({ navigation }) => {
   const [caregiver, setCaregiver] = useState(null);
 
-//  // 프렌즈의 UUID를 하드코딩
-//  const friendId = '1893e4a9-3922-4127-b30f-5fa9723981c0';
-//  console.log(BASE_URL); //BASE_URL이 안불러와지는 에러 해결
-
-  useEffect(() => {
-    const fetchCaregiver = async () => {
-      try {
-        // JWT 토큰 가져오기
-        const jwtToken = await AsyncStorage.getItem('jwtToken');
-        if (!jwtToken) {
+  useFocusEffect(
+    useCallback(() => {
+      const fetchCaregiver = async () => {
+        try {
+          // JWT 토큰 가져오기
+          const jwtToken = await AsyncStorage.getItem('jwtToken');
+          if (!jwtToken) {
             Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
             return;
-        }
-        const response = await axios.get(`${BASE_URL}/friendRequest/getCaregiver`, {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
           }
-        });
-        setCaregiver(response.data);
-      } catch (error) {
-        console.error(error);
-        Alert.alert('오류', '보호자 정보를 불러오는 중 오류가 발생하였습니다.');
-      }
-    };
 
-    fetchCaregiver();
-  }, []);
+          const response = await axios.get(`${BASE_URL}/friendRequest/getCaregiver`, {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            }
+          });
+
+          // 보호자 정보가 없을 경우 상태를 null로 설정
+          setCaregiver(response.data || null);
+        } catch (error) {
+          console.error(error);
+          // 네트워크 또는 권한 문제일 경우에만 팝업 띄우기
+          Alert.alert('오류', '보호자 정보를 불러오는 중 오류가 발생하였습니다.');
+        }
+      };
+
+      fetchCaregiver();
+    }, [])
+  );
 
   const handleCall = () => {
     if (caregiver && caregiver.phoneNumber) {
@@ -55,6 +58,11 @@ const FriendCaregiverScreen = ({ navigation }) => {
         Alert.alert('오류', '문자 보내기 중 오류가 발생했습니다.');
       });
     }
+  };
+
+  const handleCheckFriendRequest = () => {
+    // 친구 요청 확인하기 버튼을 눌렀을 때 FriendsRequestListScreen으로 네비게이트
+    navigation.navigate('FriendsRequestListScreen');
   };
 
   return (
@@ -93,6 +101,14 @@ const FriendCaregiverScreen = ({ navigation }) => {
       ) : (
         <CustomText style={styles.noCaregiverText}>보호자 정보가 없습니다.</CustomText>
       )}
+
+      {/* 보호자가 없을 때만 친구 요청 확인하기 버튼을 보이게 함 */}
+      {!caregiver && (
+        <TouchableOpacity style={styles.checkFriendRequestButton} onPress={handleCheckFriendRequest}>
+          <CustomText style={styles.checkFriendRequestButtonText}>친구 요청 확인하기</CustomText>
+        </TouchableOpacity>
+      )}
+
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <CustomText style={styles.backButtonText}>뒤로가기</CustomText>
       </TouchableOpacity>
@@ -161,6 +177,18 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#ff4d4d',
     marginBottom: 20,
+  },
+  checkFriendRequestButton: {
+    backgroundColor: '#FFA500',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+    marginBottom: 15,
+  },
+  checkFriendRequestButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontFamily: 'Pretendard-Bold',
   },
   backButton: {
     backgroundColor: '#6495ED',
