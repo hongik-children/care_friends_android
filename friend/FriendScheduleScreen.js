@@ -153,11 +153,11 @@ const FriendScheduleScreen = ({ navigation }) => {
                 <CustomText style={styles.buttonText}>위치 조회하기</CustomText>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('RecommendScreen', {
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SelectPainAreaScreen' , {
+                  latitude: location.coords.latitude,
+                  longitude: location.coords.longitude
             })}>
-                <CustomText style={styles.buttonText}>주변 병원 추천</CustomText>
+                <CustomText style={styles.buttonText}>주변 병원 데모 버튼</CustomText>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('imgUpload')}>
