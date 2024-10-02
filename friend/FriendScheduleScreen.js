@@ -37,6 +37,7 @@ const FriendScheduleScreen = ({ navigation }) => {
     }, []);
 
     const requestUserPermission = async () => {
+        // 푸시 알림 권한 요청 (Firebase)
         const authStatus = await messaging().requestPermission();
         const enabled =
             authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
@@ -46,8 +47,10 @@ const FriendScheduleScreen = ({ navigation }) => {
             console.log('Authorization status:', authStatus);
         }
 
+        // 위치 및 마이크 권한 요청 (Android, iOS)
         if (Platform.OS === 'android') {
-            const granted = await PermissionsAndroid.request(
+            // 위치 권한 요청
+            const locationGranted = await PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
                 {
                     title: "Location Permission",
@@ -58,20 +61,83 @@ const FriendScheduleScreen = ({ navigation }) => {
                 }
             );
 
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            if (locationGranted === PermissionsAndroid.RESULTS.GRANTED) {
                 console.log("Location permission granted");
             } else {
                 console.log("Location permission denied");
             }
+
+            // 마이크 권한 요청
+            const microphoneGranted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+                {
+                    title: "Microphone Permission",
+                    message: "This app needs access to your microphone for voice recognition.",
+                    buttonNeutral: "Ask Me Later",
+                    buttonNegative: "Cancel",
+                    buttonPositive: "OK"
+                }
+            );
+
+            if (microphoneGranted === PermissionsAndroid.RESULTS.GRANTED) {
+                console.log("Microphone permission granted");
+            } else {
+                console.log("Microphone permission denied");
+            }
         } else {
-            const result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-            if (result === 'granted') {
+            // iOS 위치 권한 요청
+            const locationResult = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+            if (locationResult === 'granted') {
                 console.log("Location permission granted");
             } else {
                 console.log("Location permission denied");
+            }
+
+            // iOS 마이크 권한 요청
+            const microphoneResult = await request(PERMISSIONS.IOS.MICROPHONE);
+            if (microphoneResult === 'granted') {
+                console.log("Microphone permission granted");
+            } else {
+                console.log("Microphone permission denied");
             }
         }
     };
+//    const requestUserPermission = async () => {
+//        const authStatus = await messaging().requestPermission();
+//        const enabled =
+//            authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+//            authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+//
+//        if (enabled) {
+//            console.log('Authorization status:', authStatus);
+//        }
+//
+//        if (Platform.OS === 'android') {
+//            const granted = await PermissionsAndroid.request(
+//                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+//                {
+//                    title: "Location Permission",
+//                    message: "This app needs access to your location.",
+//                    buttonNeutral: "Ask Me Later",
+//                    buttonNegative: "Cancel",
+//                    buttonPositive: "OK"
+//                }
+//            );
+//
+//            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+//                console.log("Location permission granted");
+//            } else {
+//                console.log("Location permission denied");
+//            }
+//        } else {
+//            const result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+//            if (result === 'granted') {
+//                console.log("Location permission granted");
+//            } else {
+//                console.log("Location permission denied");
+//            }
+//        }
+//    };
 
     const getFcmToken = async () => {
         const fcmTokenInfo = await messaging().getToken();
@@ -158,6 +224,13 @@ const FriendScheduleScreen = ({ navigation }) => {
                   longitude: location.coords.longitude
             })}>
                 <CustomText style={styles.buttonText}>주변 병원 데모 버튼</CustomText>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('VoiceSearchScreen' , {
+                  latitude: location.coords.latitude,
+                  longitude: location.coords.longitude
+            })}>
+                <CustomText style={styles.buttonText}>음성 병원 찾기</CustomText>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('imgUpload')}>
