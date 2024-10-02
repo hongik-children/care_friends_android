@@ -6,16 +6,26 @@ import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 import CustomText from '../CustomTextProps';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CalendarScreen = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [events, setEvents] = useState({});  // 날짜별 이벤트 리스트
   const [allEvents, setAllEvents] = useState([]);  // 전체 이벤트 객체 저장
-  console.log(BASE_URL); //BASE_URL이 안불러와지는 에러 해결
   const fetchEvents = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/task/all`);
+      // JWT 토큰 가져오기
+      const jwtToken = await AsyncStorage.getItem('jwtToken');
+      if (!jwtToken) {
+          Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
+          return;
+      }
+      const response = await axios.get(`${BASE_URL}/task/all`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        }
+      });
       const data = response.data;
 
       // 서버에서 받은 모든 데이터를 allEvents에 저장
