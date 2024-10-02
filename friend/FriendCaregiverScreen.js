@@ -4,18 +4,29 @@ import axios from 'axios';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 import CustomText from '../CustomTextProps';
 import Feather from 'react-native-vector-icons/Feather';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FriendCaregiverScreen = ({ navigation }) => {
   const [caregiver, setCaregiver] = useState(null);
 
-  // 프렌즈의 UUID를 하드코딩
-  const friendId = '1893e4a9-3922-4127-b30f-5fa9723981c0';
-  console.log(BASE_URL); //BASE_URL이 안불러와지는 에러 해결
+//  // 프렌즈의 UUID를 하드코딩
+//  const friendId = '1893e4a9-3922-4127-b30f-5fa9723981c0';
+//  console.log(BASE_URL); //BASE_URL이 안불러와지는 에러 해결
 
   useEffect(() => {
     const fetchCaregiver = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/friendRequest/getCaregiver/${friendId}`);
+        // JWT 토큰 가져오기
+        const jwtToken = await AsyncStorage.getItem('jwtToken');
+        if (!jwtToken) {
+            Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
+            return;
+        }
+        const response = await axios.get(`${BASE_URL}/friendRequest/getCaregiver`, {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          }
+        });
         setCaregiver(response.data);
       } catch (error) {
         console.error(error);
@@ -24,7 +35,7 @@ const FriendCaregiverScreen = ({ navigation }) => {
     };
 
     fetchCaregiver();
-  }, [friendId]);
+  }, []);
 
   const handleCall = () => {
     if (caregiver && caregiver.phoneNumber) {

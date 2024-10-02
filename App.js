@@ -17,6 +17,7 @@ import AddScheduleScreen from './caregiver/AddScheduleScreen';
 import CaregiverFriendsListScreen from './caregiver/CaregiverFriendsListScreen';
 import AddFriendScreen from './caregiver/AddFriendScreen';
 import FriendsRequestListScreen from './friend/FriendsRequestListScreen';
+import FriendCaregiverScreen from './friend/FriendCaregiverScreen';
 import RecommendScreen from './RecommendScreen';
 
 const Stack = createStackNavigator();
@@ -65,6 +66,8 @@ const FriendTabs = () => (
           iconName = 'home';
         } else if (route.name === 'Calendar') {
           iconName = 'calendar';
+        } else if (route.name === 'Caregiver') {
+          iconName = 'heart';
         } else if (route.name === 'Profile') {
           iconName = 'user';
         }
@@ -79,6 +82,7 @@ const FriendTabs = () => (
   >
     <Tab.Screen name="Home" component={FriendScheduleStack} />
     <Tab.Screen name="Calendar" component={CalendarStack} />
+    <Tab.Screen name="Caregiver" component={CaregiverStack} />
     <Tab.Screen name="Profile" component={ProfileStack} />
   </Tab.Navigator>
 );
@@ -115,6 +119,12 @@ const ProfileStack = () => (
 const FriendsStack = () => (
   <Stack.Navigator>
     <Stack.Screen name="CaregiverFriendsListScreen" component={CaregiverFriendsListScreen} options={{ headerShown: false }} />
+  </Stack.Navigator>
+);
+
+const CaregiverStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="FriendCaregiverScreen" component={FriendCaregiverScreen} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
 
