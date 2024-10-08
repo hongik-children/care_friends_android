@@ -6,8 +6,8 @@ import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // JWT 토큰을 가져오기 위해 추가
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 
-const AddScheduleScreen = ({ navigation }) => {
-  const [friendId, setFriendId] = useState('');
+const AddScheduleScreen = ({ route, navigation }) => {
+  const {friendId} = route.params;
   const [date, setDate] = useState(new Date());
   const [periodType, setPeriodType] = useState('NONE');
   const [period, setPeriod] = useState('');
@@ -17,6 +17,10 @@ const AddScheduleScreen = ({ navigation }) => {
   const [memo, setMemo] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+
+
+//  console.log(route.params);
+  console.log("currentFriendUUID: " + friendId); // 디버그용
 
   const handleSave = async () => {
     const taskRequest = {
@@ -72,13 +76,6 @@ const AddScheduleScreen = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <TextInput
-        placeholder="친구 ID"
-        value={friendId}
-        onChangeText={setFriendId}
-        style={[styles.input, {marginBottom:16}]}
-        placeholderTextColor={'#6495ED'}
-      />
       <Text style={{color:'#6495ED', marginBottom:10, marginHorizontal:8}}>주기</Text>
       <View style={{borderWidth:1, borderColor:'#6495ED',
     marginBottom: 20, overflow:'visible'}}>
