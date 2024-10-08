@@ -60,6 +60,9 @@
         } else {
             implementation jscFlavor
         }
+
+        implementation project(':react-native-async-storage_async-storage')
+
     }
 
     project.ext.vectoricons = [
