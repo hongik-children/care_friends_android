@@ -76,8 +76,8 @@ const AddScheduleScreen = ({ route, navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={{color:'#6495ED', marginBottom:10, marginHorizontal:8}}>주기</Text>
-      <View style={{borderWidth:1, borderColor:'#6495ED',
+      <Text style={{color:'#000', marginBottom:10, marginHorizontal:8}}>주기</Text>
+      <View style={{borderWidth:1, borderColor:'#000',
     marginBottom: 20, overflow:'visible'}}>
       <Picker
         selectedValue={periodType}
@@ -98,21 +98,21 @@ const AddScheduleScreen = ({ route, navigation }) => {
         onChangeText={setPeriod}
         style={styles.input}
 
-        placeholderTextColor={'#6495ED'}
+        placeholderTextColor={'#000'}
       />
       <TextInput
         placeholder="제목"
         value={title}
         onChangeText={setTitle}
         style={styles.input}
-        placeholderTextColor={'#6495ED'}
+        placeholderTextColor={'#000'}
       />
       <TextInput
         placeholder="위치"
         value={location}
         onChangeText={setLocation}
         style={styles.input}
-        placeholderTextColor={'#6495ED'}
+        placeholderTextColor={'#000'}
       />
       <TextInput
         placeholder="메모"
@@ -120,17 +120,17 @@ const AddScheduleScreen = ({ route, navigation }) => {
         onChangeText={setMemo}
         style={styles.input}
         multiline
-        placeholderTextColor={'#6495ED'}
+        placeholderTextColor={'#000'}
       />
       <View style={styles.dateTimePicker}>
         <Pressable
         style={{borderRadius:6, width:120, height:48, backgroundColor:'#6495ED', alignItems:'center', justifyContent:'center'}}
-        onPress={() => setShowDatePicker(true)} color="#6495ED">
+        onPress={() => setShowDatePicker(true)} color="#000">
             <Text style={{color:'#FFF', fontSize:14 }}>날짜 선택</Text>
         </Pressable>
         <Pressable
                 style={{borderRadius:6, width:120, height:48, backgroundColor:'#6495ED', alignItems:'center', justifyContent:'center'}}
-                onPress={() => setShowTimePicker(true)} color="#6495ED">
+                onPress={() => setShowTimePicker(true)} color="#000">
                     <Text style={{color:'#FFF', fontSize:14 }}>시간 선택</Text>
                 </Pressable>
       </View>
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
-    borderColor: '#6495ED',
+    borderColor: '#000',
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 16,
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     backgroundColor:'#FFF',
-    color:'#6495ED'
+    color:'#000'
   },
   dateTimePicker: {
     flexDirection: 'row',
