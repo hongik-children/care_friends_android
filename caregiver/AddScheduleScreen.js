@@ -6,8 +6,8 @@ import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // JWT 토큰을 가져오기 위해 추가
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 
-const AddScheduleScreen = ({ navigation }) => {
-  const [friendId, setFriendId] = useState('');
+const AddScheduleScreen = ({ route, navigation }) => {
+  const {friendId} = route.params;
   const [date, setDate] = useState(new Date());
   const [periodType, setPeriodType] = useState('NONE');
   const [period, setPeriod] = useState('');
@@ -17,6 +17,10 @@ const AddScheduleScreen = ({ navigation }) => {
   const [memo, setMemo] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+
+
+//  console.log(route.params);
+  console.log("currentFriendUUID: " + friendId); // 디버그용
 
   const handleSave = async () => {
     const taskRequest = {
@@ -72,15 +76,8 @@ const AddScheduleScreen = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <TextInput
-        placeholder="친구 ID"
-        value={friendId}
-        onChangeText={setFriendId}
-        style={[styles.input, {marginBottom:16}]}
-        placeholderTextColor={'#6495ED'}
-      />
-      <Text style={{color:'#6495ED', marginBottom:10, marginHorizontal:8}}>주기</Text>
-      <View style={{borderWidth:1, borderColor:'#6495ED',
+      <Text style={{color:'#000', marginBottom:10, marginHorizontal:8}}>주기</Text>
+      <View style={{borderWidth:1, borderColor:'#000',
     marginBottom: 20, overflow:'visible'}}>
       <Picker
         selectedValue={periodType}
@@ -101,21 +98,21 @@ const AddScheduleScreen = ({ navigation }) => {
         onChangeText={setPeriod}
         style={styles.input}
 
-        placeholderTextColor={'#6495ED'}
+        placeholderTextColor={'#000'}
       />
       <TextInput
         placeholder="제목"
         value={title}
         onChangeText={setTitle}
         style={styles.input}
-        placeholderTextColor={'#6495ED'}
+        placeholderTextColor={'#000'}
       />
       <TextInput
         placeholder="위치"
         value={location}
         onChangeText={setLocation}
         style={styles.input}
-        placeholderTextColor={'#6495ED'}
+        placeholderTextColor={'#000'}
       />
       <TextInput
         placeholder="메모"
@@ -123,17 +120,17 @@ const AddScheduleScreen = ({ navigation }) => {
         onChangeText={setMemo}
         style={styles.input}
         multiline
-        placeholderTextColor={'#6495ED'}
+        placeholderTextColor={'#000'}
       />
       <View style={styles.dateTimePicker}>
         <Pressable
         style={{borderRadius:6, width:120, height:48, backgroundColor:'#6495ED', alignItems:'center', justifyContent:'center'}}
-        onPress={() => setShowDatePicker(true)} color="#6495ED">
+        onPress={() => setShowDatePicker(true)} color="#000">
             <Text style={{color:'#FFF', fontSize:14 }}>날짜 선택</Text>
         </Pressable>
         <Pressable
                 style={{borderRadius:6, width:120, height:48, backgroundColor:'#6495ED', alignItems:'center', justifyContent:'center'}}
-                onPress={() => setShowTimePicker(true)} color="#6495ED">
+                onPress={() => setShowTimePicker(true)} color="#000">
                     <Text style={{color:'#FFF', fontSize:14 }}>시간 선택</Text>
                 </Pressable>
       </View>
@@ -170,7 +167,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
-    borderColor: '#6495ED',
+    borderColor: '#000',
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 16,
@@ -179,7 +176,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     backgroundColor:'#FFF',
-    color:'#6495ED'
+    color:'#000'
   },
   dateTimePicker: {
     flexDirection: 'row',
