@@ -13,6 +13,9 @@ const CaregiverCalendarScreen = () => {
     const [currentFriend, setCurrentFriend] = useState(null);
     const [events, setEvents] = useState({});
     const [isModalVisible, setModalVisible] = useState(false);
+    const [selectedDayEvents, setSelectedDayEvents] = useState([]);
+    const [isEventModalVisible, setEventModalVisible] = useState(false);
+    const [selectedDay, setSelectedDay] = useState(''); // 선택한 날짜와 요일 저장
     const screenWidth = Dimensions.get('window').width;
 
     useEffect(() => {
@@ -62,7 +65,7 @@ const CaregiverCalendarScreen = () => {
                 if (!acc[date]) {
                     acc[date] = [];
                 }
-                acc[date].push({ title: event.title, ...event });
+                acc[date].push({ title: event.title, time: event.time, description: event.description });
                 return acc;
             }, {});
 
@@ -70,6 +73,25 @@ const CaregiverCalendarScreen = () => {
         } catch (error) {
             console.error('일정 불러오기 오류:', error);
         }
+    };
+
+    // 요일 계산 함수
+    const getDayOfWeek = (year, month, day) => {
+        const date = new Date(year, month - 1, day); // 월은 0부터 시작하므로 -1
+        const daysOfWeek = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+        return daysOfWeek[date.getDay()];
+    };
+
+    // 날짜를 눌렀을 때 호출되는 함수
+    const handleDayPress = (date) => {
+        const dateKey = `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`;
+        const dateEvents = events[dateKey] || [];
+        const dayOfWeek = getDayOfWeek(date.year, date.month, date.day); // 요일 계산
+        const selectedDate = `${date.year}년 ${String(date.month).padStart(2, '0')}월 ${String(date.day).padStart(2, '0')}일 (${dayOfWeek})`;
+
+        setSelectedDay(selectedDate); // 선택된 날짜와 요일 설정
+        setSelectedDayEvents(dateEvents); // 선택한 날짜의 이벤트를 저장
+        setEventModalVisible(true); // 이벤트 모달 열기
     };
 
     return (
@@ -91,7 +113,6 @@ const CaregiverCalendarScreen = () => {
 
             <ScrollView>
                 <Calendar
-                    onDayPress={() => {}}
                     markedDates={Object.keys(events).reduce((acc, date) => {
                         acc[date] = { marked: true, dotColor: 'blue' };
                         return acc;
@@ -101,16 +122,23 @@ const CaregiverCalendarScreen = () => {
                             {date.toString('MMMM yyyy')}
                         </CustomText>
                     )}
-                    dayComponent={({ date }) => (
-                        <View style={[styles.dayContainer, { width: screenWidth / 7 }]}>
-                            <CustomText style={styles.dayText}>{date.day}</CustomText>
-                            {events[`${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`]?.map((event, index) => (
-                                <View key={index} style={styles.eventItem}>
-                                    <CustomText style={styles.eventText}>{event.title}</CustomText>
-                                </View>
-                            ))}
-                        </View>
-                    )}
+                    dayComponent={({ date }) => {
+                        const dateKey = `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`;
+                        const dateEvents = events[dateKey] || [];
+                        return (
+                            <TouchableOpacity
+                                onPress={() => handleDayPress(date)} // 클릭 시 이벤트 정보 모달을 띄움
+                                style={[styles.dayContainer, { width: screenWidth / 7 }]}
+                            >
+                                <CustomText style={styles.dayText}>{date.day}</CustomText>
+                                {dateEvents.map((event, index) => (
+                                    <View key={index} style={styles.eventItem}>
+                                        <CustomText style={styles.eventText}>{event.title}</CustomText>
+                                    </View>
+                                ))}
+                            </TouchableOpacity>
+                        );
+                    }}
                     theme={{
                         todayTextColor: '#6495ED',
                         arrowColor: '#6495ED',
@@ -120,24 +148,32 @@ const CaregiverCalendarScreen = () => {
                 />
             </ScrollView>
 
-            <Modal isVisible={isModalVisible} onBackdropPress={() => setModalVisible(false)}>
+            <Modal isVisible={isEventModalVisible} onBackdropPress={() => setEventModalVisible(false)} style={styles.modalStyle}>
                 <View style={styles.modalContent}>
-                    <FlatList
-                        data={friends}
-                        keyExtractor={(item) => item.friendId.toString()}
-                        renderItem={({ item }) => (
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setCurrentFriend(item);
-                                    setModalVisible(false);
-                                }}
-                                style={styles.friendItem}
-                            >
-                                <CustomText style={styles.friendItemText}>{item.name}</CustomText>
-                            </TouchableOpacity>
-                        )}
-                    />
-                    <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeModalButton}>
+                    <View style={styles.modalHeader}>
+                        <CustomText style={styles.modalTitle}>{selectedDay}</CustomText>
+                        <View style={styles.divider} />
+                    </View>
+                    {selectedDayEvents.length > 0 ? (
+                        <FlatList
+                            data={selectedDayEvents}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={({ item }) => (
+                                <View style={styles.eventItemModal}>
+                                    <View style={styles.timeContainer}>
+                                        <CustomText style={styles.eventTime}>{item.time}</CustomText>
+                                    </View>
+                                    <View style={styles.eventDetailsContainer}>
+                                        <CustomText style={styles.eventTitle}>{item.title}</CustomText>
+                                        <CustomText style={styles.eventDetail}>{item.description}</CustomText>
+                                    </View>
+                                </View>
+                            )}
+                        />
+                    ) : (
+                        <CustomText style={styles.noEventsText}>이 날짜에는 이벤트가 없습니다.</CustomText>
+                    )}
+                    <TouchableOpacity onPress={() => setEventModalVisible(false)} style={styles.closeModalButton}>
                         <CustomText style={styles.closeModalText}>닫기</CustomText>
                     </TouchableOpacity>
                 </View>
@@ -194,25 +230,60 @@ const styles = StyleSheet.create({
         borderColor: '#ddd',
         height: 'auto',
     },
+    modalStyle: {
+        justifyContent: 'center',  // 중앙 정렬
+        alignItems: 'center',      // 중앙 정렬
+        margin: 0,  // 화면 가장자리에 여백 없이
+    },
     modalContent: {
-        backgroundColor: 'white',
+        backgroundColor: '#333',
         padding: 20,
-        borderRadius: 10,
+        borderRadius: 20,  // 둥근 모서리
+        width: '90%',  // 모달 너비
+    },
+    modalHeader: {
         alignItems: 'center',
     },
-    friendItem: {
-        padding: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+    modalTitle: {
+        fontSize: 24,
+        color: '#fff',
+        fontWeight: 'bold',
+    },
+    divider: {
+        height: 1,
+        backgroundColor: '#555',
+        marginVertical: 10,
         width: '100%',
     },
-    friendItemText: {
-        fontSize: 18,
-        color: '#333',
+    eventItemModal: {
+        flexDirection: 'row',
+        marginBottom: 15,
+        alignItems: 'center',
+    },
+    timeContainer: {
+        width: 50,
+    },
+    eventDetailsContainer: {
+        flex: 1,
+        marginLeft: 10,
+    },
+    eventTitle: {
+        fontSize: 16,
+        color: '#fff',
+    },
+    eventDetail: {
+        fontSize: 14,
+        color: '#bbb',
+    },
+    noEventsText: {
+        fontSize: 16,
+        textAlign: 'center',
+        marginVertical: 20,
+        color: '#999',
     },
     closeModalButton: {
-        marginTop: 20,
         alignItems: 'center',
+        marginTop: 20,
     },
     closeModalText: {
         fontSize: 16,
