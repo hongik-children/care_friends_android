@@ -22,6 +22,7 @@ import FriendCaregiverScreen from './friend/FriendCaregiverScreen';
 import RecommendScreen from './RecommendScreen';
 import SelectPainAreaScreen from './SelectPainAreaScreen';
 import VoiceSearchScreen from './VoiceSearchScreen';
+import EditScheduleScreen from './caregiver/EditScheduleScreen';  // EditScheduleScreen import
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -152,6 +153,7 @@ const App = () => {
         <Stack.Screen name="SelectPainAreaScreen" component={SelectPainAreaScreen} />
         <Stack.Screen name="RecommendScreen" component={RecommendScreen} />
         <Stack.Screen name="VoiceSearchScreen" component={VoiceSearchScreen} />
+        <Stack.Screen name="EditScheduleScreen" component={EditScheduleScreen} options={{ title: '일정 수정' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

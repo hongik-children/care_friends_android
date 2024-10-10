@@ -6,8 +6,10 @@ import axios from 'axios';
 import { BASE_URL } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from 'react-native-modal';
+import { useNavigation } from '@react-navigation/native';  // 네비게이션 훅 불러오기
 
 const CaregiverCalendarScreen = () => {
+    const navigation = useNavigation();  // 네비게이션 객체 생성
     const [friends, setFriends] = useState([]);
     const [currentFriend, setCurrentFriend] = useState(null);
     const [events, setEvents] = useState({});
@@ -26,6 +28,19 @@ const CaregiverCalendarScreen = () => {
             fetchTasks(currentFriend);
         }
     }, [currentFriend]);
+
+    // 일정 아이템을 눌렀을 때 수정 화면으로 이동하는 함수
+    const handleEditEvent = (event) => {
+
+        const eventWithFriendId = {
+            ...event,  // 기존 event 객체 복사
+            friendId: currentFriend.friendId  // friendId 추가
+        };
+
+        console.log(eventWithFriendId);
+
+        navigation.navigate('EditScheduleScreen', { event : eventWithFriendId });  // event 데이터를 전달하며 수정 화면으로 이동
+    };
 
     const fetchFriends = async () => {
         try {
@@ -64,11 +79,11 @@ const CaregiverCalendarScreen = () => {
                 if (!acc[date]) {
                     acc[date] = [];
                 }
-                acc[date].push({ title: event.title, time: event.startTime, description: event.memo });
+                acc[date].push({ title: event.title, time: event.startTime, description: event.memo, taskId: event.id });
                 return acc;
             }, {});
 
-            console.log(eventsData);
+//            console.log(eventsData);
             setEvents(eventsData);
 
         } catch (error) {
@@ -161,16 +176,17 @@ const CaregiverCalendarScreen = () => {
                             data={selectedDayEvents}
                             keyExtractor={(item, index) => index.toString()}
                             renderItem={({ item }) => (
-                                <View style={styles.eventItemModal}>
-
-                                    <View style={styles.eventDetailsContainer}>
-                                        {/* 시간과 제목을 함께 표시 (Text 내에서 문자열 결합) */}
-                                        <Text style={styles.eventTitle}>
-                                            {`${item.time || '시간 없음'}  |  ${item.title}`} {/* 시간과 제목 결합 */}
-                                        </Text>
-                                        <Text style={styles.eventDetail}>{item.description}</Text>
+                                <TouchableOpacity onPress={() => handleEditEvent(item)}>
+                                    <View style={styles.eventItemModal}>
+                                        <View style={styles.eventDetailsContainer}>
+                                            {/* 시간과 제목을 함께 표시 */}
+                                            <Text style={styles.eventTitle}>
+                                                {`${item.time || '시간 없음'}  |  ${item.title}`}
+                                            </Text>
+                                            <Text style={styles.eventDetail}>{item.description}</Text>
+                                        </View>
                                     </View>
-                                </View>
+                                </TouchableOpacity>
                             )}
                         />
                     ) : (
