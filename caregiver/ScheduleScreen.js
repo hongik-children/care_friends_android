@@ -143,6 +143,26 @@ const ScheduleScreen = () => {
     return `${year}년 ${month}월 ${date}일 (${dayOfWeek})`;
   };
 
+  // 알림 전송 API 호출
+  const sendNotification = async (taskId) => {
+    try {
+      console.log(taskId)
+      const jwtToken = await AsyncStorage.getItem('jwtToken');
+      await axios.post(`${BASE_URL}/task/sendNotification`,
+        { taskId: taskId },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+      Alert.alert("알림 전송", "일정 알림이 노약자에게 전송되었습니다.");
+    } catch (error) {
+      console.error('알림 전송 실패:', error);
+      Alert.alert("알림 전송 실패", "알림을 전송하는 중 문제가 발생했습니다.");
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* 고정된 상단 날짜 */}
@@ -184,7 +204,7 @@ const ScheduleScreen = () => {
             <View style={styles.modalContainer}>
               <View style={styles.modalContent}>
                 <CustomText style={styles.modalTitle}>{selectedTask?.title}</CustomText>
-                <TouchableOpacity style={styles.actionButton}>
+                <TouchableOpacity onPress={() => sendNotification(selectedTask.id)} style={styles.actionButton}>
                   <Feather name="bell" size={24} color="#fff" />
                   <CustomText style={styles.actionButtonText}>알림 보내기</CustomText>
                 </TouchableOpacity>
