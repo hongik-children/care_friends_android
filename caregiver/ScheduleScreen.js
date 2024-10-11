@@ -163,6 +163,7 @@ const ScheduleScreen = () => {
     }
   };
 
+  console.log("selected Task " + selectedTask);
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* 고정된 상단 날짜 */}
@@ -208,7 +209,11 @@ const ScheduleScreen = () => {
                   <Feather name="bell" size={24} color="#fff" />
                   <CustomText style={styles.actionButtonText}>알림 보내기</CustomText>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButton}>
+                {/*일정 수정시 선택한 일정의 수정화면으로 가게 수정*/}
+                <TouchableOpacity style={styles.actionButton} onPress={() => {
+                    const event = {taskId : selectedTask.id}
+                    navigation.navigate('EditScheduleScreen', { event })
+                }} >
                   <Feather name="edit" size={24} color="#fff" />
                   <CustomText style={styles.actionButtonText}>일정 수정하기</CustomText>
                 </TouchableOpacity>
