@@ -54,6 +54,8 @@ const ScheduleScreen = () => {
       });
 
       setFriends(response.data);
+
+      console.log(response.data);
       if (response.data.length > 0) {
         setCurrentFriend(response.data[0]); // 첫 번째 친구 선택
       }
@@ -80,6 +82,7 @@ const ScheduleScreen = () => {
       });
 
       setTasks(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error('일정 불러오기 실패:', error);
     }
@@ -143,6 +146,7 @@ const ScheduleScreen = () => {
     return `${year}년 ${month}월 ${date}일 (${dayOfWeek})`;
   };
 
+  console.log("selected Task " + selectedTask);
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* 고정된 상단 날짜 */}
@@ -188,7 +192,11 @@ const ScheduleScreen = () => {
                   <Feather name="bell" size={24} color="#fff" />
                   <CustomText style={styles.actionButtonText}>알림 보내기</CustomText>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButton}>
+                {/*일정 수정시 선택한 일정의 수정화면으로 가게 수정*/}
+                <TouchableOpacity style={styles.actionButton} onPress={() => {
+                    const event = {taskId : selectedTask.id}
+                    navigation.navigate('EditScheduleScreen', { event })
+                }} >
                   <Feather name="edit" size={24} color="#fff" />
                   <CustomText style={styles.actionButtonText}>일정 수정하기</CustomText>
                 </TouchableOpacity>
