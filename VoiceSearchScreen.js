@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, Linking, Platform } from 'react-native';
 import Voice from 'react-native-voice'; // 음성 인식 라이브러리
 import { GOOGLE_MAP_PLATFORM_API_KEY } from '@env'; // 구글 API 키 사용
+import CustomText from '../CustomTextProps';
 
 const VoiceSearchScreen = ({ route, navigation }) => {
   const [recognizedText, setRecognizedText] = useState('');
@@ -125,7 +126,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     marginBottom: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
     color: '#333',
     textAlign: 'center',
   },
@@ -139,7 +140,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
   },
   recordingText: {
     fontSize: 16,
@@ -166,7 +167,7 @@ const styles = StyleSheet.create({
   },
   hospitalName: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
     color: '#333',
     marginBottom: 8,
   },

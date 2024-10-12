@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from '@react-native-community/geolocation';
 import MapView, { Marker } from 'react-native-maps';
+import CustomText from '../CustomTextProps';
 
 const ScheduleScreen = () => {
   const [currentFriend, setCurrentFriend] = useState(null); // 현재 선택된 친구
@@ -340,7 +341,7 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: 35,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
     alignItems: 'left',
     color: '#333',
     marginBottom: 15,
@@ -356,7 +357,7 @@ const styles = StyleSheet.create({
   },
   friendNameText: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
     color: '#333',
     marginHorizontal: 10,
   },
