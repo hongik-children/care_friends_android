@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Linking, Image } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; // react-native-vector-icons 사용
 import { NAVER_CLIENT_ID, NAVER_CLIENT_SECRET, NAVER_CLOUD_ID, NAVER_CLOUD_SECRET, GOOGLE_MAP_PLATFORM_API_KEY } from '@env'; // 환경변수에 네이버 및 구글 API 키 저장
-import CustomText from '../CustomTextProps';
+import CustomText from './CustomTextProps';
 
 const RecommendScreen = ({ route, navigation }) => {
   const [places, setPlaces] = useState([]);

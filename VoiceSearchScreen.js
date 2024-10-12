@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, Linking, Platform } from 'react-native';
 import Voice from 'react-native-voice'; // 음성 인식 라이브러리
 import { GOOGLE_MAP_PLATFORM_API_KEY } from '@env'; // 구글 API 키 사용
-import CustomText from '../CustomTextProps';
+import CustomText from './CustomTextProps';
 
 const VoiceSearchScreen = ({ route, navigation }) => {
   const [recognizedText, setRecognizedText] = useState('');
