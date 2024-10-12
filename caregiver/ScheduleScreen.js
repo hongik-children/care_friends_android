@@ -163,6 +163,29 @@ const ScheduleScreen = () => {
     }
   };
 
+
+  // 일정 삭제 API 호출
+  const deleteTask = async (taskId) => {
+    try {
+      const jwtToken = await AsyncStorage.getItem('jwtToken');
+      await axios.delete(`${BASE_URL}/task`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+        data: {
+          id: taskId,
+        },
+      });
+      Alert.alert("삭제 완료", "일정이 성공적으로 삭제되었습니다.");
+      // 일정 삭제 후 목록을 새로고침
+      fetchTasks(currentFriend);
+      setTaskActionModalVisible(false); // 모달 닫기
+    } catch (error) {
+      console.error('일정 삭제 실패:', error);
+      Alert.alert("삭제 실패", "일정을 삭제하는 중 문제가 발생했습니다.");
+    }
+  };
+
   console.log("selected Task " + selectedTask);
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -217,7 +240,7 @@ const ScheduleScreen = () => {
                   <Feather name="edit" size={24} color="#fff" />
                   <CustomText style={styles.actionButtonText}>일정 수정하기</CustomText>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButton}>
+                <TouchableOpacity onPress={() => deleteTask(selectedTask.id)} style={styles.actionButton}>
                   <Feather name="trash-2" size={24} color="#fff" />
                   <CustomText style={styles.actionButtonText}>일정 삭제하기</CustomText>
                 </TouchableOpacity>
