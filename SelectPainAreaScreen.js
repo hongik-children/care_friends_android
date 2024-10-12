@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import CustomText from '../CustomTextProps';
+import CustomText from './CustomTextProps';
 
 const SelectPainAreaScreen = ({ route, navigation }) => {
   const [selectedArea, setSelectedArea] = useState(''); // 선택된 부위를 상태로 저장
