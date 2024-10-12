@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import CustomText from '../CustomTextProps';
 
 const SelectPainAreaScreen = ({ route, navigation }) => {
   const [selectedArea, setSelectedArea] = useState(''); // 선택된 부위를 상태로 저장
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     marginBottom: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
     color: '#333',
     textAlign: 'center',
   },

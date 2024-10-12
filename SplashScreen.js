@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import CustomText from './CustomTextProps';
+import CustomText from '../CustomTextProps';
 import { Buffer } from 'buffer'; // Buffer를 사용한 Base64 디코딩
 
 // JWT 디코딩 함수
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
     color: '#000',
     textAlign: 'center',
   },

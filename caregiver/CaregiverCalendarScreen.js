@@ -7,6 +7,7 @@ import { BASE_URL } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from 'react-native-modal';
 import { useNavigation } from '@react-navigation/native';
+import CustomText from '../CustomTextProps';
 
 const CaregiverCalendarScreen = () => {
     const navigation = useNavigation();
@@ -104,9 +105,9 @@ const CaregiverCalendarScreen = () => {
                             <Feather name="chevron-left" size={24} color="#333" />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.friendNameContainer}>
-                            <Text style={styles.friendNameText}>
+                            <CustomText style={styles.friendNameText}>
                                 {currentFriend ? `${currentFriend.name}님의 일정` : '친구 선택'}
-                            </Text>
+                            </CustomText>
                             <Feather name="chevron-down" size={20} />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => setCurrentFriend(friends[1])}>
@@ -121,9 +122,9 @@ const CaregiverCalendarScreen = () => {
                                 return acc;
                             }, {})}
                             renderHeader={(date) => (
-                                <Text style={styles.monthHeader}>
+                                <CustomText style={styles.monthHeader}>
                                     {date.toString('MMMM yyyy')}
-                                </Text>
+                                </CustomText>
                             )}
                             dayComponent={({ date }) => {
                                 const dateKey = `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`;
@@ -133,10 +134,10 @@ const CaregiverCalendarScreen = () => {
                                         onPress={() => handleDayPress(date)}
                                         style={[styles.dayContainer, { width: screenWidth / 7 }]}
                                     >
-                                        <Text style={styles.dayText}>{date.day}</Text>
+                                        <CustomText style={styles.dayText}>{date.day}</CustomText>
                                         {dateEvents.map((event, index) => (
                                             <View key={index} style={styles.eventItem}>
-                                                <Text style={styles.eventText}>{event.title}</Text>
+                                                <CustomText style={styles.eventText}>{event.title}</CustomText>
                                             </View>
                                         ))}
                                     </TouchableOpacity>
@@ -153,11 +154,11 @@ const CaregiverCalendarScreen = () => {
                 </>
             ) : (
                 <View style={styles.noFriendsContainer}>
-                    <Text style={styles.noFriendsText}>등록된 친구가 없습니다.</Text>
-                    <Text style={styles.noFriendsText}>친구를 추가해주세요!</Text>
+                    <CustomText style={styles.noFriendsText}>등록된 친구가 없습니다.</CustomText>
+                    <CustomText style={styles.noFriendsText}>친구를 추가해주세요!</CustomText>
                     <TouchableOpacity style={styles.addFriendButton} onPress={() => navigation.navigate('AddFriendScreen')}>
                         <Feather name="user-plus" size={20} color="#fff" style={styles.icon} />
-                        <Text style={styles.addFriendButtonText}>친구 추가</Text>
+                        <CustomText style={styles.addFriendButtonText}>친구 추가</CustomText>
                     </TouchableOpacity>
                 </View>
             )}
@@ -165,7 +166,7 @@ const CaregiverCalendarScreen = () => {
             <Modal isVisible={isEventModalVisible} onBackdropPress={() => setEventModalVisible(false)} style={styles.modalStyle}>
                 <View style={styles.modalContent}>
                     <View style={styles.modalHeader}>
-                        <Text style={styles.modalTitle}>{selectedDay}</Text>
+                        <CustomText style={styles.modalTitle}>{selectedDay}</CustomText>
                         <View style={styles.divider} />
                     </View>
                     {selectedDayEvents.length > 0 ? (
@@ -176,20 +177,20 @@ const CaregiverCalendarScreen = () => {
                                 <TouchableOpacity onPress={() => handleEditEvent(item)}>
                                     <View style={styles.eventItemModal}>
                                         <View style={styles.eventDetailsContainer}>
-                                            <Text style={styles.eventTitle}>
+                                            <CustomText style={styles.eventTitle}>
                                                 {`${item.time || '시간 없음'}  |  ${item.title}`}
-                                            </Text>
-                                            <Text style={styles.eventDetail}>{item.description}</Text>
+                                            </CustomText>
+                                            <CustomText style={styles.eventDetail}>{item.description}</CustomText>
                                         </View>
                                     </View>
                                 </TouchableOpacity>
                             )}
                         />
                     ) : (
-                        <Text style={styles.noEventsText}>이 날짜에는 일정이 없습니다.</Text>
+                        <CustomText style={styles.noEventsText}>이 날짜에는 일정이 없습니다.</CustomText>
                     )}
                     <TouchableOpacity onPress={() => setEventModalVisible(false)} style={styles.closeModalButton}>
-                        <Text style={styles.closeModalText}>닫기</Text>
+                        <CustomText style={styles.closeModalText}>닫기</CustomText>
                     </TouchableOpacity>
                 </View>
             </Modal>
@@ -215,12 +216,12 @@ const styles = StyleSheet.create({
     },
     friendNameText: {
         fontSize: 24,
-        fontWeight: 'bold',
+        fontFamily: 'Pretendard-Bold',
         color: '#333',
     },
     monthHeader: {
         fontSize: 20,
-        fontWeight: 'bold',
+        fontFamily: 'Pretendard-Bold',
         textAlign: 'center',
         marginBottom: 10,
     },
@@ -291,7 +292,7 @@ const styles = StyleSheet.create({
     modalTitle: {
         fontSize: 24,
         color: '#fff',
-        fontWeight: 'bold',
+        fontFamily: 'Pretendard-Bold',
     },
     divider: {
         height: 1,
