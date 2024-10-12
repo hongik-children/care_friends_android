@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, StyleSheet, FlatList, ScrollView, Text, Dimensions } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, FlatList, ScrollView, Text, Dimensions, Alert } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Feather from 'react-native-vector-icons/Feather';
 import axios from 'axios';
 import { BASE_URL } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from 'react-native-modal';
-import { useNavigation } from '@react-navigation/native';  // 네비게이션 훅 불러오기
+import { useNavigation } from '@react-navigation/native';
 
 const CaregiverCalendarScreen = () => {
-    const navigation = useNavigation();  // 네비게이션 객체 생성
+    const navigation = useNavigation();
     const [friends, setFriends] = useState([]);
     const [currentFriend, setCurrentFriend] = useState(null);
     const [events, setEvents] = useState({});
     const [isModalVisible, setModalVisible] = useState(false);
     const [selectedDayEvents, setSelectedDayEvents] = useState([]);
     const [isEventModalVisible, setEventModalVisible] = useState(false);
-    const [selectedDay, setSelectedDay] = useState(''); // 선택한 날짜와 요일 저장
+    const [selectedDay, setSelectedDay] = useState('');
     const screenWidth = Dimensions.get('window').width;
 
     useEffect(() => {
@@ -28,19 +28,6 @@ const CaregiverCalendarScreen = () => {
             fetchTasks(currentFriend);
         }
     }, [currentFriend]);
-
-    // 일정 아이템을 눌렀을 때 수정 화면으로 이동하는 함수
-    const handleEditEvent = (event) => {
-
-        const eventWithFriendId = {
-            ...event,  // 기존 event 객체 복사
-            friendId: currentFriend.friendId  // friendId 추가
-        };
-
-        console.log(eventWithFriendId);
-
-        navigation.navigate('EditScheduleScreen', { event : eventWithFriendId });  // event 데이터를 전달하며 수정 화면으로 이동
-    };
 
     const fetchFriends = async () => {
         try {
@@ -83,7 +70,6 @@ const CaregiverCalendarScreen = () => {
                 return acc;
             }, {});
 
-//            console.log(eventsData);
             setEvents(eventsData);
 
         } catch (error) {
@@ -91,79 +77,90 @@ const CaregiverCalendarScreen = () => {
         }
     };
 
-    // 요일 계산 함수
     const getDayOfWeek = (year, month, day) => {
-        const date = new Date(year, month - 1, day); // 월은 0부터 시작하므로 -1
+        const date = new Date(year, month - 1, day);
         const daysOfWeek = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
         return daysOfWeek[date.getDay()];
     };
 
-    // 날짜를 눌렀을 때 호출되는 함수
     const handleDayPress = (date) => {
         const dateKey = `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`;
         const dateEvents = events[dateKey] || [];
-        const dayOfWeek = getDayOfWeek(date.year, date.month, date.day); // 요일 계산
+        const dayOfWeek = getDayOfWeek(date.year, date.month, date.day);
         const selectedDate = `${date.year}년 ${String(date.month).padStart(2, '0')}월 ${String(date.day).padStart(2, '0')}일 (${dayOfWeek})`;
-//        console.log(dateEvents);
-//        console.log(events);
-        setSelectedDay(selectedDate); // 선택된 날짜와 요일 설정
-        setSelectedDayEvents(dateEvents); // 선택한 날짜의 이벤트를 저장
-        setEventModalVisible(true); // 이벤트 모달 열기
+        setSelectedDay(selectedDate);
+        setSelectedDayEvents(dateEvents);
+        setEventModalVisible(true);
     };
 
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => setCurrentFriend(friends[0])}>
-                    <Feather name="chevron-left" size={24} color="#333" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.friendNameContainer}>
-                    <Text style={styles.friendNameText}>
-                        {currentFriend ? `${currentFriend.name}님의 일정` : '친구 선택'}
-                    </Text>
-                    <Feather name="chevron-down" size={20} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => setCurrentFriend(friends[1])}>
-                    <Feather name="chevron-right" size={24} color="#333" />
-                </TouchableOpacity>
-            </View>
+            {/* 친구 목록이 있는지 확인 */}
+            {friends.length > 0 ? (
+                <>
+                    {/* 친구 선택 및 화살표 */}
+                    <View style={styles.header}>
+                        <TouchableOpacity onPress={() => setCurrentFriend(friends[0])}>
+                            <Feather name="chevron-left" size={24} color="#333" />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.friendNameContainer}>
+                            <Text style={styles.friendNameText}>
+                                {currentFriend ? `${currentFriend.name}님의 일정` : '친구 선택'}
+                            </Text>
+                            <Feather name="chevron-down" size={20} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setCurrentFriend(friends[1])}>
+                            <Feather name="chevron-right" size={24} color="#333" />
+                        </TouchableOpacity>
+                    </View>
 
-            <ScrollView>
-                <Calendar
-                    markedDates={Object.keys(events).reduce((acc, date) => {
-                        acc[date] = { marked: true, dotColor: 'blue' };
-                        return acc;
-                    }, {})}
-                    renderHeader={(date) => (
-                        <Text style={styles.monthHeader}>
-                            {date.toString('MMMM yyyy')}
-                        </Text>
-                    )}
-                    dayComponent={({ date }) => {
-                        const dateKey = `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`;
-                        const dateEvents = events[dateKey] || [];
-                        return (
-                            <TouchableOpacity
-                                onPress={() => handleDayPress(date)} // 클릭 시 이벤트 정보 모달을 띄움
-                                style={[styles.dayContainer, { width: screenWidth / 7 }]}
-                            >
-                                <Text style={styles.dayText}>{date.day}</Text>
-                                {dateEvents.map((event, index) => (
-                                    <View key={index} style={styles.eventItem}>
-                                        <Text style={styles.eventText}>{event.title}</Text>
-                                    </View>
-                                ))}
-                            </TouchableOpacity>
-                        );
-                    }}
-                    theme={{
-                        todayTextColor: '#6495ED',
-                        arrowColor: '#6495ED',
-                        dotColor: '#6495ED',
-                    }}
-                    style={styles.calendar}
-                />
-            </ScrollView>
+                    <ScrollView>
+                        <Calendar
+                            markedDates={Object.keys(events).reduce((acc, date) => {
+                                acc[date] = { marked: true, dotColor: 'blue' };
+                                return acc;
+                            }, {})}
+                            renderHeader={(date) => (
+                                <Text style={styles.monthHeader}>
+                                    {date.toString('MMMM yyyy')}
+                                </Text>
+                            )}
+                            dayComponent={({ date }) => {
+                                const dateKey = `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`;
+                                const dateEvents = events[dateKey] || [];
+                                return (
+                                    <TouchableOpacity
+                                        onPress={() => handleDayPress(date)}
+                                        style={[styles.dayContainer, { width: screenWidth / 7 }]}
+                                    >
+                                        <Text style={styles.dayText}>{date.day}</Text>
+                                        {dateEvents.map((event, index) => (
+                                            <View key={index} style={styles.eventItem}>
+                                                <Text style={styles.eventText}>{event.title}</Text>
+                                            </View>
+                                        ))}
+                                    </TouchableOpacity>
+                                );
+                            }}
+                            theme={{
+                                todayTextColor: '#6495ED',
+                                arrowColor: '#6495ED',
+                                dotColor: '#6495ED',
+                            }}
+                            style={styles.calendar}
+                        />
+                    </ScrollView>
+                </>
+            ) : (
+                <View style={styles.noFriendsContainer}>
+                    <Text style={styles.noFriendsText}>등록된 친구가 없습니다.</Text>
+                    <Text style={styles.noFriendsText}>친구를 추가해주세요!</Text>
+                    <TouchableOpacity style={styles.addFriendButton} onPress={() => navigation.navigate('AddFriendScreen')}>
+                        <Feather name="user-plus" size={20} color="#fff" style={styles.icon} />
+                        <Text style={styles.addFriendButtonText}>친구 추가</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
 
             <Modal isVisible={isEventModalVisible} onBackdropPress={() => setEventModalVisible(false)} style={styles.modalStyle}>
                 <View style={styles.modalContent}>
@@ -179,7 +176,6 @@ const CaregiverCalendarScreen = () => {
                                 <TouchableOpacity onPress={() => handleEditEvent(item)}>
                                     <View style={styles.eventItemModal}>
                                         <View style={styles.eventDetailsContainer}>
-                                            {/* 시간과 제목을 함께 표시 */}
                                             <Text style={styles.eventTitle}>
                                                 {`${item.time || '시간 없음'}  |  ${item.title}`}
                                             </Text>
@@ -250,16 +246,44 @@ const styles = StyleSheet.create({
         borderColor: '#ddd',
         height: 'auto',
     },
+    noFriendsContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 50,
+    },
+    noFriendsText: {
+        fontSize: 20,
+        color: '#555',
+        marginBottom: 10,
+        textAlign: 'center',
+    },
+    addFriendButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#6495ED',
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 8,
+        marginTop: 20,
+    },
+    addFriendButtonText: {
+        color: '#fff',
+        fontSize: 18,
+        marginLeft: 10,
+    },
+    icon: {
+        marginRight: 8,
+    },
     modalStyle: {
-        justifyContent: 'center',  // 중앙 정렬
-        alignItems: 'center',      // 중앙 정렬
-        margin: 0,  // 화면 가장자리에 여백 없이
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: 0,
     },
     modalContent: {
         backgroundColor: '#333',
         padding: 20,
-        borderRadius: 20,  // 둥근 모서리
-        width: '90%',  // 모달 너비
+        borderRadius: 20,
+        width: '90%',
     },
     modalHeader: {
         alignItems: 'center',
@@ -280,9 +304,6 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         alignItems: 'center',
     },
-    timeContainer: {
-        width: 50,
-    },
     eventDetailsContainer: {
         flex: 1,
         marginLeft: 10,
@@ -295,7 +316,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#bbb',
         paddingLeft: 90,
-//        textAlign: 'center', // 텍스트 가운데 정렬
     },
     noEventsText: {
         fontSize: 16,
