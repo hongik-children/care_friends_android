@@ -58,17 +58,24 @@ const CaregiverFriendsListScreen = ({ navigation }) => {
   );
 
   return (
-      <View style={styles.container}>
+    <View style={styles.container}>
+      {/* 친구가 없는 경우 메시지 표시 */}
+      {friends.length === 0 ? (
+        <View style={styles.noFriendsContainer}>
+          <CustomText style={styles.noFriendsText}>등록된 친구가 없습니다.</CustomText>
+        </View>
+      ) : (
         <FlatList
           data={friends}
           keyExtractor={(item) => item.name}
           renderItem={renderFriendItem}
         />
-        {/* 친구 추가 버튼 */}
-        <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('AddFriendScreen')}>
-          <CustomText style={styles.ButtonText}>친구 추가하기</CustomText>
-        </TouchableOpacity>
-      </View>
+      )}
+      {/* 친구 추가 버튼 */}
+      <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('AddFriendScreen')}>
+        <CustomText style={styles.ButtonText}>친구 추가하기</CustomText>
+      </TouchableOpacity>
+    </View>
     );
 };
 
@@ -77,6 +84,16 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#f9f9f9',
+  },
+  noFriendsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noFriendsText: {
+    fontSize: 18,
+    color: '#a0a0a0', // 연한 회색
+    textAlign: 'center',
   },
   title: {
     fontSize: 24,
