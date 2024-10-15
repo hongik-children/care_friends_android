@@ -94,6 +94,20 @@ const CaregiverCalendarScreen = () => {
         setEventModalVisible(true);
     };
 
+    // 화살표로 다음 친구 선택
+    const handleNextFriend = () => {
+        const currentIndex = friends.findIndex(f => f.friendId === currentFriend.friendId);
+        const nextIndex = (currentIndex + 1) % friends.length; // 마지막 친구에서 처음으로
+        setCurrentFriend(friends[nextIndex]);
+    };
+
+    // 화살표로 이전 친구 선택
+    const handlePreviousFriend = () => {
+        const currentIndex = friends.findIndex(f => f.friendId === currentFriend.friendId);
+        const prevIndex = (currentIndex - 1 + friends.length) % friends.length; // 첫 친구에서 마지막으로
+        setCurrentFriend(friends[prevIndex]);
+    };
+
     return (
         <View style={styles.container}>
             {/* 친구 목록이 있는지 확인 */}
@@ -101,7 +115,7 @@ const CaregiverCalendarScreen = () => {
                 <>
                     {/* 친구 선택 및 화살표 */}
                     <View style={styles.header}>
-                        <TouchableOpacity onPress={() => setCurrentFriend(friends[0])}>
+                        <TouchableOpacity onPress={handlePreviousFriend}>
                             <Feather name="chevron-left" size={24} color="#333" />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.friendNameContainer}>
@@ -110,7 +124,7 @@ const CaregiverCalendarScreen = () => {
                             </CustomText>
                             <Feather name="chevron-down" size={20} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => setCurrentFriend(friends[1])}>
+                        <TouchableOpacity onPress={handleNextFriend}>
                             <Feather name="chevron-right" size={24} color="#333" />
                         </TouchableOpacity>
                     </View>
