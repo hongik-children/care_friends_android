@@ -314,12 +314,12 @@ const ScheduleScreen = () => {
                       style={styles.friendItem}
                       onPress={() => handleFriendSelect(item.friendId)}
                     >
-                      <Text style={styles.friendItemText}>{item.name}</Text>
+                      <CustomText style={styles.friendItemText}>{item.name}</CustomText>
                     </TouchableOpacity>
                   )}
                 />
                 <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeModalButton}>
-                  <Text style={styles.closeModalText}>닫기</Text>
+                  <CustomText style={styles.closeModalText}>닫기</CustomText>
                 </TouchableOpacity>
               </View>
             </View>
