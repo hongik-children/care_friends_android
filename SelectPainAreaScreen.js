@@ -17,9 +17,9 @@ const SelectPainAreaScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Select Pain Area</Text>
+      <CustomText style={styles.title}>Select Pain Area</CustomText>
       {selectedArea ? (
-        <Text style={styles.selectedText}>Selected Area: {selectedArea}</Text>
+        <CustomText style={styles.selectedText}>Selected Area: {selectedArea}</CustomText>
       ) : null}
       <View style={styles.bodyContainer}>
         <Image

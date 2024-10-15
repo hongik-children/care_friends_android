@@ -86,19 +86,19 @@ const VoiceSearchScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>음성으로 아픈 부위를 말해 주세요</Text>
+      <CustomText style={styles.title}>음성으로 아픈 부위를 말해 주세요</CustomText>
       <TouchableOpacity style={styles.voiceButton} onPress={startVoiceRecognition} disabled={isRecording}>
-        <Text style={styles.buttonText}>{isRecording ? '녹음 중...' : '음성 인식 시작'}</Text>
+        <CustomText style={styles.buttonText}>{isRecording ? '녹음 중...' : '음성 인식 시작'}</CustomText>
       </TouchableOpacity>
-      {isRecording && <Text style={styles.recordingText}>녹음 중...</Text>}
-      <Text style={styles.recognizedText}>인식된 내용: {recognizedText}</Text>
+      {isRecording && <CustomText style={styles.recordingText}>녹음 중...</CustomText>}
+      <CustomText style={styles.recognizedText}>인식된 내용: {recognizedText}</CustomText>
       <FlatList
         data={places}
         keyExtractor={(item) => item.place_id}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => handleCardPress(item)}>
             <View style={styles.card}>
-              <Text style={styles.hospitalName}>{item.name}</Text>
+              <CustomText style={styles.hospitalName}>{item.name}</CustomText>
               {item.photos && item.photos.length > 0 && (
                 <Image
                   source={{
@@ -107,8 +107,8 @@ const VoiceSearchScreen = ({ route, navigation }) => {
                   style={styles.hospitalImage}
                 />
               )}
-              <Text style={styles.text}>평점: {item.rating ? item.rating : 'N/A'}</Text>
-              <Text style={styles.text}>주소: {item.vicinity}</Text>
+              <CustomText style={styles.text}>평점: {item.rating ? item.rating : 'N/A'}</CustomText>
+              <CustomText style={styles.text}>주소: {item.vicinity}</CustomText>
             </View>
           </TouchableOpacity>
         )}

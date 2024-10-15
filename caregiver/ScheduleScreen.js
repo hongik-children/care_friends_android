@@ -127,22 +127,20 @@ const ScheduleScreen = () => {
     }
   };
 
-  // 시간 형식 변환 함수
+  // 시간 형식 변환 함수 (오전/오후 표시)
   const formatTime = (timeString) => {
     const time = new Date(`1970-01-01T${timeString}`);
-    return time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const hours = time.getHours();
+    const minutes = time.getMinutes();
+    const period = hours >= 12 ? '오후' : '오전';
+    const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+    return `${period} ${formattedHours}:${formattedMinutes}`;
   };
 
-  // 날짜 형식
-  const getFormattedDate = () => {
-    const year = today.getFullYear();
-    const month = today.getMonth() + 1;
-    const date = today.getDate();
-    const dayOfWeekNames = ['일', '월', '화', '수', '목', '금', '토'];
-    const dayOfWeek = dayOfWeekNames[today.getDay()]; // 요일 가져오기
-    return `${year}년 ${month}월 ${date}일 (${dayOfWeek})`;
-  };
 
+  const DayofWeek = ['일','월','화','수','목','금','토'];
   // 알림 전송 API 호출
   const sendNotification = async (taskId) => {
     try {
@@ -189,27 +187,37 @@ const ScheduleScreen = () => {
   console.log("selected Task " + selectedTask);
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* 고정된 상단 날짜 */}
-      <CustomText style={styles.dateText}>{getFormattedDate()}</CustomText>
-
       {/* 친구 목록이 있는지 확인 */}
       {friends.length > 0 ? (
         <>
           {/* 친구 선택 및 화살표 */}
-          <View style={styles.friendScheduleHeader}>
-            <TouchableOpacity onPress={handlePreviousFriend}>
-              <Feather name="chevron-left" size={24} color="#333" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.friendNameContainer}>
-              <Text style={styles.friendNameText}>
-                {currentFriend ? `${currentFriend.name}님의 일정` : "친구 선택"}
-              </Text>
-              <Feather name="chevron-down" size={20} color="#333" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleNextFriend}>
-              <Feather name="chevron-right" size={24} color="#333" />
-            </TouchableOpacity>
-          </View>
+            <View style={styles.friendScheduleHeader}>
+              <CustomText style={styles.title}>
+                오늘
+              </CustomText>
+
+              <TouchableOpacity onPress={handlePreviousFriend} style={styles.iconWrapper}>
+                <Feather name="chevron-left" size={24} color="#333" />
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.friendNameContainer}>
+                <CustomText style={styles.friendNameHighlight}>
+                  {currentFriend ? `${currentFriend.name}` : "친구"}
+                </CustomText>
+                <Feather name="chevron-down" size={20} color="#333" style={styles.iconWrapper} />
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={handleNextFriend} style={styles.iconWrapper}>
+                <Feather name="chevron-right" size={24} color="#333" />
+              </TouchableOpacity>
+
+              <CustomText style={styles.title}>
+                님의 일정
+              </CustomText>
+            </View>
+
+          <CustomText style={styles.date}>{new Date().getMonth()+1}월 {new Date().getDate()}일 ({DayofWeek[new Date().getDay()]})</CustomText>
+
 
           {/* 일정 목록 표시 */}
           {tasks.length > 0 ? (
@@ -311,12 +319,12 @@ const ScheduleScreen = () => {
                       style={styles.friendItem}
                       onPress={() => handleFriendSelect(item.friendId)}
                     >
-                      <Text style={styles.friendItemText}>{item.name}</Text>
+                      <CustomText style={styles.friendItemText}>{item.name}</CustomText>
                     </TouchableOpacity>
                   )}
                 />
                 <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeModalButton}>
-                  <Text style={styles.closeModalText}>닫기</Text>
+                  <CustomText style={styles.closeModalText}>닫기</CustomText>
                 </TouchableOpacity>
               </View>
             </View>
@@ -343,19 +351,29 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#FFFFFF',
   },
-  dateText: {
-    fontSize: 35,
-    fontFamily: 'Pretendard-Bold',
-    alignItems: 'left',
-    color: '#333',
-    marginBottom: 15,
+  title: {
+    fontSize: 28,
+    fontFamily: 'Pretendard-ExtraBold',
+    marginVertical: 10,
+    color: '#000000',
+  },
+  date: {
+    fontSize: 24,
+    marginBottom: 20,
+    color: '#333333',
   },
   friendScheduleHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 5,
   },
   friendNameContainer: {
+    fontSize: 28,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 5,
+  },
+  friendNameWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -364,6 +382,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Pretendard-Bold',
     color: '#333',
     marginHorizontal: 10,
+  },
+  friendNameHighlight: {
+    fontFamily: 'Pretendard-Bold',
+    fontSize: 28,
+    color: '#333333',
   },
   event: {
     backgroundColor: '#FFF8DE',
@@ -462,6 +485,9 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     marginLeft: 10,
+  },
+  iconWrapper: {
+    marginHorizontal: 5,
   },
   icon: {
     marginRight: 8,

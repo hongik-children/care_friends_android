@@ -229,6 +229,18 @@ const FriendScheduleScreen = ({ navigation }) => {
         );
     };
 
+  // 시간 형식 변환 함수 (오전/오후 표시)
+  const formatTime = (timeString) => {
+    const time = new Date(`1970-01-01T${timeString}`);
+    const hours = time.getHours();
+    const minutes = time.getMinutes();
+    const period = hours >= 12 ? '오후' : '오전';
+    const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+    return `${period} ${formattedHours}:${formattedMinutes}`;
+  };
+
     const DayofWeek = ['일','월','화','수','목','금','토'];
 
     // 로딩 중일 때 로딩 화면 표시
@@ -245,16 +257,16 @@ const FriendScheduleScreen = ({ navigation }) => {
             <CustomText style={styles.title}>오늘의 일정</CustomText>
             <CustomText style={styles.date}>{new Date().getMonth()+1}월 {new Date().getDate()}일 ({DayofWeek[new Date().getDay()]})</CustomText>
 
-            {/* 일정 데이터를 표시하는 부분 */}
+            {/* 일정 목록 표시 */}
             {tasks.length > 0 ? (
-                tasks.map((task) => (
-                    <View key={task.id} style={styles.event}>
-                        <CustomText style={styles.time}>{task.startTime}</CustomText>
-                        <CustomText style={styles.description}>{task.title}</CustomText>
-                    </View>
-                ))
+              tasks.map((task) => (
+                <TouchableOpacity key={task.id} style={styles.event} onPress={() => handleTaskPress(task)}>
+                  <CustomText style={styles.time}>{formatTime(task.startTime)}</CustomText>
+                  <CustomText style={styles.description}>{task.title}</CustomText>
+                </TouchableOpacity>
+              ))
             ) : (
-                <CustomText style={{ fontSize: 18, color: 'gray' }}>일정이 없습니다.</CustomText>
+              <CustomText style={styles.noTaskText}>오늘 일정이 없습니다.</CustomText>
             )}
 
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('FriendAddScheduleScreen')}>
@@ -312,13 +324,11 @@ const styles = StyleSheet.create({
     },
     time: {
         fontSize: 22,
-        fontFamily: 'Pretendard-Bold',
-        color: '#000000',
+        color: '#000',
     },
     description: {
         fontSize: 22,
-        fontFamily: 'Pretendard-Bold',
-        color: '#000000',
+        color: '#000',
     },
     button: {
         backgroundColor: '#6495ED',
@@ -347,6 +357,11 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 300,
         marginTop: 20,
+    },
+    noTaskText: {
+      fontSize: 18,
+      color: '#555',
+      marginVertical: 10,
     },
 });
 

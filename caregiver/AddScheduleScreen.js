@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // JWT 토큰을 가져오기 위해 추가
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
+import CustomText from '../CustomTextProps';
 
 const AddScheduleScreen = ({ route, navigation }) => {
   const {friendId} = route.params;
@@ -76,7 +77,7 @@ const AddScheduleScreen = ({ route, navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={{color:'#000', marginBottom:10, marginHorizontal:8}}>주기</Text>
+      <CustomText style={{color:'#000', marginBottom:10, marginHorizontal:8}}>주기</CustomText>
       <View style={{borderWidth:1, borderColor:'#000',
     marginBottom: 20, overflow:'visible'}}>
       <Picker
@@ -126,12 +127,12 @@ const AddScheduleScreen = ({ route, navigation }) => {
         <Pressable
         style={{borderRadius:6, width:120, height:48, backgroundColor:'#6495ED', alignItems:'center', justifyContent:'center'}}
         onPress={() => setShowDatePicker(true)} color="#000">
-            <Text style={{color:'#FFF', fontSize:14 }}>날짜 선택</Text>
+            <CustomText style={{color:'#FFF', fontSize:14 }}>날짜 선택</CustomText>
         </Pressable>
         <Pressable
                 style={{borderRadius:6, width:120, height:48, backgroundColor:'#6495ED', alignItems:'center', justifyContent:'center'}}
                 onPress={() => setShowTimePicker(true)} color="#000">
-                    <Text style={{color:'#FFF', fontSize:14 }}>시간 선택</Text>
+                    <CustomText style={{color:'#FFF', fontSize:14 }}>시간 선택</CustomText>
                 </Pressable>
       </View>
       {showDatePicker && (
@@ -153,7 +154,7 @@ const AddScheduleScreen = ({ route, navigation }) => {
       <Pressable
                       style={{borderRadius:6, height:48, backgroundColor:'#6495ED', alignItems:'center', justifyContent:'center'}}
                       onPress={handleSave}>
-                          <Text style={{color:'#FFF', fontSize:14 }}>저장</Text>
+                          <CustomText style={{color:'#FFF', fontSize:14 }}>저장</CustomText>
                       </Pressable>
     </ScrollView>
   );
