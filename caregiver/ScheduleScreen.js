@@ -251,6 +251,11 @@ const ScheduleScreen = () => {
             </View>
           </Modal>
 
+          <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('LocationScreen', { friendId: currentFriend.friendId })}>
+              <Feather name="map-pin" size={24} color="#fff" />
+              <CustomText style={styles.actionButtonText}>위치 조회하기</CustomText>
+          </TouchableOpacity>
+
           {/* 전화 걸기 */}
           <TouchableOpacity style={styles.actionButton} onPress={handleCall}>
             <Feather name="phone" size={24} color="#fff" />
