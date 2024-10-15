@@ -129,6 +129,37 @@ const CaregiverCalendarScreen = () => {
                         </TouchableOpacity>
                     </View>
 
+                    {/* 모달: 친구 선택 */}
+                    <Modal
+                        transparent={true}
+                        visible={isModalVisible}
+                        onRequestClose={() => setModalVisible(false)}
+                        style={{ margin: 0 }}
+                    >
+                        <View style={styles.modalContainer}>
+                            <View style={styles.modalContent}>
+                                <FlatList
+                                    data={friends}
+                                    keyExtractor={(item) => item.friendId.toString()}
+                                    renderItem={({ item }) => (
+                                        <TouchableOpacity
+                                            style={styles.friendItem}
+                                            onPress={() => {
+                                                setCurrentFriend(item);
+                                                setModalVisible(false); // 모달 닫기
+                                            }}
+                                        >
+                                            <CustomText style={styles.friendItemText}>{item.name}</CustomText>
+                                        </TouchableOpacity>
+                                    )}
+                                />
+                                <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeModalButton}>
+                                    <CustomText style={styles.closeModalText}>닫기</CustomText>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
+
                     <ScrollView>
                         <Calendar
                             markedDates={Object.keys(events).reduce((acc, date) => {
@@ -188,16 +219,12 @@ const CaregiverCalendarScreen = () => {
                             data={selectedDayEvents}
                             keyExtractor={(item, index) => index.toString()}
                             renderItem={({ item }) => (
-                                <TouchableOpacity onPress={() => handleEditEvent(item)}>
-                                    <View style={styles.eventItemModal}>
-                                        <View style={styles.eventDetailsContainer}>
-                                            <CustomText style={styles.eventTitle}>
-                                                {`${item.time || '시간 없음'}  |  ${item.title}`}
-                                            </CustomText>
-                                            <CustomText style={styles.eventDetail}>{item.description}</CustomText>
-                                        </View>
-                                    </View>
-                                </TouchableOpacity>
+                                <View style={styles.eventItemModal}>
+                                    <CustomText style={styles.eventTitle}>
+                                        {`${item.time || '시간 없음'}  |  ${item.title}`}
+                                    </CustomText>
+                                    <CustomText style={styles.eventDetail}>{item.description}</CustomText>
+                                </View>
                             )}
                         />
                     ) : (
@@ -294,48 +321,47 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         margin: 0,
     },
-    modalContent: {
-        backgroundColor: '#333',
-        padding: 20,
-        borderRadius: 20,
-        width: '90%',
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
-    modalHeader: {
+    modalContent: {
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        borderRadius: 10,
+        padding: 20,
+        width: '80%',
+    },
+    friendItem: {
+        paddingVertical: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+    },
+    friendItemText: {
+        fontSize: 18,
+        color: '#333',
+    },
+    closeModalButton: {
+        marginTop: 20,
         alignItems: 'center',
     },
-    modalTitle: {
-        fontSize: 24,
-        color: '#fff',
-        fontFamily: 'Pretendard-Bold',
-    },
-    divider: {
-        height: 1,
-        backgroundColor: '#555',
-        marginVertical: 10,
-        width: '100%',
+    closeModalText: {
+        fontSize: 16,
+        color: '#6495ED',
     },
     eventItemModal: {
         flexDirection: 'row',
         marginBottom: 15,
         alignItems: 'center',
     },
-    eventDetailsContainer: {
-        flex: 1,
-        marginLeft: 10,
-    },
     eventTitle: {
         fontSize: 16,
-        color: '#fff',
+        color: '#333',
     },
     eventDetail: {
         fontSize: 14,
-        color: '#bbb',
-        paddingLeft: 90,
-    },
-    noEventsText: {
-        fontSize: 16,
-        textAlign: 'center',
-        marginVertical: 20,
         color: '#999',
     },
     closeModalButton: {
