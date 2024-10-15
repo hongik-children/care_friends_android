@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, PermissionsAndroid, Platform, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, PermissionsAndroid, Platform, ActivityIndicator, Modal, Alert } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import notifee, { AndroidImportance } from '@notifee/react-native';
 import Geolocation from '@react-native-community/geolocation';
@@ -28,6 +28,8 @@ const FriendScheduleScreen = ({ navigation }) => {
     const [showMap, setShowMap] = useState(false);
     const [tasks, setTasks] = useState([]); // 일정 목록을 저장할 상태 추가
     const [loading, setLoading] = useState(true); // 로딩 상태 추가
+    const [selectedTask, setSelectedTask] = useState(null); // 선택된 일정
+    const [taskActionModalVisible, setTaskActionModalVisible] = useState(false); // 일정 액션 모달
 
     useEffect(() => {
         requestUserPermission();
@@ -52,31 +54,22 @@ const FriendScheduleScreen = ({ navigation }) => {
         }, [])
     );
 
-    // 일정 데이터를 서버로부터 가져오는 함수
+    // 일정 데이터를 가져오는 함수
     const fetchTasks = async () => {
-        try {
-            const jwtToken = await AsyncStorage.getItem('jwtToken'); // JWT 토큰 가져오기
-
-            // 오늘 날짜를 'YYYY-MM-DD' 형식으로 구함
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0'); // 월을 두 자리로 맞춤 (예: '01', '11')
-            const day = String(today.getDate()).padStart(2, '0'); // 일을 두 자리로 맞춤 (예: '05', '22')
-            const todayString = `${year}-${month}-${day}`; // 'YYYY-MM-DD' 형식으로 만듦
-
-            // 서버로 오늘 날짜를 쿼리 파라미터로 전달하여 요청
-            const response = await axios.get(`${BASE_URL}/task/myTask?date=${todayString}`, { // 오늘 날짜 추가
-                headers: {
-                    Authorization: `Bearer ${jwtToken}` // JWT 토큰을 Authorization 헤더에 포함
-                }
-            });
-
-            setTasks(response.data); // 서버에서 받은 일정 데이터를 상태로 저장
-        } catch (error) {
-            console.error('일정 데이터를 가져오는 중 오류 발생:', error);
-        } finally {
-            setLoading(false); // 로딩 완료
-        }
+    try {
+      const jwtToken = await AsyncStorage.getItem('jwtToken'); // JWT 토큰 가져오기
+      const today = new Date().toISOString().split('T')[0]; // 오늘 날짜
+      const response = await axios.get(`${BASE_URL}/task/myTask?date=${today}`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+      setTasks(response.data); // 서버에서 받은 일정 데이터 저장
+    } catch (error) {
+      console.error('일정 데이터를 가져오는 중 오류 발생:', error);
+    } finally {
+      setLoading(false); // 로딩 완료
+    }
     };
 
     const requestUserPermission = async () => {
@@ -206,6 +199,32 @@ const FriendScheduleScreen = ({ navigation }) => {
     return `${period} ${formattedHours}:${formattedMinutes}`;
   };
 
+
+  // 일정 클릭 시 액션 모달 열기
+  const handleTaskPress = (task) => {
+    setSelectedTask(task);
+    setTaskActionModalVisible(true);
+  };
+
+  // 일정 삭제 API 호출
+  const deleteTask = async (taskId) => {
+    try {
+      const jwtToken = await AsyncStorage.getItem('jwtToken');
+      await axios.delete(`${BASE_URL}/task`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+        data: { id: taskId },
+      });
+      Alert.alert("삭제 완료", "일정이 성공적으로 삭제되었습니다.");
+      fetchTasks(); // 삭제 후 일정 목록 새로고침
+      setTaskActionModalVisible(false); // 모달 닫기
+    } catch (error) {
+      console.error('일정 삭제 실패:', error);
+      Alert.alert("삭제 실패", "일정을 삭제하는 중 문제가 발생했습니다.");
+    }
+  };
+
     const DayofWeek = ['일','월','화','수','목','금','토'];
 
     // 로딩 중일 때 로딩 화면 표시
@@ -284,6 +303,30 @@ const FriendScheduleScreen = ({ navigation }) => {
                     />
                 </MapView>
             )}
+          {/* 일정 액션 모달 */}
+          <Modal visible={taskActionModalVisible} transparent={true} animationType="slide">
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <CustomText style={styles.modalTitle}>{selectedTask?.title}</CustomText>
+                {/* 일정 수정 */}
+                <TouchableOpacity style={styles.actionButton} onPress={() => {
+                    const event = { taskId: selectedTask.id };
+                    navigation.navigate('EditScheduleScreen', { event });
+                  }}>
+                  <Feather name="edit" size={24} color="#fff" />
+                  <CustomText style={styles.actionButtonText}>일정 수정하기</CustomText>
+                </TouchableOpacity>
+                {/* 일정 삭제 */}
+                <TouchableOpacity onPress={() => deleteTask(selectedTask.id)} style={styles.actionButton}>
+                  <Feather name="trash-2" size={24} color="#fff" />
+                  <CustomText style={styles.actionButtonText}>일정 삭제하기</CustomText>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setTaskActionModalVisible(false)} style={styles.closeModalButton}>
+                  <CustomText style={styles.closeModalText}>닫기</CustomText>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
         </ScrollView>
     );
 };
@@ -358,6 +401,46 @@ const styles = StyleSheet.create({
       color: '#555',
       marginVertical: 10,
     },
+      actionButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#6495ED',
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        borderRadius: 8,
+        marginVertical: 10,
+        width: '100%',
+      },
+      actionButtonText: {
+        color: '#fff',
+        fontSize: 18,
+        marginLeft: 10,
+      },
+      modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      },
+      modalContent: {
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        borderRadius: 10,
+        padding: 20,
+        width: '80%',
+      },
+      modalTitle: {
+        fontSize: 22,
+        marginBottom: 15,
+      },
+      closeModalButton: {
+        marginTop: 20,
+        alignItems: 'center',
+      },
+      closeModalText: {
+        fontSize: 16,
+        color: '#6495ED',
+      },
 });
 
 export default FriendScheduleScreen;
