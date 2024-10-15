@@ -353,6 +353,11 @@ const styles = StyleSheet.create({
         height: 300,
         marginTop: 20,
     },
+    noTaskText: {
+      fontSize: 18,
+      color: '#555',
+      marginVertical: 10,
+    },
 });
 
 export default FriendScheduleScreen;
