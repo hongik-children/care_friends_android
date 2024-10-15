@@ -22,7 +22,8 @@ import FriendCaregiverScreen from './friend/FriendCaregiverScreen';
 import RecommendScreen from './RecommendScreen';
 import SelectPainAreaScreen from './SelectPainAreaScreen';
 import VoiceSearchScreen from './VoiceSearchScreen';
-import EditScheduleScreen from './caregiver/EditScheduleScreen';  // EditScheduleScreen import
+import EditScheduleScreen from './caregiver/EditScheduleScreen';// EditScheduleScreen import
+import LocationScreen from './caregiver/LocationScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -98,6 +99,7 @@ const ScheduleStack = () => (
     <Stack.Screen name="AddScheduleScreen" component={AddScheduleScreen} options={{ headerShown: false }} />
     <Stack.Screen name="AddFriendScreen" component={AddFriendScreen} options={{ headerShown: false }} />
     <Stack.Screen name="CaregiverFriendsListScreen" component={CaregiverFriendsListScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="LocationScreen" component={LocationScreen} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
 
@@ -154,6 +156,7 @@ const App = () => {
         <Stack.Screen name="RecommendScreen" component={RecommendScreen} />
         <Stack.Screen name="VoiceSearchScreen" component={VoiceSearchScreen} />
         <Stack.Screen name="EditScheduleScreen" component={EditScheduleScreen} options={{ title: '일정 수정' }} />
+        <Stack.Screen name="LocationScreen" component={LocationScreen} options={{ title: '위치 조회' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
