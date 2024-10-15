@@ -26,8 +26,8 @@ notifee.onBackgroundEvent(async ({ type, detail }) => {
 const FriendScheduleScreen = ({ navigation }) => {
     const [location, setLocation] = useState(null);
     const [showMap, setShowMap] = useState(false);
-    const [tasks, setTasks] = useState([]); // 일정 목록을 저장할 상태 추가
-    const [loading, setLoading] = useState(true); // 로딩 상태 추가
+    const [tasks, setTasks] = useState([]); // 일정 목록을 저장할 상태
+    const [loading, setLoading] = useState(true); // 로딩 상태
     const [selectedTask, setSelectedTask] = useState(null); // 선택된 일정
     const [taskActionModalVisible, setTaskActionModalVisible] = useState(false); // 일정 액션 모달
 
@@ -38,196 +38,111 @@ const FriendScheduleScreen = ({ navigation }) => {
 
         const unsubscribe = messaging().onMessage(async remoteMessage => onMessageReceived(remoteMessage));
         messaging().setBackgroundMessageHandler(async remoteMessage => {
-            console.log('Message handled in the background!', remoteMessage);
             onMessageReceived(remoteMessage);
         });
 
-        return () => {
-            unsubscribe();
-        };
+        return () => unsubscribe();
     }, []);
 
     // useFocusEffect로 화면이 다시 포커스를 받을 때마다 fetchTasks 실행
     useFocusEffect(
         useCallback(() => {
-            fetchTasks();  // 일정 데이터를 다시 불러오는 함수 호출
+            fetchTasks();
         }, [])
     );
 
     // 일정 데이터를 가져오는 함수
     const fetchTasks = async () => {
-    try {
-      const jwtToken = await AsyncStorage.getItem('jwtToken'); // JWT 토큰 가져오기
-      const today = new Date().toISOString().split('T')[0]; // 오늘 날짜
-      const response = await axios.get(`${BASE_URL}/task/myTask?date=${today}`, {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-      });
-      setTasks(response.data); // 서버에서 받은 일정 데이터 저장
-    } catch (error) {
-      console.error('일정 데이터를 가져오는 중 오류 발생:', error);
-    } finally {
-      setLoading(false); // 로딩 완료
-    }
+        try {
+            const jwtToken = await AsyncStorage.getItem('jwtToken');
+            const today = new Date().toISOString().split('T')[0];
+            const response = await axios.get(`${BASE_URL}/task/myTask?date=${today}`, {
+                headers: { Authorization: `Bearer ${jwtToken}` },
+            });
+            setTasks(response.data); // 서버에서 받은 일정 데이터 저장
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const requestUserPermission = async () => {
-        // 푸시 알림 권한 요청 (Firebase)
         const authStatus = await messaging().requestPermission();
-        const enabled =
-            authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-            authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-        if (enabled) {
-            console.log('Authorization status:', authStatus);
+        if (authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+            authStatus === messaging.AuthorizationStatus.PROVISIONAL) {
+            console.log('Notification permission:', authStatus);
         }
 
-        // 위치 및 마이크 권한 요청 (Android, iOS)
         if (Platform.OS === 'android') {
-            // 위치 권한 요청
-            const locationGranted = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-                {
-                    title: "Location Permission",
-                    message: "This app needs access to your location.",
-                    buttonNeutral: "Ask Me Later",
-                    buttonNegative: "Cancel",
-                    buttonPositive: "OK"
-                }
-            );
-
-            if (locationGranted === PermissionsAndroid.RESULTS.GRANTED) {
-                console.log("Location permission granted");
-            } else {
-                console.log("Location permission denied");
-            }
-
-            // 마이크 권한 요청
-            const microphoneGranted = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-                {
-                    title: "Microphone Permission",
-                    message: "This app needs access to your microphone for voice recognition.",
-                    buttonNeutral: "Ask Me Later",
-                    buttonNegative: "Cancel",
-                    buttonPositive: "OK"
-                }
-            );
-
-            if (microphoneGranted === PermissionsAndroid.RESULTS.GRANTED) {
-                console.log("Microphone permission granted");
-            } else {
-                console.log("Microphone permission denied");
-            }
+            await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
         } else {
-            // iOS 위치 권한 요청
-            const locationResult = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-            if (locationResult === 'granted') {
-                console.log("Location permission granted");
-            } else {
-                console.log("Location permission denied");
-            }
-
-            // iOS 마이크 권한 요청
-            const microphoneResult = await request(PERMISSIONS.IOS.MICROPHONE);
-            if (microphoneResult === 'granted') {
-                console.log("Microphone permission granted");
-            } else {
-                console.log("Microphone permission denied");
-            }
+            await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+            await request(PERMISSIONS.IOS.MICROPHONE);
         }
     };
 
     const getFcmToken = async () => {
-        const fcmTokenInfo = await messaging().getToken();
-        console.log('FCM Token:', fcmTokenInfo);
+        const fcmToken = await messaging().getToken();
+        console.log('FCM Token:', fcmToken);
     };
 
     const onMessageReceived = async (message) => {
-        console.log("title :: ", message.notification.title);
-        console.log("body :: ", message.notification.body);
-
         const channelId = await notifee.createChannel({
             id: 'default',
             name: 'Default Channel',
             importance: AndroidImportance.HIGH,
         });
 
-        console.log('Channel created with ID:', channelId);
-
         await notifee.displayNotification({
             title: message.notification.title,
             body: message.notification.body,
-            android: {
-                channelId,
-                smallIcon: '@mipmap/ic_launcher',
-            },
-        }).then(() => {
-            console.log('Notification displayed successfully');
-        }).catch(error => {
-            console.error('Error displaying notification:', error);
+            android: { channelId, smallIcon: '@mipmap/ic_launcher' },
         });
-    };
-
-    const sendPushMessage = async () => {
-        navigation.navigate('NotificationScreen');
     };
 
     const getCurrentLocation = () => {
         Geolocation.getCurrentPosition(
-            (position) => {
-                setLocation(position);
-                setShowMap(true);
-            },
-            (error) => {
-                console.error(error);
-            },
+            (position) => setLocation(position),
+            (error) => console.error(error),
             { enableHighAccuracy: false, timeout: 15000 }
         );
+        setShowMap(true);
     };
 
-  // 시간 형식 변환 함수 (오전/오후 표시)
-  const formatTime = (timeString) => {
-    const time = new Date(`1970-01-01T${timeString}`);
-    const hours = time.getHours();
-    const minutes = time.getMinutes();
-    const period = hours >= 12 ? '오후' : '오전';
-    const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
-    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    const formatTime = (timeString) => {
+        const time = new Date(`1970-01-01T${timeString}`);
+        const hours = time.getHours();
+        const minutes = time.getMinutes();
+        const period = hours >= 12 ? '오후' : '오전';
+        const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+        const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+        return `${period} ${formattedHours}:${formattedMinutes}`;
+    };
 
-    return `${period} ${formattedHours}:${formattedMinutes}`;
-  };
+    const handleTaskPress = (task) => {
+        setSelectedTask(task);
+        setTaskActionModalVisible(true);
+    };
 
+    const deleteTask = async (taskId) => {
+        try {
+            const jwtToken = await AsyncStorage.getItem('jwtToken');
+            await axios.delete(`${BASE_URL}/task`, {
+                headers: { Authorization: `Bearer ${jwtToken}` },
+                data: { id: taskId },
+            });
+            Alert.alert("삭제 완료", "일정이 성공적으로 삭제되었습니다.");
+            fetchTasks();
+            setTaskActionModalVisible(false);
+        } catch (error) {
+            console.error('Error deleting task:', error);
+            Alert.alert("삭제 실패", "일정을 삭제하는 중 문제가 발생했습니다.");
+        }
+    };
 
-  // 일정 클릭 시 액션 모달 열기
-  const handleTaskPress = (task) => {
-    setSelectedTask(task);
-    setTaskActionModalVisible(true);
-  };
+    const DayofWeek = ['일', '월', '화', '수', '목', '금', '토'];
 
-  // 일정 삭제 API 호출
-  const deleteTask = async (taskId) => {
-    try {
-      const jwtToken = await AsyncStorage.getItem('jwtToken');
-      await axios.delete(`${BASE_URL}/task`, {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-        data: { id: taskId },
-      });
-      Alert.alert("삭제 완료", "일정이 성공적으로 삭제되었습니다.");
-      fetchTasks(); // 삭제 후 일정 목록 새로고침
-      setTaskActionModalVisible(false); // 모달 닫기
-    } catch (error) {
-      console.error('일정 삭제 실패:', error);
-      Alert.alert("삭제 실패", "일정을 삭제하는 중 문제가 발생했습니다.");
-    }
-  };
-
-    const DayofWeek = ['일','월','화','수','목','금','토'];
-
-    // 로딩 중일 때 로딩 화면 표시
     if (loading) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -239,49 +154,29 @@ const FriendScheduleScreen = ({ navigation }) => {
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <CustomText style={styles.title}>오늘의 일정</CustomText>
-            <CustomText style={styles.date}>{new Date().getMonth()+1}월 {new Date().getDate()}일 ({DayofWeek[new Date().getDay()]})</CustomText>
+            <CustomText style={styles.date}>
+                {new Date().getMonth() + 1}월 {new Date().getDate()}일 ({DayofWeek[new Date().getDay()]})
+            </CustomText>
 
-            {/* 일정 목록 표시 */}
             {tasks.length > 0 ? (
-              tasks.map((task) => (
-                <TouchableOpacity key={task.id} style={styles.event} onPress={() => handleTaskPress(task)}>
-                  <CustomText style={styles.time}>{formatTime(task.startTime)}</CustomText>
-                  <CustomText style={styles.description}>{task.title}</CustomText>
-                </TouchableOpacity>
-              ))
+                tasks.map((task) => (
+                    <TouchableOpacity key={task.id} style={styles.event} onPress={() => handleTaskPress(task)}>
+                        <CustomText style={styles.time}>{formatTime(task.startTime)}</CustomText>
+                        <CustomText style={styles.description}>{task.title}</CustomText>
+                    </TouchableOpacity>
+                ))
             ) : (
-              <CustomText style={styles.noTaskText}>오늘 일정이 없습니다.</CustomText>
+                <CustomText style={styles.noTaskText}>오늘 일정이 없습니다.</CustomText>
             )}
 
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('FriendAddScheduleScreen')}>
-                <Feather name="plus-circle" size={20} color="#fff" style={styles.icon} />
+                <Feather name="plus-circle" size={20} color="#fff" />
                 <CustomText style={styles.buttonText}>일정 추가하기</CustomText>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={sendPushMessage}>
-                <Feather name="bell" size={20} color="#fff" style={styles.icon} />
-                <CustomText style={styles.buttonText}>알림 보내기</CustomText>
-            </TouchableOpacity>
-
             <TouchableOpacity style={styles.button} onPress={getCurrentLocation}>
-                <Feather name="map-pin" size={20} color="#fff" style={styles.icon} />
+                <Feather name="map-pin" size={20} color="#fff" />
                 <CustomText style={styles.buttonText}>위치 조회하기</CustomText>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SelectPainAreaScreen' , {
-                  latitude: location ? location.coords.latitude : 0,
-                  longitude: location ? location.coords.longitude : 0
-            })}>
-                <Feather name="map" size={20} color="#fff" style={styles.icon} />
-                <CustomText style={styles.buttonText}>주변 병원 데모 버튼</CustomText>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('VoiceSearchScreen' , {
-                  latitude: location ? location.coords.latitude : 0,
-                  longitude: location ? location.coords.longitude : 0
-            })}>
-                <Feather name="mic" size={20} color="#fff" style={styles.icon} />
-                <CustomText style={styles.buttonText}>음성 병원 찾기</CustomText>
             </TouchableOpacity>
 
             {showMap && location && (
@@ -294,39 +189,34 @@ const FriendScheduleScreen = ({ navigation }) => {
                         longitudeDelta: 0.0421,
                     }}
                 >
-                    <Marker
-                        coordinate={{
-                            latitude: location.coords.latitude,
-                            longitude: location.coords.longitude,
-                        }}
-                        title="Your Location"
-                    />
+                    <Marker coordinate={{
+                        latitude: location.coords.latitude,
+                        longitude: location.coords.longitude,
+                    }} title="Your Location" />
                 </MapView>
             )}
-          {/* 일정 액션 모달 */}
-          <Modal visible={taskActionModalVisible} transparent={true} animationType="slide">
-            <View style={styles.modalContainer}>
-              <View style={styles.modalContent}>
-                <CustomText style={styles.modalTitle}>{selectedTask?.title}</CustomText>
-                {/* 일정 수정 */}
-                <TouchableOpacity style={styles.actionButton} onPress={() => {
-                    const event = { taskId: selectedTask.id };
-                    navigation.navigate('EditScheduleScreen', { event });
-                  }}>
-                  <Feather name="edit" size={24} color="#fff" />
-                  <CustomText style={styles.actionButtonText}>일정 수정하기</CustomText>
-                </TouchableOpacity>
-                {/* 일정 삭제 */}
-                <TouchableOpacity onPress={() => deleteTask(selectedTask.id)} style={styles.actionButton}>
-                  <Feather name="trash-2" size={24} color="#fff" />
-                  <CustomText style={styles.actionButtonText}>일정 삭제하기</CustomText>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => setTaskActionModalVisible(false)} style={styles.closeModalButton}>
-                  <CustomText style={styles.closeModalText}>닫기</CustomText>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
+
+            <Modal visible={taskActionModalVisible} transparent={true} animationType="slide">
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <CustomText style={styles.modalTitle}>{selectedTask?.title}</CustomText>
+                        <TouchableOpacity style={styles.actionButton} onPress={() => {
+                            const event = { taskId: selectedTask.id };
+                            navigation.navigate('EditScheduleScreen', { event });
+                        }}>
+                            <Feather name="edit" size={24} color="#fff" />
+                            <CustomText style={styles.actionButtonText}>일정 수정하기</CustomText>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => deleteTask(selectedTask.id)} style={styles.actionButton}>
+                            <Feather name="trash-2" size={24} color="#fff" />
+                            <CustomText style={styles.actionButtonText}>일정 삭제하기</CustomText>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setTaskActionModalVisible(false)} style={styles.closeModalButton}>
+                            <CustomText style={styles.closeModalText}>닫기</CustomText>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </ScrollView>
     );
 };
@@ -375,21 +265,12 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         width: '100%',
         alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
-        elevation: 5,
-        flexDirection: 'row', // 아이콘과 텍스트를 나란히 배치
+        flexDirection: 'row',
     },
     buttonText: {
-        fontFamily: 'Pretendard-SemiBold',
         fontSize: 20,
         color: '#FFFFFF',
-        marginLeft: 10, // 아이콘과 텍스트 사이에 간격 추가
-    },
-    icon: {
-        marginRight: 10, // 아이콘과 텍스트 사이 간격
+        marginLeft: 10,
     },
     map: {
         width: '100%',
@@ -397,11 +278,11 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     noTaskText: {
-      fontSize: 18,
-      color: '#555',
-      marginVertical: 10,
+        fontSize: 18,
+        color: '#555',
+        marginVertical: 10,
     },
-      actionButton: {
+    actionButton: {
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#6495ED',
@@ -410,37 +291,37 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginVertical: 10,
         width: '100%',
-      },
-      actionButtonText: {
+    },
+    actionButtonText: {
         color: '#fff',
         fontSize: 18,
         marginLeft: 10,
-      },
-      modalContainer: {
+    },
+    modalContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      },
-      modalContent: {
+    },
+    modalContent: {
         backgroundColor: '#fff',
         alignItems: 'center',
         borderRadius: 10,
         padding: 20,
         width: '80%',
-      },
-      modalTitle: {
+    },
+    modalTitle: {
         fontSize: 22,
         marginBottom: 15,
-      },
-      closeModalButton: {
+    },
+    closeModalButton: {
         marginTop: 20,
         alignItems: 'center',
-      },
-      closeModalText: {
+    },
+    closeModalText: {
         fontSize: 16,
         color: '#6495ED',
-      },
+    },
 });
 
 export default FriendScheduleScreen;
