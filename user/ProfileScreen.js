@@ -167,13 +167,13 @@ const ProfileScreen = ({ navigation }) => {
         <View style={styles.modalContainer}>
           <View style={styles.modalView}>
             <TouchableOpacity style={styles.modalButton} onPress={handleImagePick}>
-              <Text style={styles.modalButtonText}>수정</Text>
+              <CustomText style={styles.modalButtonText}>수정</CustomText>
             </TouchableOpacity>
             <TouchableOpacity style={styles.modalButton} onPress={handleDeleteImage}>
-              <Text style={styles.modalButtonText}>삭제</Text>
+              <CustomText style={styles.modalButtonText}>삭제</CustomText>
             </TouchableOpacity>
             <TouchableOpacity style={styles.modalButton} onPress={() => setModalVisible(false)}>
-              <Text style={styles.modalButtonText}>취소</Text>
+              <CustomText style={styles.modalButtonText}>취소</CustomText>
             </TouchableOpacity>
           </View>
         </View>
