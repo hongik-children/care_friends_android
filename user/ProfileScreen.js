@@ -1,25 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Alert, StyleSheet, Image, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, StyleSheet, Image, Modal, Share } from 'react-native';
+import Feather from 'react-native-vector-icons/Feather';
 import axios from 'axios';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 import CustomText from '../CustomTextProps';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { logout as kakaoLogout } from '@react-native-seoul/kakao-login';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 const ProfileScreen = ({ navigation }) => {
   const [profile, setProfile] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [userType, setUserType] = useState(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         // JWT 토큰 가져오기
         const jwtToken = await AsyncStorage.getItem('jwtToken');
+        const userTypeStored = await AsyncStorage.getItem('userType');
+        setUserType(userTypeStored);
+
         if (!jwtToken) {
           Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
           return;
         }
+
         const response = await axios.get(`${BASE_URL}/profile`, {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
@@ -34,6 +41,21 @@ const ProfileScreen = ({ navigation }) => {
 
     fetchProfile();
   }, []);
+
+  const handleCopyUUID = () => {
+    if (profile?.uuid) {
+      Clipboard.setString(profile.uuid);
+      Alert.alert('UUID 복사됨', '노약자의 UUID가 클립보드에 복사되었습니다.');
+    }
+  };
+
+  const handleShareUUID = () => {
+    if (profile?.uuid) {
+      Share.share({
+        message: `노약자의 UUID: ${profile.uuid}`,
+      });
+    }
+  };
 
   const handleImagePick = () => {
     const options = {
@@ -145,6 +167,30 @@ const ProfileScreen = ({ navigation }) => {
             <CustomText style={styles.label}>성별</CustomText>
             <CustomText style={styles.value}>{profile.gender === 'MALE' ? '남성' : '여성'}</CustomText>
           </View>
+            {/* UUID 표시 및 복사, 공유 버튼 (노약자인 경우) */}
+            {userType === 'friend' && (
+              <View style={styles.infoRow}>
+                <CustomText style={styles.label}>UUID</CustomText>
+
+                {/* UUID를 앞뒤로 잘라서 보여주고 전체 복사는 유지 */}
+                <View style={styles.uuidContainer}>
+                  <CustomText style={styles.value}>
+                    {`${profile.uuid.substring(0, 7)}...${profile.uuid.substring(profile.uuid.length - 7)}`}
+                  </CustomText>
+
+                  {/* 복사 버튼 */}
+                  <TouchableOpacity onPress={handleCopyUUID}>
+                    <Feather name="copy" size={24} color="#333" style={styles.icon} />
+                  </TouchableOpacity>
+
+                  {/* 공유 버튼 */}
+                  <TouchableOpacity onPress={handleShareUUID}>
+                    <Feather name="share" size={24} color="#333" style={styles.icon} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+
         </View>
       ) : (
         <CustomText style={styles.noProfileText}>프로필 정보가 없습니다.</CustomText>
@@ -215,6 +261,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 15,
+    alignItems: 'center',
   },
   label: {
     fontSize: 22,
@@ -278,6 +325,22 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontFamily: 'Pretendard-Bold',
+  },
+  uuidText: {
+    fontSize: 18,
+    color: '#333',
+    fontFamily: 'Pretendard-Bold',
+  },
+  uuidContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flex: 1,
+    flexWrap: 'wrap', // 여러 줄로 표시되게 하기
+    marginHorizontal: 10,
+  },
+  icon: {
+    marginLeft: 5,
   },
 });
 
