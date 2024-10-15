@@ -82,7 +82,7 @@ const RecommendScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>주변 병원</Text>
+      <CustomText style={styles.title}>주변 병원</CustomText>
       <FlatList
         data={places}
         keyExtractor={(item) => item.link}
@@ -90,7 +90,7 @@ const RecommendScreen = ({ route, navigation }) => {
           <TouchableOpacity onPress={() => handleCardPress(item)}>
             <View style={styles.card}>
               <View style={styles.cardHeader}>
-                <Text style={styles.hospitalName}>{item.title.replace(/<[^>]+>/g, '')}</Text>
+                <CustomText style={styles.hospitalName}>{item.title.replace(/<[^>]+>/g, '')}</CustomText>
               </View>
               <Image
                 source={
@@ -101,7 +101,7 @@ const RecommendScreen = ({ route, navigation }) => {
                 style={styles.hospitalImage}
               />
               <View style={styles.cardContent}>
-                <Text style={styles.text}>주소: {item.roadAddress}</Text>
+                <CustomText style={styles.text}>주소: {item.roadAddress}</CustomText>
               </View>
             </View>
           </TouchableOpacity>

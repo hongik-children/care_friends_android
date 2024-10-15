@@ -4,6 +4,7 @@ import { login } from "@react-native-seoul/kakao-login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "@env";
 import { useNavigation } from "@react-navigation/native";
+import CustomText from '../CustomTextProps';
 
 const KakaoLoginScreen = () => {
   const navigation = useNavigation();
@@ -51,7 +52,7 @@ const KakaoLoginScreen = () => {
   return (
     <View style={styles.container}>
       <Pressable style={styles.button} onPress={signInWithKakao}>
-        <Text style={styles.text}>카카오 로그인</Text>
+        <CustomText style={styles.text}>카카오 로그인</CustomText>
       </Pressable>
     </View>
   );
@@ -75,6 +76,7 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: "center",
+    fontFamily: 'Pretendard-Bold',
   },
 });
 
