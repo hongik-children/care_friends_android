@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
         color: '#333333',
     },
     event: {
-        backgroundColor: '#FFF8DE',
+        backgroundColor: '#EFF5FB',
         width: '100%',
         padding: 15,
         marginVertical: 10,
