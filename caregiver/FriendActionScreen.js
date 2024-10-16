@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet, Alert, Linking } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Alert, Linking, Image } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import CustomText from '../CustomTextProps';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { BASE_URL } from '@env';
+import DefaultProfileImage from '../assets/Default-Profile.png';
 
 const FriendActionScreen = ({ route, navigation }) => {
   const { friend, onDeleteFriend } = route.params;
@@ -70,6 +71,11 @@ const FriendActionScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Image
+        source={friend.profileImg ? { uri: friend.profileImg } : DefaultProfileImage} // 프로필 이미지가 없으면 기본 이미지 사용
+        style={styles.profileImage}
+      />
+
       <CustomText style={styles.title}>{friend.name}님에게</CustomText>
 
       <TouchableOpacity style={styles.actionButton} onPress={handleCall}>
@@ -107,6 +113,13 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: 'center',
     backgroundColor: '#f9f9f9',
+  },
+  profileImage: {
+    width: 120,  // 이미지 크기
+    height: 120,
+    borderRadius: 60,  // 원형 이미지
+    alignSelf: 'center',  // 가운데 정렬
+    marginBottom: 20,  // 이미지와 텍스트 사이 간격
   },
   title: {
     fontSize: 28,

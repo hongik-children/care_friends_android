@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   voiceButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#6495ED',
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',

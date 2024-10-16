@@ -1,11 +1,12 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, TouchableOpacity, Alert, StyleSheet, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, StyleSheet, Linking, Image } from 'react-native';
 import axios from 'axios';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 import CustomText from '../CustomTextProps';
 import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
+import DefaultProfileImage from '../assets/Default-Profile.png';
 
 const FriendCaregiverScreen = ({ navigation }) => {
   const [caregiver, setCaregiver] = useState(null);
@@ -67,8 +68,14 @@ const FriendCaregiverScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      {caregiver && (
+          <Image
+              source={caregiver.profileImg ? { uri: caregiver.profileImg } : DefaultProfileImage} // 프로필 이미지가 없을 경우 기본 이미지 표시
+              style={styles.profileImage}
+          />
+      )}
       <CustomText style={styles.title}>나의 보호자</CustomText>
-      {caregiver ? (
+        {caregiver ? (
         <View style={styles.caregiverBox}>
           <View style={styles.infoRow}>
             <CustomText style={styles.label}>이름</CustomText>
@@ -119,6 +126,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9f9f9',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  profileImage: {
+    width: 120,  // 이미지 크기
+    height: 120,
+    borderRadius: 60,  // 원형 이미지
+    alignSelf: 'center',  // 가운데 정렬
+    marginBottom: 20,  // 이미지와 텍스트 사이 간격
   },
   title: {
     fontSize: 28,

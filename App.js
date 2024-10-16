@@ -24,7 +24,7 @@ import SelectPainAreaScreen from './SelectPainAreaScreen';
 import VoiceSearchScreen from './VoiceSearchScreen';
 import EditScheduleScreen from './caregiver/EditScheduleScreen';// EditScheduleScreen import
 import LocationScreen from './caregiver/LocationScreen';
-import OnboardingScreen from './user/OnboardingScreen'
+import OnboardingScreen from './user/OnboardingScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -148,16 +148,16 @@ const App = () => {
       <Stack.Navigator initialRouteName="SplashScreen">
         <Stack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
         <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} options={{ headerShown: false }}/>
-        <Stack.Screen name="KakaoLoginScreen" component={KakaoLoginScreen} options={{ title: '카카오 로그인' }} />
-        <Stack.Screen name="SignupScreen" component={SignupScreen} options={{ title: '회원 가입' }} />
-        <Stack.Screen name="UserTypeSelectionScreen" component={UserTypeSelectionScreen} options={{ title: '회원 유형 선택' }} />
-        <Stack.Screen name="FriendActionScreen" component={FriendActionScreen} options={{ title: '프렌즈 관리' }} />
+        <Stack.Screen name="KakaoLoginScreen" component={KakaoLoginScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="SignupScreen" component={SignupScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="UserTypeSelectionScreen" component={UserTypeSelectionScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="FriendActionScreen" component={FriendActionScreen} options={{ headerShown: false }} />
         <Stack.Screen name="CaregiverTabs" component={CaregiverTabs} options={{ headerShown: false }} />
         <Stack.Screen name="FriendTabs" component={FriendTabs} options={{ headerShown: false }} />
         <Stack.Screen name="SelectPainAreaScreen" component={SelectPainAreaScreen} />
         <Stack.Screen name="RecommendScreen" component={RecommendScreen} />
         <Stack.Screen name="VoiceSearchScreen" component={VoiceSearchScreen} />
-        <Stack.Screen name="EditScheduleScreen" component={EditScheduleScreen} options={{ title: '일정 수정' }} />
+        <Stack.Screen name="EditScheduleScreen" component={EditScheduleScreen} options={{ headerShown: false }} />
         <Stack.Screen name="LocationScreen" component={LocationScreen} options={{ title: '위치 조회' }} />
       </Stack.Navigator>
     </NavigationContainer>
