@@ -24,6 +24,7 @@ import SelectPainAreaScreen from './SelectPainAreaScreen';
 import VoiceSearchScreen from './VoiceSearchScreen';
 import EditScheduleScreen from './caregiver/EditScheduleScreen';// EditScheduleScreen import
 import LocationScreen from './caregiver/LocationScreen';
+import OnboardingScreen from './user/OnboardingScreen'
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -146,6 +147,7 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="SplashScreen">
         <Stack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="KakaoLoginScreen" component={KakaoLoginScreen} options={{ title: '카카오 로그인' }} />
         <Stack.Screen name="SignupScreen" component={SignupScreen} options={{ title: '회원 가입' }} />
         <Stack.Screen name="UserTypeSelectionScreen" component={UserTypeSelectionScreen} options={{ title: '회원 유형 선택' }} />
