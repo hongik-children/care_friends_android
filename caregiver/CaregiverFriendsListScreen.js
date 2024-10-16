@@ -1,42 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 import CustomText from '../CustomTextProps';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 const CaregiverFriendsListScreen = ({ navigation }) => {
   const [friends, setFriends] = useState([]);
 
-  useEffect(() => {
-    const fetchFriends = async () => {
-      try {
-        // JWT 토큰 가져오기
-        const jwtToken = await AsyncStorage.getItem('jwtToken');
-        if (!jwtToken) {
-          Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
-          return;
-        }
-        console.log(BASE_URL); //BASE_URL이 안불러와지는 에러 해결
-        const apiUrl = `${BASE_URL}/friendRequest/getFriends`; // API URL
-
-        // 서버로 요청 보내기
-        const response = await axios.get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${jwtToken}` // JWT 토큰을 헤더에 추가
-          }
-        });
-
-        setFriends(response.data);
-
-      } catch (error) {
-        console.error(error);
-        Alert.alert('오류', '프렌즈 리스트를 불러오는 중 오류가 발생하였습니다.');
+  const fetchFriends = async () => {
+    try {
+      const jwtToken = await AsyncStorage.getItem('jwtToken');
+      if (!jwtToken) {
+        Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
+        return;
       }
-    };
+      const response = await axios.get(`${BASE_URL}/friendRequest/getFriends`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        }
+      });
 
-    fetchFriends();
-  }, []);
+      setFriends(response.data);
+    } catch (error) {
+      console.error(error);
+      Alert.alert('오류', '프렌즈 리스트를 불러오는 중 오류가 발생하였습니다.');
+    }
+  };
+
+  // 화면이 포커스될 때마다 친구 목록을 새로 불러오는 함수
+  useFocusEffect(
+    useCallback(() => {
+      fetchFriends();
+    }, [])
+  );
+
 
   // 친구 삭제 시 리스트에서 제거하는 함수
   const handleDeleteFriend = (friendId) => {
