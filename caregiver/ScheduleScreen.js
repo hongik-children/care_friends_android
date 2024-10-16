@@ -242,6 +242,7 @@ const ScheduleScreen = () => {
                 </TouchableOpacity>
                 {/*일정 수정시 선택한 일정의 수정화면으로 가게 수정*/}
                 <TouchableOpacity style={styles.actionButton} onPress={() => {
+                    setTaskActionModalVisible(false);
                     const event = {taskId : selectedTask.id}
                     navigation.navigate('EditScheduleScreen', { event })
                 }} >
@@ -463,9 +464,9 @@ const styles = StyleSheet.create({
     color: '#6495ED',
   },
   noFriendsContainer: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 50,
   },
   noFriendsText: {
     fontSize: 20,

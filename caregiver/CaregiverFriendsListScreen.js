@@ -38,13 +38,19 @@ const CaregiverFriendsListScreen = ({ navigation }) => {
     fetchFriends();
   }, []);
 
-
+  // 친구 삭제 시 리스트에서 제거하는 함수
+  const handleDeleteFriend = (friendId) => {
+    setFriends((prevFriends) => prevFriends.filter(friend => friend.friendId !== friendId));
+  };
 
   // 프렌드 정보 렌더링
   const renderFriendItem = ({ item }) => (
     <TouchableOpacity
       style={styles.friendItem}
-      onPress={() => navigation.navigate('FriendActionScreen', { friend: item })} // 프렌즈 정보 전달
+      onPress={() => navigation.navigate('FriendActionScreen', {
+        friend: item,
+        onDeleteFriend: handleDeleteFriend
+      })}
     >
       <View style={styles.friendDetails}>
         <CustomText style={styles.friendName}>{item.name}</CustomText>
@@ -67,7 +73,7 @@ const CaregiverFriendsListScreen = ({ navigation }) => {
       ) : (
         <FlatList
           data={friends}
-          keyExtractor={(item) => item.name}
+          keyExtractor={(item) => item.friendId.toString()}
           renderItem={renderFriendItem}
         />
       )}

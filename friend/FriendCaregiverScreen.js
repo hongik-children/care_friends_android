@@ -108,10 +108,6 @@ const FriendCaregiverScreen = ({ navigation }) => {
           <CustomText style={styles.checkFriendRequestButtonText}>친구 요청 확인하기</CustomText>
         </TouchableOpacity>
       )}
-
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <CustomText style={styles.backButtonText}>뒤로가기</CustomText>
-      </TouchableOpacity>
     </View>
   );
 };

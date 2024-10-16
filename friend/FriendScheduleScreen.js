@@ -278,6 +278,7 @@ const FriendScheduleScreen = ({ navigation }) => {
                         <CustomText style={styles.modalTitle}>{selectedTask?.title}</CustomText>
                         <TouchableOpacity style={styles.actionButton} onPress={() => {
                             const event = { taskId: selectedTask.id };
+                            setTaskActionModalVisible(false);
                             navigation.navigate('EditScheduleScreen', { event });
                         }}>
                             <Feather name="edit" size={24} color="#fff" />

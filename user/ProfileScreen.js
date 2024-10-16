@@ -195,9 +195,6 @@ const ProfileScreen = ({ navigation }) => {
       ) : (
         <CustomText style={styles.noProfileText}>프로필 정보가 없습니다.</CustomText>
       )}
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <CustomText style={styles.backButtonText}>뒤로가기</CustomText>
-      </TouchableOpacity>
 
       {/* 로그아웃 버튼 추가 */}
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
