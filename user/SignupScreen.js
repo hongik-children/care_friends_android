@@ -18,6 +18,7 @@ const SignupScreen = () => {
     const [birthDate, setBirthDate] = useState('');
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [selectedDate, setSelectedDate] = useState(new Date());
+    const [showLoginModal, setShowLoginModal] = useState(false); // 로그인 안내 모달 상태
 
     const convertUserType = (type) => {
         if (type === '보호자') return 'caregiver';
@@ -71,15 +72,19 @@ const SignupScreen = () => {
                 }
             });
             console.log('회원가입 성공:', response.data);
-            Alert.alert('회원가입이 성공적으로 완료되었습니다.');
 
-            // 회원가입 후 로그인 화면으로 이동
-            navigation.navigate("KakaoLoginScreen");
+            // 회원가입 후 모달을 표시
+            setShowLoginModal(true);
 
         } catch (error) {
             console.error('회원가입 실패:', error);
             Alert.alert('회원가입에 실패했습니다.');
         }
+    };
+
+    const handleLoginRedirect = () => {
+        setShowLoginModal(false); // 모달 닫기
+        navigation.navigate("KakaoLoginScreen"); // 로그인 화면으로 이동
     };
 
     return (
@@ -133,7 +138,9 @@ const SignupScreen = () => {
                             onDateChange={setSelectedDate}
                             maximumDate={new Date()}
                         />
-                        <Button title="확인" onPress={() => onConfirmDate(selectedDate)} />
+                        <TouchableOpacity style={styles.okButton} onPress={() => onConfirmDate(selectedDate)}>
+                            <CustomText style={styles.okButtonText}>확인</CustomText>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </Modal>
@@ -141,6 +148,20 @@ const SignupScreen = () => {
             <TouchableOpacity style={styles.signupButton} onPress={handleSignup}>
                 <CustomText style={styles.signupButtonText}>회원가입</CustomText>
             </TouchableOpacity>
+
+
+            {/* 로그인 안내 모달 */}
+            <Modal transparent={true} visible={showLoginModal} animationType="slide">
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <CustomText style={styles.modalText}>회원가입이 완료되었습니다.</CustomText>
+                        <CustomText style={styles.modalText}>한 번 더 로그인해주세요.</CustomText>
+                        <TouchableOpacity style={styles.loginButton} onPress={handleLoginRedirect}>
+                            <CustomText style={styles.loginButtonText}>로그인 화면으로 이동</CustomText>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 };
@@ -230,6 +251,42 @@ const styles = StyleSheet.create({
     signupButtonText: {
         color: '#fff',
         fontSize: 16,
+        fontFamily: 'Pretendard-Bold',
+    },
+    modalContent: {
+        backgroundColor: '#fff',
+        padding: 20,
+        borderRadius: 10,
+        marginHorizontal: 30,
+        alignItems: 'center',
+    },
+    modalText: {
+        fontSize: 18,
+        marginBottom: 20,
+        textAlign: 'center',
+    },
+    loginButton: {
+        backgroundColor: '#6495ED',
+        paddingVertical: 12,
+        paddingHorizontal: 25,
+        borderRadius: 8,
+        alignItems: 'center',
+    },
+    loginButtonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontFamily: 'Pretendard-Bold',
+    },
+    okButton: {
+        backgroundColor: '#6495ED',
+        paddingVertical: 12,
+        paddingHorizontal: 25,
+        borderRadius: 8,
+        alignItems: 'center',
+    },
+    okButtonText: {
+        color: '#fff',
+        fontSize: 18,
         fontFamily: 'Pretendard-Bold',
     },
 });
