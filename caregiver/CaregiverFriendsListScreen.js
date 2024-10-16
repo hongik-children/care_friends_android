@@ -1,42 +1,49 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Alert, StyleSheet, Image } from 'react-native';
 import axios from 'axios';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 import CustomText from '../CustomTextProps';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DefaultProfileImage from '../assets/Default-Profile.png'; // 기본 프로필 이미지 경로
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
+
 
 const CaregiverFriendsListScreen = ({ navigation }) => {
   const [friends, setFriends] = useState([]);
 
-  useEffect(() => {
-    const fetchFriends = async () => {
-      try {
-        // JWT 토큰 가져오기
-        const jwtToken = await AsyncStorage.getItem('jwtToken');
-        if (!jwtToken) {
-          Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
-          return;
-        }
-        console.log(BASE_URL); //BASE_URL이 안불러와지는 에러 해결
-        const apiUrl = `${BASE_URL}/friendRequest/getFriends`; // API URL
-
-        // 서버로 요청 보내기
-        const response = await axios.get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${jwtToken}` // JWT 토큰을 헤더에 추가
-          }
-        });
-
-        setFriends(response.data);
-
-      } catch (error) {
-        console.error(error);
-        Alert.alert('오류', '프렌즈 리스트를 불러오는 중 오류가 발생하였습니다.');
+  const fetchFriends = async () => {
+    try {
+      // JWT 토큰 가져오기
+      const jwtToken = await AsyncStorage.getItem('jwtToken');
+      if (!jwtToken) {
+        Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
+        return;
       }
-    };
 
-    fetchFriends();
-  }, []);
+      const apiUrl = `${BASE_URL}/friendRequest/getFriends`; // API URL
+
+      // 서버로 요청 보내기
+      const response = await axios.get(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}` // JWT 토큰을 헤더에 추가
+        }
+      });
+
+      setFriends(response.data);
+
+    } catch (error) {
+      console.error(error);
+      Alert.alert('오류', '프렌즈 리스트를 불러오는 중 오류가 발생하였습니다.');
+    }
+  };
+
+  // useFocusEffect 사용: 화면이 포커스를 받을 때마다 데이터를 다시 요청
+  useFocusEffect(
+    useCallback(() => {
+      fetchFriends(); // 최신 친구 데이터를 요청
+    }, [])
+  );
 
   // 친구 삭제 시 리스트에서 제거하는 함수
   const handleDeleteFriend = (friendId) => {
@@ -52,13 +59,22 @@ const CaregiverFriendsListScreen = ({ navigation }) => {
         onDeleteFriend: handleDeleteFriend
       })}
     >
-      <View style={styles.friendDetails}>
+      {/* 1열: 프로필 이미지 */}
+      <Image
+        source={item.profileImg ? { uri: item.profileImg } : require('../assets/Default-Profile.png')} // 프로필 이미지 URL이 없으면 기본 이미지 사용
+        style={styles.profileImage}
+      />
+
+      {/* 2열: 이름 (굵은 글씨) */}
+      <View style={styles.nameContainer}>
         <CustomText style={styles.friendName}>{item.name}</CustomText>
-        <CustomText style={styles.friendPhone}>{item.phoneNumber}</CustomText>
       </View>
-      <View style={styles.friendInfo}>
-        <CustomText style={styles.friendBirthday}>생년월일: {item.birthDate}</CustomText>
-        <CustomText style={styles.friendGender}>성별: {item.gender === 'MALE' ? '남성' : '여성'}</CustomText>
+
+      {/* 3열: 전화번호, 생년월일, 성별 */}
+      <View style={styles.infoContainer}>
+        <CustomText style={styles.friendPhone}>{item.phoneNumber}</CustomText>
+        <CustomText style={styles.friendBirthday}>{item.birthDate}</CustomText>
+        <CustomText style={styles.friendGender}>{item.gender === 'MALE' ? '남성' : '여성'}</CustomText>
       </View>
     </TouchableOpacity>
   );
@@ -108,35 +124,50 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   friendItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 15,
+    flexDirection: 'row', // 가로로 배치
+    alignItems: 'center', // 세로 축 가운데 정렬
+    paddingVertical: 8,
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
   },
   friendDetails: {
+    flexDirection: 'row', // 프로필 이미지와 텍스트를 가로로 배치
+    alignItems: 'center',
     flex: 1,
-    flexDirection: 'column',
   },
-  friendInfo: {
-    flexShrink: 0,
+  profileImage: {
+    width: 60, // 이미지 크기 조정
+    height: 60,
+    borderRadius: 25, // 원형 이미지
+    marginRight: 15, // 텍스트와의 간격
+  },
+  nameContainer: {
+    flex: 1, // 이름을 가운데 정렬하기 위한 공간 차지
+    justifyContent: 'center',
+    alignItems: 'center', // 세로축 가운데 정렬
+  },
+  infoContainer: {
+    flex: 2, // 전화번호, 생년월일, 성별을 오른쪽에 정렬
+    justifyContent: 'center',
     alignItems: 'flex-end',
   },
   friendName: {
-    fontSize: 18,
+    fontSize: 25,
     fontFamily: 'Pretendard-Bold',
     color: '#333',
   },
   friendPhone: {
-    fontSize: 14,
+    fontSize: 18,
     color: '#555',
+    marginBottom: 5, // 아래 간격 추가
   },
   friendBirthday: {
-    fontSize: 14,
+    fontSize: 18,
     color: '#333',
+    marginBottom: 5, // 아래 간격 추가
   },
   friendGender: {
-    fontSize: 14,
+    fontSize: 18,
     color: '#555',
   },
   Button: {
