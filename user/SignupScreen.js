@@ -138,7 +138,9 @@ const SignupScreen = () => {
                             onDateChange={setSelectedDate}
                             maximumDate={new Date()}
                         />
-                        <Button title="확인" onPress={() => onConfirmDate(selectedDate)} />
+                        <TouchableOpacity style={styles.okButton} onPress={() => onConfirmDate(selectedDate)}>
+                            <CustomText style={styles.okButtonText}>확인</CustomText>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </Modal>
@@ -271,6 +273,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     loginButtonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontFamily: 'Pretendard-Bold',
+    },
+    okButton: {
+        backgroundColor: '#6495ED',
+        paddingVertical: 12,
+        paddingHorizontal: 25,
+        borderRadius: 8,
+        alignItems: 'center',
+    },
+    okButtonText: {
         color: '#fff',
         fontSize: 18,
         fontFamily: 'Pretendard-Bold',
