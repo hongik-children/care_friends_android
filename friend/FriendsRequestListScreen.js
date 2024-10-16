@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { View, FlatList, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 import CustomText from '../CustomTextProps';
@@ -7,9 +7,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FriendsRequestListScreen = ({ navigation }) => {
   const [requests, setRequests] = useState([]);
-
-  // 프렌즈의 UUID를 하드코딩
-  //const friendId = 'fce5ae58-7682-429b-b784-6e15e10d0ee9';
 
   useEffect(() => {
     // 친구 요청 리스트를 가져오는 함수
@@ -20,7 +17,6 @@ const FriendsRequestListScreen = ({ navigation }) => {
           Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
           return;
         }
-        console.log(BASE_URL); //BASE_URL이 안불러와지는 에러 해결
         const response = await axios.get(`${BASE_URL}/friendRequest/pendingRequests`, {
           headers: {
             Authorization: `Bearer ${jwtToken}`
@@ -39,15 +35,11 @@ const FriendsRequestListScreen = ({ navigation }) => {
   // 친구 요청 수락/거절 버튼 클릭 시 호출되는 함수
   const handleRequestAction = async (requestId, action) => {
     try {
-      console.log(requestId);
-      console.log(action);
       const jwtToken = await AsyncStorage.getItem('jwtToken');
-      console.log(jwtToken);
       if (!jwtToken) {
         Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
         return;
       }
-      console.log(`${BASE_URL}/friendRequest/${requestId}/${action}`);
       const response = await axios.post(`${BASE_URL}/friendRequest/${requestId}/${action}`,
       {},
       {
@@ -55,7 +47,6 @@ const FriendsRequestListScreen = ({ navigation }) => {
           Authorization: `Bearer ${jwtToken}`
         }
       });
-      console.log(response);
       if (response.status === 200) {
         Alert.alert('성공', `친구 요청이 ${action === 'accept' ? '수락' : '거절'}되었습니다.`);
         setRequests(requests.filter(req => req.requestId !== requestId)); // 수락/거절된 요청을 리스트에서 제거
@@ -92,11 +83,17 @@ const FriendsRequestListScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <CustomText style={styles.title}>친구 요청 리스트</CustomText>
-      <FlatList
-        data={requests}
-        renderItem={renderRequestItem}
-        keyExtractor={item => item.requestId.toString()}
-      />
+      {requests.length === 0 ? (
+        <View style={styles.noRequestsContainer}>
+          <CustomText style={styles.noRequestsText}>아직 친구 요청이 없습니다.</CustomText>
+        </View>
+      ) : (
+        <FlatList
+          data={requests}
+          renderItem={renderRequestItem}
+          keyExtractor={item => item.requestId.toString()}
+        />
+      )}
     </View>
   );
 };
@@ -159,6 +156,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Pretendard-Bold',
     color: '#fff',
+  },
+  noRequestsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noRequestsText: {
+    fontSize: 18,
+    color: '#a0a0a0',
+    textAlign: 'center',
   },
 });
 

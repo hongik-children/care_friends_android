@@ -242,6 +242,7 @@ const ScheduleScreen = () => {
                 </TouchableOpacity>
                 {/*일정 수정시 선택한 일정의 수정화면으로 가게 수정*/}
                 <TouchableOpacity style={styles.actionButton} onPress={() => {
+                    setTaskActionModalVisible(false);
                     const event = {taskId : selectedTask.id}
                     navigation.navigate('EditScheduleScreen', { event })
                 }} >
@@ -258,6 +259,11 @@ const ScheduleScreen = () => {
               </View>
             </View>
           </Modal>
+
+          <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('LocationScreen', { friendId: currentFriend.friendId })}>
+              <Feather name="map-pin" size={24} color="#fff" />
+              <CustomText style={styles.actionButtonText}>위치 조회하기</CustomText>
+          </TouchableOpacity>
 
           {/* 전화 걸기 */}
           <TouchableOpacity style={styles.actionButton} onPress={handleCall}>
@@ -384,7 +390,7 @@ const styles = StyleSheet.create({
     color: '#333333',
   },
   event: {
-    backgroundColor: '#FFF8DE',
+    backgroundColor: '#EFF5FB',
     width: '100%',
     padding: 15,
     marginVertical: 10,
@@ -458,9 +464,9 @@ const styles = StyleSheet.create({
     color: '#6495ED',
   },
   noFriendsContainer: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 50,
   },
   noFriendsText: {
     fontSize: 20,
