@@ -2,11 +2,11 @@ import React from 'react';
 import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import Onboarding from 'react-native-onboarding-swiper';
 import CustomText from '../CustomTextProps';
+import KakaoLoginScreen from '../user/KakaoLoginScreen';
 
 const OnboardingScreen = ({ navigation }) => {
   return (
     <Onboarding
-      onDone={() => navigation.replace('KakaoLoginScreen')}
       nextLabel={<CustomText style={styles.navigationText}>다음</CustomText>}
       bottomBarHighlight={false}
       showSkip={false}
@@ -30,16 +30,9 @@ const OnboardingScreen = ({ navigation }) => {
         },
         {
           backgroundColor: '#fff',
-          title: '카카오 로그인으로',
-          subtitle: (
-            <View style={styles.loginContainer}>
-              <CustomText style={styles.subtitle}>간편하게 시작하세요.</CustomText>
-              <TouchableOpacity style={styles.kakaoButton} onPress={() => navigation.replace('KakaoLoginScreen')}>
-                <CustomText style={styles.kakaoButtonText}>카카오 로그인</CustomText>
-              </TouchableOpacity>
-            </View>
-          ),
-          titleStyles: styles.title,
+          image: null,
+          title: null,
+          subtitle: <KakaoLoginScreen navigation={navigation} />,
         },
       ]}
     />

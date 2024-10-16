@@ -24,7 +24,7 @@ import SelectPainAreaScreen from './SelectPainAreaScreen';
 import VoiceSearchScreen from './VoiceSearchScreen';
 import EditScheduleScreen from './caregiver/EditScheduleScreen';// EditScheduleScreen import
 import LocationScreen from './caregiver/LocationScreen';
-import OnboardingScreen from './user/OnboardingScreen'
+import OnboardingScreen from './user/OnboardingScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
