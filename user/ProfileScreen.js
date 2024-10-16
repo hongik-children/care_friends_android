@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, TouchableOpacity, Alert, StyleSheet, Image, Modal, Share } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import axios from 'axios';
@@ -8,39 +8,42 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { logout as kakaoLogout } from '@react-native-seoul/kakao-login';
 import Clipboard from '@react-native-clipboard/clipboard';
+import { useFocusEffect } from '@react-navigation/native';
 
 const ProfileScreen = ({ navigation }) => {
   const [profile, setProfile] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [userType, setUserType] = useState(null);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        // JWT 토큰 가져오기
-        const jwtToken = await AsyncStorage.getItem('jwtToken');
-        const userTypeStored = await AsyncStorage.getItem('userType');
-        setUserType(userTypeStored);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchProfile = async () => {
+        try {
+          // JWT 토큰 가져오기
+          const jwtToken = await AsyncStorage.getItem('jwtToken');
+          const userTypeStored = await AsyncStorage.getItem('userType');
+          setUserType(userTypeStored);
 
-        if (!jwtToken) {
-          Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
-          return;
-        }
-
-        const response = await axios.get(`${BASE_URL}/profile`, {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
+          if (!jwtToken) {
+            Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
+            return;
           }
-        });
-        setProfile(response.data);
-      } catch (error) {
-        console.error(error);
-        Alert.alert('오류', '프로필 정보를 불러오는 중 오류가 발생하였습니다.');
-      }
-    };
 
-    fetchProfile();
-  }, []);
+          const response = await axios.get(`${BASE_URL}/profile`, {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            }
+          });
+          setProfile(response.data);
+        } catch (error) {
+          console.error(error);
+          Alert.alert('오류', '프로필 정보를 불러오는 중 오류가 발생하였습니다.');
+        }
+      };
+
+      fetchProfile(); // 포커스가 잡힐 때마다 호출
+    }, []) // 빈 의존성 배열을 전달해 화면이 포커스를 받을 때마다 실행되도록 설정
+  );
 
   const handleCopyUUID = () => {
     if (profile?.uuid) {
