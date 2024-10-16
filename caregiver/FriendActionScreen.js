@@ -87,7 +87,7 @@ const FriendActionScreen = ({ route, navigation }) => {
         <CustomText style={styles.actionButtonText}>일정 추가하기</CustomText>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.actionButton} onPress={handleCheckLocation}>
+      <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('LocationScreen', { friendId: friend.friendId })}>
         <Feather name="map-pin" size={24} color="#fff" />
         <CustomText style={styles.actionButtonText}>위치 확인하기</CustomText>
       </TouchableOpacity>
