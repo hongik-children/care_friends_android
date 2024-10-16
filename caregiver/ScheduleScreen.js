@@ -464,9 +464,9 @@ const styles = StyleSheet.create({
     color: '#6495ED',
   },
   noFriendsContainer: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 50,
   },
   noFriendsText: {
     fontSize: 20,
