@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Alert, StyleSheet, Image } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '@env'; // @env 모듈로 불러옴
 import CustomText from '../CustomTextProps';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DefaultProfileImage from '../assets/Default-Profile.png'; // 기본 프로필 이미지 경로
 import { useFocusEffect } from '@react-navigation/native';
-import { useCallback } from 'react';
-
 
 const CaregiverFriendsListScreen = ({ navigation }) => {
   const [friends, setFriends] = useState([]);
