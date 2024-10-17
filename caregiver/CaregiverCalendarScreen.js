@@ -108,6 +108,21 @@ const CaregiverCalendarScreen = () => {
         setCurrentFriend(friends[prevIndex]);
     };
 
+    // 일정 아이템을 눌렀을 때 수정 화면으로 이동하는 함수
+    const handleEditEvent = (event) => {
+
+        const eventWithFriendId = {
+            ...event,  // 기존 event 객체 복사
+            friendId: currentFriend.friendId  // friendId 추가
+        };
+
+        console.log(eventWithFriendId);
+
+        navigation.navigate('EditScheduleScreen', { event : eventWithFriendId });  // event 데이터를 전달하며 수정 화면으로 이동
+    };
+
+//    console.log(friends.length);
+
     return (
         <View style={styles.container}>
             {/* 친구 목록이 있는지 확인 */}
@@ -137,7 +152,7 @@ const CaregiverCalendarScreen = () => {
                         style={{ margin: 0 }}
                     >
                         <View style={styles.modalContainer}>
-                            <View style={styles.modalContent}>
+                            <View style={styles.friendContent}>
                                 <FlatList
                                     data={friends}
                                     keyExtractor={(item) => item.friendId.toString()}
@@ -219,12 +234,17 @@ const CaregiverCalendarScreen = () => {
                             data={selectedDayEvents}
                             keyExtractor={(item, index) => index.toString()}
                             renderItem={({ item }) => (
-                                <View style={styles.eventItemModal}>
-                                    <CustomText style={styles.eventTitle}>
-                                        {`${item.time || '시간 없음'}  |  ${item.title}`}
-                                    </CustomText>
-                                    <CustomText style={styles.eventDetail}>{item.description}</CustomText>
-                                </View>
+                                <TouchableOpacity onPress={() => handleEditEvent(item)}>
+                                    <View style={styles.eventItemModal}>
+                                        <View style={styles.eventDetailsContainer}>
+                                            {/* 시간과 제목을 함께 표시 */}
+                                            <Text style={styles.eventTitle}>
+                                                {`${item.time || '시간 없음'}  |  ${item.title}`}
+                                            </Text>
+                                            <Text style={styles.eventDetail}>{item.description}</Text>
+                                        </View>
+                                    </View>
+                                </TouchableOpacity>
                             )}
                         />
                     ) : (
@@ -327,12 +347,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
+    friendContent: {
+            backgroundColor: '#fff',
+            alignItems: 'center',
+            borderRadius: 10,
+            padding: 20,
+            width: '80%',
+        },
     modalContent: {
         backgroundColor: '#fff',
-        alignItems: 'center',
-        borderRadius: 10,
         padding: 20,
-        width: '80%',
+        borderRadius: 20,  // 둥근 모서리
+        width: '90%',  // 모달 너비
     },
     friendItem: {
         paddingVertical: 10,
@@ -343,18 +369,31 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#333',
     },
-    closeModalButton: {
-        marginTop: 20,
+    modalHeader: {
         alignItems: 'center',
     },
-    closeModalText: {
-        fontSize: 16,
-        color: '#6495ED',
+    modalTitle: {
+        fontSize: 24,
+        color: '#333',
+        fontWeight: 'bold',
+    },
+    divider: {
+        height: 1,
+        backgroundColor: '#999',
+        marginVertical: 10,
+        width: '100%',
     },
     eventItemModal: {
         flexDirection: 'row',
         marginBottom: 15,
         alignItems: 'center',
+    },
+    timeContainer: {
+        width: 50,
+    },
+    eventDetailsContainer: {
+        flex: 1,
+        marginLeft: 10,
     },
     eventTitle: {
         fontSize: 16,
@@ -362,6 +401,14 @@ const styles = StyleSheet.create({
     },
     eventDetail: {
         fontSize: 14,
+        color: '#999',
+        paddingLeft: 90,
+//        textAlign: 'center', // 텍스트 가운데 정렬
+    },
+    noEventsText: {
+        fontSize: 16,
+        textAlign: 'center',
+        marginVertical: 20,
         color: '#999',
     },
     closeModalButton: {
@@ -373,5 +420,4 @@ const styles = StyleSheet.create({
         color: '#6495ED',
     },
 });
-
 export default CaregiverCalendarScreen;
