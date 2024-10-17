@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useCallback } from 'react';
 import { View, TouchableOpacity, StyleSheet, FlatList, ScrollView, Text, Dimensions, Alert } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Feather from 'react-native-vector-icons/Feather';
@@ -6,7 +6,7 @@ import axios from 'axios';
 import { BASE_URL } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from 'react-native-modal';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import CustomText from '../CustomTextProps';
 
 const CaregiverCalendarScreen = () => {
@@ -27,11 +27,16 @@ const CaregiverCalendarScreen = () => {
         fetchFriends();
     }, []);
 
-    useEffect(() => {
-        if (currentFriend) {
+    useFocusEffect(
+        useCallback(() => {
+            // 화면이 포커스될 때마다 실행할 작업
             fetchTasks(currentFriend);
-        }
-    }, [currentFriend]);
+
+            return () => {
+                // 화면이 포커스를 잃었을 때 실행할 클린업 작업이 필요하다면 여기에 작성
+            };
+        }, [currentFriend])  // currentFriend가 변경될 때마다 다시 실행
+    );
 
     const fetchFriends = async () => {
         try {
