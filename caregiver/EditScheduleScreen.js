@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, StyleSheet, Alert, Pressable, Text, ScrollView } from 'react-native';
+import { View, TextInput, StyleSheet, Alert, Pressable, Text, ScrollView, BackHandler } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { BASE_URL } from '@env';
@@ -14,6 +14,18 @@ const EditScheduleScreen = ({ route, navigation }) => {
 
     useEffect(() => {
         fetchTask();
+
+        const backAction = () => {
+            navigation.goBack();  // 뒤로 가기
+            return true;  // 기본 동작을 막고 커스텀 동작 실행
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction
+        );
+
+        return () => backHandler.remove();  // 클린업
     }, []);
 
     useEffect(() => {
@@ -48,6 +60,28 @@ const EditScheduleScreen = ({ route, navigation }) => {
             Alert.alert('오류', '일정 수정 중 오류가 발생했습니다.');
         }
     };
+
+     const handleDelete = async () => {
+         try {
+             const jwtToken = await AsyncStorage.getItem('jwtToken');
+             await axios.delete(`${BASE_URL}/task`, {
+                 headers: {
+                     Authorization: `Bearer ${jwtToken}`,
+                 },
+                 data: {
+                     id: taskId,
+                 },
+             });
+
+             Alert.alert("삭제 완료", "일정이 성공적으로 삭제되었습니다.");
+
+             // 이전 화면으로 돌아가기
+             navigation.goBack();  // navigation을 통해 전 화면으로 이동
+         } catch (error) {
+             console.error('일정 삭제 실패:', error);
+             Alert.alert("삭제 실패", "일정을 삭제하는 중 문제가 발생했습니다.");
+         }
+     };
 
     const fetchTask = async () => {
         try {
@@ -110,6 +144,13 @@ const EditScheduleScreen = ({ route, navigation }) => {
                 onPress={handleSave}>
                 <Text style={styles.saveButtonText}>저장</Text>
             </Pressable>
+
+            {/* 삭제 버튼 */}
+            <Pressable
+                style={styles.deleteButton}
+                onPress={handleDelete}>
+                <Text style={styles.saveButtonText}>삭제</Text>
+            </Pressable>
         </ScrollView>
     );
 };
@@ -140,6 +181,14 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         height: 48,
         backgroundColor: '#6495ED',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 20,
+    },
+    deleteButton: {
+        borderRadius: 6,
+        height: 48,
+        backgroundColor: '#FF4C4C',
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 20,
