@@ -20,6 +20,9 @@ const CaregiverCalendarScreen = () => {
     const [selectedDay, setSelectedDay] = useState('');
     const screenWidth = Dimensions.get('window').width;
 
+//    AddScheduleScreen으로 넣을때 연, 월, 일 숫자로만 구성된 data
+    const [date, setDate] = useState([]);
+
     useEffect(() => {
         fetchFriends();
     }, []);
@@ -91,7 +94,9 @@ const CaregiverCalendarScreen = () => {
         const selectedDate = `${date.year}년 ${String(date.month).padStart(2, '0')}월 ${String(date.day).padStart(2, '0')}일 (${dayOfWeek})`;
         setSelectedDay(selectedDate);
         setSelectedDayEvents(dateEvents);
+        setDate(date); // AddScheduleScreen 클릭시 넘겨줄 파라미터
         setEventModalVisible(true);
+//        console.log("CCS date " + date.year + " " + date.month);
     };
 
     // 화살표로 다음 친구 선택
@@ -255,7 +260,7 @@ const CaregiverCalendarScreen = () => {
                     <TouchableOpacity
                         onPress={() => {
                             setEventModalVisible(false); // 모달을 닫고
-                            navigation.navigate("AddScheduleScreen", { selectedDay }); // 'AddSchedule' 화면으로 이동하고 선택된 날짜 전달
+                            navigation.navigate("AddScheduleScreen", { defaultDate : date,  friendId: currentFriend.friendId}); // 'AddSchedule' 화면으로 이동하고 선택된 날짜 전달
                         }}
                         style={styles.addEventButton}>
                         <CustomText style={styles.addEventText}>일정 추가하기</CustomText>

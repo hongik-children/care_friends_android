@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Platform, Alert, Pressable, Text, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, Button, StyleSheet, Platform, Alert, Pressable, Text, ScrollView} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
 import { Picker } from '@react-native-picker/picker';
@@ -17,7 +17,44 @@ const AddScheduleScreen = ({ route, navigation }) => {
   const [location, setLocation] = useState('');
   const [memo, setMemo] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(null);
+
+//  선택한 날짜 화면에 보여주기 위한 변수
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
+
+//  console.log("Edit화면 route 파람: " + route.params.defaultDate);
+
+// 기본적으로 Add 에 넘겨준 디폴트 날짜, 시간이 있으면 세팅하기
+  useEffect(() => {
+      // route.params가 있을 때 값 가져오기
+      if (route.params && route.params.defaultDate) {
+          setSelectedDate(new Date(route.params.defaultDate.year, route.params.defaultDate.month-1, route.params.defaultDate.day));
+      }
+
+      if (route.params && route.params.defaultTime) {
+          setSelectedTime(new Date(route.params.defaultTime));
+      } else {
+          // 디폴트로 오전 8시 설정
+          const defaultTime = new Date();
+          defaultTime.setHours(8, 0, 0);  // 오전 8시 설정
+          setSelectedTime(defaultTime);
+      }
+  }, [route.params]);
+
+  const onChangeDate = (event, date) => {
+      setShowDatePicker(false);  // DateTimePicker 숨기기
+      if (date) {
+          setSelectedDate(date);  // 선택된 날짜 저장
+      }
+  };
+
+  const onChangeTime = (event, time) => {
+      setShowTimePicker(false);  // DateTimePicker 숨기기
+      if (time) {
+          setSelectedTime(time);  // 선택된 시간 저장
+      }
+  };
 
 
 //  console.log(route.params);
@@ -123,17 +160,56 @@ const AddScheduleScreen = ({ route, navigation }) => {
         multiline
         placeholderTextColor={'#000'}
       />
-      <View style={styles.dateTimePicker}>
-        <Pressable
-        style={{borderRadius:6, width:120, height:48, backgroundColor:'#6495ED', alignItems:'center', justifyContent:'center'}}
-        onPress={() => setShowDatePicker(true)} color="#000">
-            <CustomText style={{color:'#FFF', fontSize:14 }}>날짜 선택</CustomText>
-        </Pressable>
-        <Pressable
-                style={{borderRadius:6, width:120, height:48, backgroundColor:'#6495ED', alignItems:'center', justifyContent:'center'}}
-                onPress={() => setShowTimePicker(true)} color="#000">
-                    <CustomText style={{color:'#FFF', fontSize:14 }}>시간 선택</CustomText>
-                </Pressable>
+      <View style={styles.container}>
+          <View style={styles.dateTimePicker}>
+              <Pressable
+                  style={styles.button}
+                  onPress={() => setShowDatePicker(true)}
+              >
+                  <CustomText style={styles.buttonText}>날짜 선택</CustomText>
+              </Pressable>
+
+              <Pressable
+                  style={styles.button}
+                  onPress={() => setShowTimePicker(true)}
+              >
+                  <CustomText style={styles.buttonText}>시간 선택</CustomText>
+              </Pressable>
+          </View>
+
+          {/* 선택된 날짜 및 시간 표시 */}
+          <View style={styles.selectedDateTimeContainer}>
+              {selectedDate && (
+                  <Text style={styles.selectedDateTimeText}>
+                      날짜: {selectedDate.toLocaleDateString()}
+                  </Text>
+              )}
+              {selectedTime && (
+                  <Text style={styles.selectedDateTimeText}>
+                      시간: {selectedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </Text>
+              )}
+          </View>
+
+          {/* Date Picker */}
+          {showDatePicker && (
+              <DateTimePicker
+                  value={selectedDate || new Date()}  // 초기 값
+                  mode="date"  // 날짜 선택
+                  display="default"
+                  onChange={onChangeDate}  // 선택한 날짜로 상태 업데이트
+              />
+          )}
+
+          {/* Time Picker */}
+          {showTimePicker && (
+              <DateTimePicker
+                  value={selectedTime || new Date()}  // 초기 값
+                  mode="time"  // 시간 선택
+                  display="default"
+                  onChange={onChangeTime}  // 선택한 시간으로 상태 업데이트
+              />
+          )}
       </View>
       {showDatePicker && (
         <DateTimePicker
@@ -183,6 +259,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 20,
+  },
+  button : {
+    borderRadius:6,
+    width:120, height:48,
+    backgroundColor:'#6495ED',
+    alignItems:'center',
+    justifyContent:'center',
+  },
+  buttonText : {
+    color:'#FFF',
+    fontSize:14
+  },
+  selectedDateTimeText: {
+      color: '#333',
+      fontSize: 18,
+      fontFamily: 'Pretendard-Bold',
+      textAlign: 'center',  // 글자 가운데 정렬
   },
 });
 
