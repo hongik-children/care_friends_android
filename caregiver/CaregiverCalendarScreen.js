@@ -250,11 +250,24 @@ const CaregiverCalendarScreen = () => {
                     ) : (
                         <CustomText style={styles.noEventsText}>이 날짜에는 일정이 없습니다.</CustomText>
                     )}
+
+                    {/* 일정 추가하기 버튼 추가 */}
+                    <TouchableOpacity
+                        onPress={() => {
+                            setEventModalVisible(false); // 모달을 닫고
+                            navigation.navigate("AddScheduleScreen", { selectedDay }); // 'AddSchedule' 화면으로 이동하고 선택된 날짜 전달
+                        }}
+                        style={styles.addEventButton}>
+                        <CustomText style={styles.addEventText}>일정 추가하기</CustomText>
+                    </TouchableOpacity>
+
+                    {/* 닫기 버튼 */}
                     <TouchableOpacity onPress={() => setEventModalVisible(false)} style={styles.closeModalButton}>
                         <CustomText style={styles.closeModalText}>닫기</CustomText>
                     </TouchableOpacity>
                 </View>
             </Modal>
+
 
         </View>
     );
@@ -419,5 +432,16 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#6495ED',
     },
+    addEventButton: {
+        marginTop: 20,
+        backgroundColor: '#6495ED',
+        padding: 10,
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+    addEventText: {
+            color: '#fff',
+            fontSize: 16,
+        },
 });
 export default CaregiverCalendarScreen;
