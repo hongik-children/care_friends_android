@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, StyleSheet, Alert, Pressable, Text, ScrollView } from 'react-native';
+import { View, TextInput, StyleSheet, Alert, Pressable, Text, ScrollView, BackHandler } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { BASE_URL } from '@env';
@@ -14,6 +14,18 @@ const EditScheduleScreen = ({ route, navigation }) => {
 
     useEffect(() => {
         fetchTask();
+
+        const backAction = () => {
+            navigation.goBack();  // 뒤로 가기
+            return true;  // 기본 동작을 막고 커스텀 동작 실행
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction
+        );
+
+        return () => backHandler.remove();  // 클린업
     }, []);
 
     useEffect(() => {
