@@ -455,6 +455,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#333',
   },
+  modalTitle: {
+      fontSize: 22,
+      marginBottom: 15,
+  },
   closeModalButton: {
     marginTop: 20,
     alignItems: 'center',

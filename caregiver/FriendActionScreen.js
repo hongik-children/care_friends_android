@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react'; // useLayoutEffect 추가
 import { View, TouchableOpacity, StyleSheet, Alert, Linking, Image } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import CustomText from '../CustomTextProps';
@@ -8,7 +8,19 @@ import { BASE_URL } from '@env';
 import DefaultProfileImage from '../assets/Default-Profile.png';
 
 const FriendActionScreen = ({ route, navigation }) => {
-  const { friend, onDeleteFriend } = route.params;
+  const { friend } = route.params;
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Feather name="arrow-left" size={24} color="#000" />
+        </TouchableOpacity>
+      ),
+      headerTitle: '',  // 헤더 타이틀을 빈 문자열로 설정
+      headerShown: true,  // 헤더가 보이도록 설정
+    });
+  }, [navigation]);
 
   const handleCall = () => {
     const phoneNumber = `tel:${friend.phoneNumber}`;
@@ -54,11 +66,8 @@ const FriendActionScreen = ({ route, navigation }) => {
               });
 
               Alert.alert('삭제 완료', `${friend.name}님을 삭제했습니다.`);
-              // 콜백 함수가 존재하는지 확인하고 호출
-              if (onDeleteFriend) {
-                onDeleteFriend(friend.friendId);  // 부모 컴포넌트에 삭제 알림 전달
-              }
-              navigation.goBack(); // 삭제 후 이전 화면으로 돌아가기
+              // 삭제 후 이전 화면으로 돌아가기
+              navigation.goBack();
             } catch (error) {
               console.error('친구 삭제 오류:', error);
               Alert.alert('오류', '친구를 삭제하는 중 오류가 발생했습니다.');
@@ -141,6 +150,9 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     marginLeft: 10,
+  },
+  backButton: {
+    paddingLeft: 10,
   },
 });
 
