@@ -178,7 +178,7 @@ const ProfileScreen = ({ navigation }) => {
                 {/* UUID를 앞뒤로 잘라서 보여주고 전체 복사는 유지 */}
                 <View style={styles.uuidContainer}>
                   <CustomText style={styles.value}>
-                    {`${profile.uuid.substring(0, 7)}...${profile.uuid.substring(profile.uuid.length - 7)}`}
+                    {`${profile.uuid.substring(0, 6)}...${profile.uuid.substring(profile.uuid.length - 6)}`}
                   </CustomText>
 
                   {/* 복사 버튼 */}
