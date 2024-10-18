@@ -25,6 +25,7 @@ import VoiceSearchScreen from './VoiceSearchScreen';
 import EditScheduleScreen from './caregiver/EditScheduleScreen';// EditScheduleScreen import
 import LocationScreen from './caregiver/LocationScreen';
 import OnboardingScreen from './user/OnboardingScreen';
+import EditProfileScreen from './user/EditProfileScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -127,6 +128,7 @@ const FriendCalendarStack = () => (
 const ProfileStack = () => (
   <Stack.Navigator>
     <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
 
