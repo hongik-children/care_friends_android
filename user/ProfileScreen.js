@@ -45,6 +45,10 @@ const ProfileScreen = ({ navigation }) => {
     }, []) // 빈 의존성 배열을 전달해 화면이 포커스를 받을 때마다 실행되도록 설정
   );
 
+  const handleEditProfile = () => {
+    navigation.navigate('EditProfileScreen', { profile });
+  };
+
   const handleCopyUUID = () => {
     if (profile?.uuid) {
       Clipboard.setString(profile.uuid);
@@ -170,6 +174,7 @@ const ProfileScreen = ({ navigation }) => {
             <CustomText style={styles.label}>성별</CustomText>
             <CustomText style={styles.value}>{profile.gender === 'MALE' ? '남성' : '여성'}</CustomText>
           </View>
+
             {/* UUID 표시 및 복사, 공유 버튼 (노약자인 경우) */}
             {userType === 'friend' && (
               <View style={styles.infoRow}>
@@ -178,7 +183,7 @@ const ProfileScreen = ({ navigation }) => {
                 {/* UUID를 앞뒤로 잘라서 보여주고 전체 복사는 유지 */}
                 <View style={styles.uuidContainer}>
                   <CustomText style={styles.value}>
-                    {`${profile.uuid.substring(0, 7)}...${profile.uuid.substring(profile.uuid.length - 7)}`}
+                    {`${profile.uuid.substring(0, 6)}...${profile.uuid.substring(profile.uuid.length - 6)}`}
                   </CustomText>
 
                   {/* 복사 버튼 */}
@@ -194,6 +199,10 @@ const ProfileScreen = ({ navigation }) => {
               </View>
             )}
 
+          {/* 프로필 수정 버튼 */}
+          <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
+            <CustomText style={styles.editButtonText}>프로필 수정</CustomText>
+          </TouchableOpacity>
         </View>
       ) : (
         <CustomText style={styles.noProfileText}>프로필 정보가 없습니다.</CustomText>
@@ -341,6 +350,18 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginLeft: 5,
+  },
+  editButton: {
+    backgroundColor: '#6495ED',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+    marginTop: 20,
+  },
+  editButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontFamily: 'Pretendard-Bold',
   },
 });
 

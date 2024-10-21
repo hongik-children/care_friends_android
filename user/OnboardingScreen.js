@@ -30,8 +30,8 @@ const OnboardingScreen = ({ navigation }) => {
         },
         {
           backgroundColor: '#fff',
-          image: null,
-          title: null,
+          image: <View style={{ height: 1 }} />,
+          title: "",
           subtitle: <KakaoLoginScreen navigation={navigation} />,
         },
       ]}
