@@ -49,6 +49,35 @@ const ProfileScreen = ({ navigation }) => {
     navigation.navigate('EditProfileScreen', { profile });
   };
 
+  const unregisterAccount = async () => {
+      try {
+
+          const jwtToken = await AsyncStorage.getItem('jwtToken');
+          if (!jwtToken) {
+            Alert.alert("오류", "JWT 토큰을 찾을 수 없습니다. 다시 로그인하세요.");
+            return;
+          }
+
+          // 탈퇴 API 호출
+          const response = await axios.delete(`${BASE_URL}/friendRequest/unregister/${profile.uuid}`, {
+              headers: {
+                  Authorization: `Bearer ${jwtToken}`, // 필요한 경우 JWT 토큰 추가
+              },
+          });
+
+          if (response.status === 204) { // 탈퇴 성공 시
+              // 원하는 화면으로 이동
+              navigation.reset({
+                  index: 0,
+                  routes: [{ name: 'OnboardingScreen' }], // 'TargetScreen'은 이동할 화면 이름
+              });
+          }
+      } catch (error) {
+          console.error("탈퇴 요청 실패:", error);
+          // 실패 시 처리 (예: 오류 메시지 표시)
+      }
+  };
+
   const handleCopyUUID = () => {
     if (profile?.uuid) {
       Clipboard.setString(profile.uuid);
@@ -202,6 +231,11 @@ const ProfileScreen = ({ navigation }) => {
           {/* 프로필 수정 버튼 */}
           <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
             <CustomText style={styles.editButtonText}>프로필 수정</CustomText>
+          </TouchableOpacity>
+
+          {/* 탈퇴 버튼 */}
+          <TouchableOpacity style={styles.unregisterButton} onPress={unregisterAccount}>
+            <CustomText style={styles.editButtonText}>회원 탈퇴</CustomText>
           </TouchableOpacity>
         </View>
       ) : (
@@ -358,6 +392,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: 20,
   },
+  unregisterButton: {
+      backgroundColor: '#FF6347',
+      paddingVertical: 12,
+      paddingHorizontal: 30,
+      borderRadius: 8,
+      marginTop: 20,
+    },
   editButtonText: {
     color: '#fff',
     fontSize: 18,
