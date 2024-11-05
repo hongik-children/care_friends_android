@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, Linking, Platform } from 'react-native';
 import Voice from 'react-native-voice'; // 음성 인식 라이브러리
 import { GOOGLE_MAP_PLATFORM_API_KEY } from '@env'; // 구글 API 키 사용
+import { OPENAI_API_KEY } from '@env'; // 구글 API 키 사용
 import CustomText from './CustomTextProps';
+import axios from 'axios';
 
 const VoiceSearchScreen = ({ route, navigation }) => {
   const [recognizedText, setRecognizedText] = useState('');
@@ -23,6 +25,14 @@ const VoiceSearchScreen = ({ route, navigation }) => {
     };
   }, []);
 
+  const handleAreaPress = (area) => {
+      navigation.navigate('RecommendScreen', {
+          latitude: latitude,
+          longitude: longitude,
+          selectedArea: area
+      });
+  };
+
   const onSpeechStart = (event) => {
     console.log('onSpeechStart: ', event);
     setIsRecording(true); // 녹음 시작 시 상태 업데이트
@@ -38,7 +48,9 @@ const VoiceSearchScreen = ({ route, navigation }) => {
     if (event.value && event.value.length > 0) {
       const text = event.value[0];
       setRecognizedText(text);
-      fetchNearbyHospitals(text);
+      generateAnswer(text);
+//      handleAreaPress(text);
+
     }
     setIsRecording(false); // 결과가 나왔을 때 녹음 중 상태 해제
   };
@@ -62,27 +74,35 @@ const VoiceSearchScreen = ({ route, navigation }) => {
     }
   };
 
-  const fetchNearbyHospitals = (query) => {
-    if (latitude && longitude) {
-      const googlePlacesUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=1000&type=hospital&keyword=${query}&key=${GOOGLE_MAP_PLATFORM_API_KEY}`;
+  // 지피티 요청 함수
 
-      fetch(googlePlacesUrl)
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.results) {
-            setPlaces(data.results);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+  async function generateAnswer(prompt) {
+    try {
+      const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+        model: "gpt-3.5-turbo",
+        messages: [
+          { role: "system", content: "사용자는 병원종류를 추천해달라고 할꺼야. 병원종류만 대답하면돼." },
+          { role: "user", content: prompt + " 길게 대답하지말고 병원 종류만 딱 대답해줘 ex) 안과, 정형외과, 이비인후과, 비뇨기과, 신경외과, 치과, 정신과, 한의원" }
+        ],
+        max_tokens: 100,
+        temperature: 0.7
+      }, {
+        headers: {
+          'Authorization': `Bearer ${OPENAI_API_KEY}`,
+          'Content-Type': 'application/json',
+        }
+      });
+
+      const answer = response.data.choices[0].message.content;
+      console.log("답변:", answer);
+
+
+      handleAreaPress(answer); // gpt 답변결과로 병원 추천
+      return answer;
+    } catch (error) {
+      console.error("Error:", error.response ? error.response.data : error.message);
     }
-  };
-
-  const handleCardPress = (place) => {
-    const url = `https://www.google.com/maps/search/?api=1&query=${place.name}&query_place_id=${place.place_id}`;
-    Linking.openURL(url).catch((err) => console.error("Couldn't load page", err));
-  };
+  }
 
   return (
     <View style={styles.container}>
@@ -92,27 +112,6 @@ const VoiceSearchScreen = ({ route, navigation }) => {
       </TouchableOpacity>
       {isRecording && <CustomText style={styles.recordingText}>녹음 중...</CustomText>}
       <CustomText style={styles.recognizedText}>인식된 내용: {recognizedText}</CustomText>
-      <FlatList
-        data={places}
-        keyExtractor={(item) => item.place_id}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handleCardPress(item)}>
-            <View style={styles.card}>
-              <CustomText style={styles.hospitalName}>{item.name}</CustomText>
-              {item.photos && item.photos.length > 0 && (
-                <Image
-                  source={{
-                    uri: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${item.photos[0].photo_reference}&key=${GOOGLE_MAP_PLATFORM_API_KEY}`,
-                  }}
-                  style={styles.hospitalImage}
-                />
-              )}
-              <CustomText style={styles.text}>평점: {item.rating ? item.rating : 'N/A'}</CustomText>
-              <CustomText style={styles.text}>주소: {item.vicinity}</CustomText>
-            </View>
-          </TouchableOpacity>
-        )}
-      />
     </View>
   );
 };
