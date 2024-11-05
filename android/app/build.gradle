@@ -31,15 +31,21 @@
                 keyAlias 'androiddebugkey'
                 keyPassword 'android'
             }
+            release {
+                storeFile file('carefriends-key.jks') // 릴리즈 키스토어 경로를 정확히 입력하세요.
+                storePassword 'kds51884!'     // 릴리즈 키스토어 비밀번호
+                keyAlias 'carefriends'               // 릴리즈 키 별칭
+                keyPassword 'kds51884!'         // 릴리즈 키 비밀번호
+            }
         }
         buildTypes {
             debug {
                 signingConfig signingConfigs.debug
             }
             release {
-                signingConfig signingConfigs.debug
+                signingConfig signingConfigs.release    // release signingConfig를 사용하도록 설정
                 minifyEnabled enableProguardInReleaseBuilds
-                proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+                proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             }
         }
     }
