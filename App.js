@@ -162,7 +162,7 @@ const App = () => {
         <Stack.Screen name="VoiceSearchScreen" component={VoiceSearchScreen} />
         <Stack.Screen name="EditScheduleScreen" component={EditScheduleScreen} options={{ headerShown: false }} />
         <Stack.Screen name="LocationScreen" component={LocationScreen} options={{ title: '위치 조회' }} />
-        <Stack.Screen name="UnregisterScreen" component={UnregisterScreen} options={{ title: '위치 조회' }} />
+        <Stack.Screen name="UnregisterScreen" component={UnregisterScreen} options={{ title: '회원 탈퇴' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
