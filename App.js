@@ -26,6 +26,7 @@ import EditScheduleScreen from './caregiver/EditScheduleScreen';// EditScheduleS
 import LocationScreen from './caregiver/LocationScreen';
 import OnboardingScreen from './user/OnboardingScreen';
 import EditProfileScreen from './user/EditProfileScreen';
+import UnregisterScreen from './UnregisterScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -161,6 +162,7 @@ const App = () => {
         <Stack.Screen name="VoiceSearchScreen" component={VoiceSearchScreen} />
         <Stack.Screen name="EditScheduleScreen" component={EditScheduleScreen} options={{ headerShown: false }} />
         <Stack.Screen name="LocationScreen" component={LocationScreen} options={{ title: '위치 조회' }} />
+        <Stack.Screen name="UnregisterScreen" component={UnregisterScreen} options={{ title: '회원 탈퇴' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

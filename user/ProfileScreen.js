@@ -45,6 +45,11 @@ const ProfileScreen = ({ navigation }) => {
     }, []) // 빈 의존성 배열을 전달해 화면이 포커스를 받을 때마다 실행되도록 설정
   );
 
+  const handleNavigateToUnregister = () => {
+//    console.log("haha " + profile.uuid );
+      navigation.navigate('UnregisterScreen', {profile : profile}); // UnregisterScreen으로 이동
+  };
+
   const handleEditProfile = () => {
     navigation.navigate('EditProfileScreen', { profile });
   };
@@ -203,6 +208,11 @@ const ProfileScreen = ({ navigation }) => {
           <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
             <CustomText style={styles.editButtonText}>프로필 수정</CustomText>
           </TouchableOpacity>
+
+          {/* 탈퇴 버튼 */}
+          <TouchableOpacity style={styles.unregisterButton} onPress={handleNavigateToUnregister}>
+            <CustomText style={styles.editButtonText}>회원 탈퇴</CustomText>
+          </TouchableOpacity>
         </View>
       ) : (
         <CustomText style={styles.noProfileText}>프로필 정보가 없습니다.</CustomText>
@@ -358,6 +368,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: 20,
   },
+  unregisterButton: {
+      backgroundColor: '#FF6347',
+      paddingVertical: 12,
+      paddingHorizontal: 30,
+      borderRadius: 8,
+      marginTop: 20,
+    },
   editButtonText: {
     color: '#fff',
     fontSize: 18,
