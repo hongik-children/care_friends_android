@@ -24,7 +24,7 @@ const FriendAddScheduleScreen = ({ navigation }) => {
       date: date.toISOString().split('T')[0], // YYYY-MM-DD 형식으로 변환
       periodType,
       period,
-      startTime: startTime.toISOString().split('T')[1].substring(0, 8), // HH:MM:SS 형식으로 변환
+      startTime: new Date(startTime.getTime() + 9 * 60 * 60 * 1000).toISOString().split('T')[1].substring(0, 8),
       title,
       location,
       memo,

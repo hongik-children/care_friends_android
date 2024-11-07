@@ -129,7 +129,7 @@ const ScheduleScreen = () => {
 
   // 시간 형식 변환 함수 (오전/오후 표시)
   const formatTime = (timeString) => {
-    const time = new Date(`1970-01-01T${timeString}`);
+    const time = new Date(`1970-01-01T${timeString}+09:00`);
     const hours = time.getHours();
     const minutes = time.getMinutes();
     const period = hours >= 12 ? '오후' : '오전';

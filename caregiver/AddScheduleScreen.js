@@ -66,7 +66,7 @@ const AddScheduleScreen = ({ route, navigation }) => {
       date: date.toISOString().split('T')[0],
       periodType,
       period,
-      startTime: startTime.toISOString().split('T')[1].substring(0, 8),
+      startTime: new Date(startTime.getTime() + 9 * 60 * 60 * 1000).toISOString().split('T')[1].substring(0, 8),
       title,
       location,
       memo,
