@@ -410,8 +410,8 @@ const styles = StyleSheet.create({
     },
     modalTitle: {
         fontSize: 24,
+        fontFamily: 'Pretendard-Bold',
         color: '#333',
-        fontWeight: 'bold',
     },
     divider: {
         height: 1,
@@ -432,14 +432,14 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     eventTitle: {
-        fontSize: 16,
+        fontSize: 18,
         color: '#333',
     },
     eventDetail: {
         fontSize: 14,
         color: '#999',
-        paddingLeft: 90,
-//        textAlign: 'center', // 텍스트 가운데 정렬
+        paddingLeft: 95,
+        marginVertical: 2,
     },
     noEventsText: {
         fontSize: 16,
@@ -465,6 +465,6 @@ const styles = StyleSheet.create({
     addEventText: {
             color: '#fff',
             fontSize: 16,
-        },
+    },
 });
 export default CaregiverCalendarScreen;
