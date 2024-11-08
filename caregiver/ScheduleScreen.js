@@ -279,7 +279,7 @@ const ScheduleScreen = () => {
 
           {/* 일정 추가하기 */}
           <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('AddScheduleScreen', { friendId: currentFriend.friendId })}>
-            <Feather name="calendar" size={24} color="#fff" />
+            <Feather name="plus-circle" size={24} color="#fff" />
             <CustomText style={styles.actionButtonText}>일정 추가하기</CustomText>
           </TouchableOpacity>
 
