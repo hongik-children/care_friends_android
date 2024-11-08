@@ -260,7 +260,7 @@ const FriendScheduleScreen = ({ navigation }) => {
                   longitude: location ? location.coords.longitude : 0
             })}>
                 <Feather name="map" size={20} color="#fff" style={styles.icon} />
-                <CustomText style={styles.buttonText}>주변 병원 데모 버튼</CustomText>
+                <CustomText style={styles.buttonText}>아픈 부위로 병원 찾기</CustomText>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('VoiceSearchScreen' , {

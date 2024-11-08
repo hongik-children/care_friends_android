@@ -424,8 +424,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   actionButtonText: {
-    color: '#fff',
-    fontSize: 18,
+    color: '#FFFFFF',
+    fontSize: 20,
     marginLeft: 10,
   },
   map: {
