@@ -114,8 +114,8 @@ const AddScheduleScreen = ({ route, navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <CustomText style={{color:'#000', marginBottom:10, marginHorizontal:8}}>주기</CustomText>
-      <View style={{borderWidth:1, borderColor:'#000',
+      <CustomText style={{color:'#333', marginBottom:10, marginHorizontal:8}}>주기</CustomText>
+      <View style={{borderWidth:1, borderColor:'#333',
     marginBottom: 20, overflow:'visible'}}>
       <Picker
         selectedValue={periodType}
@@ -136,21 +136,21 @@ const AddScheduleScreen = ({ route, navigation }) => {
         onChangeText={setPeriod}
         style={styles.input}
 
-        placeholderTextColor={'#000'}
+        placeholderTextColor={'#333'}
       />
       <TextInput
         placeholder="제목"
         value={title}
         onChangeText={setTitle}
         style={styles.input}
-        placeholderTextColor={'#000'}
+        placeholderTextColor={'#333'}
       />
       <TextInput
         placeholder="위치"
         value={location}
         onChangeText={setLocation}
         style={styles.input}
-        placeholderTextColor={'#000'}
+        placeholderTextColor={'#333'}
       />
       <TextInput
         placeholder="메모"
@@ -158,7 +158,7 @@ const AddScheduleScreen = ({ route, navigation }) => {
         onChangeText={setMemo}
         style={styles.input}
         multiline
-        placeholderTextColor={'#000'}
+        placeholderTextColor={'#333'}
       />
       <View style={styles.container}>
           <View style={styles.dateTimePicker}>
@@ -230,7 +230,7 @@ const AddScheduleScreen = ({ route, navigation }) => {
       <Pressable
                       style={{borderRadius:6, height:48, backgroundColor:'#6495ED', alignItems:'center', justifyContent:'center'}}
                       onPress={handleSave}>
-                          <CustomText style={{color:'#FFF', fontSize:14 }}>저장</CustomText>
+                          <CustomText style={{color:'#FFF', fontSize:17 }}>저장</CustomText>
                       </Pressable>
     </ScrollView>
   );
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
-    borderColor: '#000',
+    borderColor: '#333',
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 16,
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     backgroundColor:'#FFF',
-    color:'#000'
+    color:'#333'
   },
   dateTimePicker: {
     flexDirection: 'row',
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
   },
   buttonText : {
     color:'#FFF',
-    fontSize:14
+    fontSize:16
   },
   selectedDateTimeText: {
       color: '#333',

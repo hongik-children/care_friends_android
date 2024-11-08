@@ -73,8 +73,8 @@ const FriendAddScheduleScreen = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <CustomText style={{ color: '#6495ED', marginBottom: 10, marginHorizontal: 8 }}>주기</CustomText>
-      <View style={{ borderWidth: 1, borderColor: '#6495ED', marginBottom: 20, overflow: 'visible' }}>
+      <CustomText style={{ color: '#333', marginBottom: 10, marginHorizontal: 8 }}>주기</CustomText>
+      <View style={{ borderWidth: 1, borderColor: '#333', marginBottom: 20, overflow: 'visible' }}>
         <Picker
           selectedValue={periodType}
           onValueChange={(itemValue) => setPeriodType(itemValue)}
@@ -94,7 +94,7 @@ const FriendAddScheduleScreen = ({ navigation }) => {
         value={period}
         onChangeText={setPeriod}
         style={styles.input}
-        placeholderTextColor={'#6495ED'}
+        placeholderTextColor={'#333'}
       />
 
       <TextInput
@@ -102,7 +102,7 @@ const FriendAddScheduleScreen = ({ navigation }) => {
         value={title}
         onChangeText={setTitle}
         style={styles.input}
-        placeholderTextColor={'#6495ED'}
+        placeholderTextColor={'#333'}
       />
 
       <TextInput
@@ -110,7 +110,7 @@ const FriendAddScheduleScreen = ({ navigation }) => {
         value={location}
         onChangeText={setLocation}
         style={styles.input}
-        placeholderTextColor={'#6495ED'}
+        placeholderTextColor={'#333'}
       />
 
       <TextInput
@@ -119,7 +119,7 @@ const FriendAddScheduleScreen = ({ navigation }) => {
         onChangeText={setMemo}
         style={styles.input}
         multiline
-        placeholderTextColor={'#6495ED'}
+        placeholderTextColor={'#333'}
       />
 
       <View style={styles.dateTimePicker}>
@@ -127,13 +127,13 @@ const FriendAddScheduleScreen = ({ navigation }) => {
           style={{ borderRadius: 6, width: 120, height: 48, backgroundColor: '#6495ED', alignItems: 'center', justifyContent: 'center' }}
           onPress={() => setShowDatePicker(true)} color="#6495ED"
         >
-          <CustomText style={{ color: '#FFF', fontSize: 14 }}>날짜 선택</CustomText>
+          <CustomText style={{ color: '#FFF', fontSize: 16}}>날짜 선택</CustomText>
         </Pressable>
         <Pressable
           style={{ borderRadius: 6, width: 120, height: 48, backgroundColor: '#6495ED', alignItems: 'center', justifyContent: 'center' }}
           onPress={() => setShowTimePicker(true)} color="#6495ED"
         >
-          <CustomText style={{ color: '#FFF', fontSize: 14 }}>시간 선택</CustomText>
+          <CustomText style={{ color: '#FFF', fontSize: 16 }}>시간 선택</CustomText>
         </Pressable>
       </View>
 
@@ -159,7 +159,7 @@ const FriendAddScheduleScreen = ({ navigation }) => {
         style={{ borderRadius: 6, height: 48, backgroundColor: '#6495ED', alignItems: 'center', justifyContent: 'center' }}
         onPress={handleSave}
       >
-        <CustomText style={{ color: '#FFF', fontSize: 14 }}>저장</CustomText>
+        <CustomText style={{ color: '#FFF', fontSize: 17 }}>저장</CustomText>
       </Pressable>
     </ScrollView>
   );
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
-    borderColor: '#6495ED',
+    borderColor: '#333',
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 16,
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     backgroundColor: '#FFF',
-    color: '#6495ED',
+    color: '#333',
   },
   dateTimePicker: {
     flexDirection: 'row',
