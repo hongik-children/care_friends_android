@@ -80,33 +80,49 @@ const RecommendScreen = ({ route, navigation }) => {
     Linking.openURL(naverMapUrl).catch((err) => console.error("Couldn't load page", err));
   };
 
+  const handleAddVisitSchedule = (place) => {
+    const encodedPlaceName = encodeURIComponent(place.title.replace(/<[^>]+>/g, ''));
+    const naverMapUrl = `https://map.naver.com/v5/search/${encodedPlaceName}`;
+
+    // Navigate to AddVisitScheduleScreen with the necessary data
+    navigation.navigate('AddHospitalScheduleScreen', {
+      hospitalName: place.title.replace(/<[^>]+>/g, ''),
+      naverMapUrl: naverMapUrl,
+    });
+  };
+
   return (
     <View style={styles.container}>
       <CustomText style={styles.title}>주변 병원</CustomText>
-      <FlatList
-        data={places}
-        keyExtractor={(item) => item.link}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handleCardPress(item)}>
-            <View style={styles.card}>
-              <View style={styles.cardHeader}>
-                <CustomText style={styles.hospitalName}>{item.title.replace(/<[^>]+>/g, '')}</CustomText>
+        <FlatList
+          data={places}
+          keyExtractor={(item, index) => item.link || index.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => handleCardPress(item)}>
+              <View style={styles.card}>
+                <View style={styles.cardHeader}>
+                  <CustomText style={styles.hospitalName}>{item.title.replace(/<[^>]+>/g, '')}</CustomText>
+                </View>
+                <Image
+                  source={
+                    item.photoUrl
+                      ? { uri: item.photoUrl }
+                      : require('./assets/default_hospital.png')
+                  }
+                  style={styles.hospitalImage}
+                />
+                <View style={styles.cardContent}>
+                  <CustomText style={styles.text}>주소: {item.roadAddress}</CustomText>
+                </View>
+
+                {/* 방문하기 버튼 */}
+                <TouchableOpacity style={styles.visitButton} onPress={() => handleAddVisitSchedule(item)}>
+                  <Text style={styles.visitButtonText}>방문하기</Text>
+                </TouchableOpacity>
               </View>
-              <Image
-                source={
-                  item.photoUrl
-                    ? { uri: item.photoUrl }
-                    : require('./assets/default_hospital.png') // 기본 이미지 설정
-                }
-                style={styles.hospitalImage}
-              />
-              <View style={styles.cardContent}>
-                <CustomText style={styles.text}>주소: {item.roadAddress}</CustomText>
-              </View>
-            </View>
-          </TouchableOpacity>
-        )}
-      />
+            </TouchableOpacity>
+          )}
+        />
     </View>
   );
 };
@@ -150,6 +166,21 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 8,
     marginBottom: 8,
+  },
+  visitButton: {
+    backgroundColor: '#6495ED',  // 버튼 색상
+    addingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+    minHeight: 40,
+  },
+  visitButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   cardContent: {
     marginTop: 8,

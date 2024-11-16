@@ -80,3 +80,6 @@ android/app/src/main/AndroidManifest.xml
 android/app/src/main/res/values/strings.xml
 
 .env
+out/
+carefriends-key.jks
+android/app/build.gradle

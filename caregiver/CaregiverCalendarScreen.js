@@ -1,6 +1,6 @@
 import React, { useState, useEffect,useCallback } from 'react';
 import { View, TouchableOpacity, StyleSheet, FlatList, ScrollView, Text, Dimensions, Alert } from 'react-native';
-import { Calendar } from 'react-native-calendars';
+import { Calendar, LocaleConfig } from 'react-native-calendars';
 import Feather from 'react-native-vector-icons/Feather';
 import axios from 'axios';
 import { BASE_URL } from '@env';
@@ -8,6 +8,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from 'react-native-modal';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import CustomText from '../CustomTextProps';
+
+LocaleConfig.locales['ko'] = {
+  monthNames: ['01월', '02월', '03월', '04월', '05월', '06월', '07월', '08월', '09월', '10월', '11월', '12월'],
+  monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+  dayNames: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+  dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+  today: '오늘',
+};
+LocaleConfig.defaultLocale = 'ko';
 
 const CaregiverCalendarScreen = () => {
     const navigation = useNavigation();
@@ -131,7 +140,7 @@ const CaregiverCalendarScreen = () => {
         navigation.navigate('EditScheduleScreen', { event : eventWithFriendId });  // event 데이터를 전달하며 수정 화면으로 이동
     };
 
-//    console.log(friends.length);
+    const today = new Date().toISOString().split('T')[0]; // Get today's date in 'YYYY-MM-DD' format
 
     return (
         <View style={styles.container}>
@@ -193,18 +202,19 @@ const CaregiverCalendarScreen = () => {
                             }, {})}
                             renderHeader={(date) => (
                                 <CustomText style={styles.monthHeader}>
-                                    {date.toString('MMMM yyyy')}
+                                    {date.toString('yyyy MMMM')}
                                 </CustomText>
                             )}
                             dayComponent={({ date }) => {
                                 const dateKey = `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`;
                                 const dateEvents = events[dateKey] || [];
+                                const isToday = dateKey === today;
                                 return (
                                     <TouchableOpacity
                                         onPress={() => handleDayPress(date)}
                                         style={[styles.dayContainer, { width: screenWidth / 7 }]}
                                     >
-                                        <CustomText style={styles.dayText}>{date.day}</CustomText>
+                                        <CustomText style={[styles.dayText, isToday && styles.todayText]}>{date.day}</CustomText>
                                         {dateEvents.map((event, index) => (
                                             <View key={index} style={styles.eventItem}>
                                                 <CustomText style={styles.eventText}>{event.title}</CustomText>
@@ -316,6 +326,9 @@ const styles = StyleSheet.create({
     dayText: {
         fontSize: 16,
     },
+    todayText: {
+      color: '#6495ED', // Blue color for today's date
+    },
     eventItem: {
         backgroundColor: '#F0F0F0',
         padding: 2,
@@ -397,8 +410,8 @@ const styles = StyleSheet.create({
     },
     modalTitle: {
         fontSize: 24,
+        fontFamily: 'Pretendard-Bold',
         color: '#333',
-        fontWeight: 'bold',
     },
     divider: {
         height: 1,
@@ -419,14 +432,14 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     eventTitle: {
-        fontSize: 16,
+        fontSize: 18,
         color: '#333',
     },
     eventDetail: {
         fontSize: 14,
         color: '#999',
-        paddingLeft: 90,
-//        textAlign: 'center', // 텍스트 가운데 정렬
+        paddingLeft: 95,
+        marginVertical: 2,
     },
     noEventsText: {
         fontSize: 16,
@@ -452,6 +465,6 @@ const styles = StyleSheet.create({
     addEventText: {
             color: '#fff',
             fontSize: 16,
-        },
+    },
 });
 export default CaregiverCalendarScreen;

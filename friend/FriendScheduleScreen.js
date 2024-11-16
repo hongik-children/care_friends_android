@@ -192,7 +192,7 @@ const FriendScheduleScreen = ({ navigation }) => {
     };
 
     const formatTime = (timeString) => {
-        const time = new Date(`1970-01-01T${timeString}`);
+        const time = new Date(`1970-01-01T${timeString}+09:00`);
         const hours = time.getHours();
         const minutes = time.getMinutes();
         const period = hours >= 12 ? '오후' : '오전';
@@ -259,8 +259,8 @@ const FriendScheduleScreen = ({ navigation }) => {
                   latitude: location ? location.coords.latitude : 0,
                   longitude: location ? location.coords.longitude : 0
             })}>
-                <Feather name="map" size={20} color="#fff" style={styles.icon} />
-                <CustomText style={styles.buttonText}>주변 병원 데모 버튼</CustomText>
+                <Feather name="search" size={20} color="#fff" style={styles.icon} />
+                <CustomText style={styles.buttonText}>아픈 부위로 병원 찾기</CustomText>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('VoiceSearchScreen' , {
@@ -269,6 +269,22 @@ const FriendScheduleScreen = ({ navigation }) => {
             })}>
                 <Feather name="mic" size={20} color="#fff" style={styles.icon} />
                 <CustomText style={styles.buttonText}>음성 병원 찾기</CustomText>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation.navigate('FriendAddHospitalScheduleScreen')}
+            >
+                <Feather name="clipboard" size={20} color="#fff" />
+                <CustomText style={styles.buttonText}>병원 일정 추가하기</CustomText>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation.navigate('FriendHospitalListScreen')}
+            >
+                <Feather name="bookmark" size={20} color="#fff" />
+                <CustomText style={styles.buttonText}>나의 진료 기록</CustomText>
             </TouchableOpacity>
 
             {/* 모달 */}

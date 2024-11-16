@@ -22,11 +22,13 @@ import FriendCaregiverScreen from './friend/FriendCaregiverScreen';
 import RecommendScreen from './RecommendScreen';
 import SelectPainAreaScreen from './SelectPainAreaScreen';
 import VoiceSearchScreen from './VoiceSearchScreen';
-import EditScheduleScreen from './caregiver/EditScheduleScreen';// EditScheduleScreen import
+import EditScheduleScreen from './user/EditScheduleScreen';// EditScheduleScreen import
 import LocationScreen from './caregiver/LocationScreen';
 import OnboardingScreen from './user/OnboardingScreen';
 import EditProfileScreen from './user/EditProfileScreen';
 import UnregisterScreen from './UnregisterScreen';
+import FriendAddHospitalScheduleScreen from './friend/FriendAddHospitalScheduleScreen';
+import FriendHospitalListScreen from './friend/FriendHospitalListScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -56,10 +58,10 @@ const CaregiverTabs = () => (
       tabBarLabelStyle: { fontSize: 16, fontFamily: 'Pretendard-SemiBold' },
     })}
   >
-    <Tab.Screen name="Home" component={ScheduleStack} />
-    <Tab.Screen name="Calendar" component={CaregiverCalendarStack} />
-    <Tab.Screen name="Friends" component={FriendsStack} />
-    <Tab.Screen name="Profile" component={ProfileStack} />
+    <Tab.Screen name="Home" component={ScheduleStack} options={{ title: '홈' }} />
+    <Tab.Screen name="Calendar" component={CaregiverCalendarStack} options={{ title: '달력' }} />
+    <Tab.Screen name="Friends" component={FriendsStack} options={{ title: '프렌즈' }} />
+    <Tab.Screen name="Profile" component={ProfileStack} options={{ title: '내 정보' }} />
   </Tab.Navigator>
 );
 
@@ -88,10 +90,10 @@ const FriendTabs = () => (
       tabBarLabelStyle: { fontSize: 16, fontFamily: 'Pretendard-SemiBold' },
     })}
   >
-    <Tab.Screen name="Home" component={FriendScheduleStack} />
-    <Tab.Screen name="Calendar" component={FriendCalendarStack} />
-    <Tab.Screen name="Caregiver" component={CaregiverStack} />
-    <Tab.Screen name="Profile" component={ProfileStack} />
+    <Tab.Screen name="Home" component={FriendScheduleStack} options={{ title: '홈' }} />
+    <Tab.Screen name="Calendar" component={FriendCalendarStack} options={{ title: '달력' }} />
+    <Tab.Screen name="Caregiver" component={CaregiverStack} options={{ title: '보호자' }} />
+    <Tab.Screen name="Profile" component={ProfileStack} options={{ title: '내 정보' }} />
   </Tab.Navigator>
 );
 
@@ -158,11 +160,13 @@ const App = () => {
         <Stack.Screen name="CaregiverTabs" component={CaregiverTabs} options={{ headerShown: false }} />
         <Stack.Screen name="FriendTabs" component={FriendTabs} options={{ headerShown: false }} />
         <Stack.Screen name="SelectPainAreaScreen" component={SelectPainAreaScreen} />
-        <Stack.Screen name="RecommendScreen" component={RecommendScreen} />
-        <Stack.Screen name="VoiceSearchScreen" component={VoiceSearchScreen} />
+        <Stack.Screen name="RecommendScreen" component={RecommendScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="VoiceSearchScreen" component={VoiceSearchScreen} options={{ headerShown: false }} />
         <Stack.Screen name="EditScheduleScreen" component={EditScheduleScreen} options={{ headerShown: false }} />
         <Stack.Screen name="LocationScreen" component={LocationScreen} options={{ title: '위치 조회' }} />
         <Stack.Screen name="UnregisterScreen" component={UnregisterScreen} options={{ title: '회원 탈퇴' }} />
+        <Stack.Screen name="FriendAddHospitalScheduleScreen" component={FriendAddHospitalScheduleScreen}  options={{ title: '병원 일정 추가' }} />
+        <Stack.Screen name="FriendHospitalListScreen" component={FriendHospitalListScreen}  options={{ title: '나의 진료 기록' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

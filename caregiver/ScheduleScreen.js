@@ -129,7 +129,7 @@ const ScheduleScreen = () => {
 
   // 시간 형식 변환 함수 (오전/오후 표시)
   const formatTime = (timeString) => {
-    const time = new Date(`1970-01-01T${timeString}`);
+    const time = new Date(`1970-01-01T${timeString}+09:00`);
     const hours = time.getHours();
     const minutes = time.getMinutes();
     const period = hours >= 12 ? '오후' : '오전';
@@ -279,7 +279,7 @@ const ScheduleScreen = () => {
 
           {/* 일정 추가하기 */}
           <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('AddScheduleScreen', { friendId: currentFriend.friendId })}>
-            <Feather name="calendar" size={24} color="#fff" />
+            <Feather name="plus-circle" size={24} color="#fff" />
             <CustomText style={styles.actionButtonText}>일정 추가하기</CustomText>
           </TouchableOpacity>
 
@@ -424,8 +424,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   actionButtonText: {
-    color: '#fff',
-    fontSize: 18,
+    color: '#FFFFFF',
+    fontSize: 20,
     marginLeft: 10,
   },
   map: {
